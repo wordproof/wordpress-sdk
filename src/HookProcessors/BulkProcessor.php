@@ -4,7 +4,15 @@
 namespace WordProof\Wordpress\HookProcessors;
 
 
-class BulkProcessor
+class BulkProcessor implements Processor
 {
+    public function __construct()
+    {
+        add_action('plugins_loaded', [$this, 'init']);
+    }
     
+    public function init()
+    {
+        //
+    }
 }
