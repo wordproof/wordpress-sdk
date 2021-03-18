@@ -7,6 +7,7 @@ namespace WordProof\Wordpress;
 use WordProof\Wordpress\HookProcessors\BulkProcessor;
 use WordProof\Wordpress\HookProcessors\MetaBoxesProcessor;
 use WordProof\Wordpress\HookProcessors\SettingsProcessor;
+use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
 {
@@ -20,13 +21,13 @@ class WordProofTimestamp
     
     private ?SettingsProcessor $settingsProcessor = null;
     
-    private Vendor\WordProof\ApiClient\WordProofApi $client;
+    private WordProofApi $client;
     
     public function __construct(int $clientId, string $clientSecret)
     {
         $this->clientId = $clientId;
         $this->clientSecret = str_replace('"','', str_replace("'","", $clientSecret));
-        $this->client = new Vendor\WordProof\ApiClient\WordProofApi();
+        $this->client = new WordProofApi();
     }
     
     public function withMetaBoxes(): self
