@@ -32,7 +32,9 @@
     "extra": {
         "imposter": {
             "namespace": "WordProof\\Wordpress\\Vendor",
-            "excludes": []
+            "excludes": [
+                "laminas/laminas-zendframework-bridge"
+            ]
         }
     }
 }

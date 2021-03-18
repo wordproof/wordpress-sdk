@@ -28,6 +28,9 @@ class WordProofTimestamp
         $this->clientId = $clientId;
         $this->clientSecret = str_replace('"','', str_replace("'","", $clientSecret));
         $this->client = new WordProofApi();
+        
+        add_action('admin_action_wordproof_webhook_handle', [$this, 'webhookHandle']);
+        add_action('admin_action_wordproof_authorize_redirect', [$this, 'authorizeRedirect']);
     }
     
     public function withMetaBoxes(): self
@@ -48,6 +51,12 @@ class WordProofTimestamp
         return $this;
     }
     
+    public function webhookHandle()
+    {
+        $data = $_GET;
+        do_action('wordproof_webhook_handle', $data);
+    }
+    
     public function authorizeRedirect()
     {
         $params = [
@@ -60,5 +69,7 @@ class WordProofTimestamp
         $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/authorize?" . http_build_query($params);
         
         header("Location: " . $url);
+        
+        die();
     }
 }
