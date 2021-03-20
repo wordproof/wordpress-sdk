@@ -6,7 +6,7 @@ name: Notify about new version
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    tags: [ "*" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,6 +22,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
       - name: Telegram Notify
         # You may pin to the exact commit or the version.
         # uses: appleboy/telegram-action@ae54341a85fdcf97cbea354678d7b8c062286c15
@@ -29,5 +31,5 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          args: Wordpress SDK; New event fired - ${{ github.event_name }}.
+          args: Wordpress SDK; New version $GIT_TAG_NAME published.
 
