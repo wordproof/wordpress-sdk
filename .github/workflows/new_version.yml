@@ -22,14 +22,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
-      - uses: olegtarasov/get-tag@v2.1
-        id: tagName
+      
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        
       - name: Telegram Notify
-        # You may pin to the exact commit or the version.
-        # uses: appleboy/telegram-action@ae54341a85fdcf97cbea354678d7b8c062286c15
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          args: Wordpress SDK; New version $GIT_TAG_NAME published.
+          args: Wordpress SDK; New version ${{steps.tag.outputs.tag}} published.
 
