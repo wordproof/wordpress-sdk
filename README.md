@@ -10,3 +10,14 @@ composer require wordproof/wordpress-sdk
 ```
 
 ## Usage
+
+```injectablephp
+use WordProof\Wordpress\WordProofTimestamp;
+
+$clientId = 123;
+$clientSecret = "YOURCLIENTSECRET";
+
+$wordproof = new WordProofTimestamp($clientId, $clientSecret);
+
+$wordproof->authorizeRedirect();
+```
