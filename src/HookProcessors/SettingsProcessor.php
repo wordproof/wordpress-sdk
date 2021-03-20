@@ -28,10 +28,11 @@ class SettingsProcessor implements Processor
     
     public function setSettings($key, $value = null)
     {
-        if (is_array($key))
+        if (is_array($key)) {
             $this->settings = array_merge($this->settings, $key);
-        
-        $this->settings[$key] = $value;
+        } else {
+            $this->settings[$key] = $value;
+        }
     }
     
     public function handle()
