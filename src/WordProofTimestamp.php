@@ -15,11 +15,11 @@ class WordProofTimestamp
     
     private string $clientSecret;
     
-    private ?BulkProcessor $bulkProcessor = null;
+    private BulkProcessor $bulkProcessor;
     
-    private ?MetaBoxesProcessor $metaBoxesProcessor = null;
+    private MetaBoxesProcessor $metaBoxesProcessor;
     
-    private ?SettingsProcessor $settingsProcessor = null;
+    private SettingsProcessor $settingsProcessor;
     
     private WordProofApi $client;
     
@@ -29,25 +29,30 @@ class WordProofTimestamp
         $this->clientSecret = str_replace('"','', str_replace("'","", $clientSecret));
         $this->client = new WordProofApi();
         
+        $this->bulkProcessor = new BulkProcessor();
+        $this->metaBoxesProcessor = new MetaBoxesProcessor();
+        $this->settingsProcessor = new SettingsProcessor();
+        
         add_action('admin_action_wordproof_webhook_handle', [$this, 'webhookHandle']);
         add_action('admin_action_wordproof_authorize_redirect', [$this, 'authorizeRedirect']);
     }
     
     public function withMetaBoxes(): self
     {
-        $this->metaBoxesProcessor = new MetaBoxesProcessor();
+        $this->metaBoxesProcessor->init();
         return $this;
     }
     
     public function withBulk(): self
     {
-        $this->bulkProcessor = new BulkProcessor();
+        $this->bulkProcessor->init();
         return $this;
     }
     
     public function withSettings(array $settings): self
     {
-        $this->settingsProcessor = new SettingsProcessor($settings);
+        $this->settingsProcessor->setSettings($settings);
+        $this->settingsProcessor->init();
         return $this;
     }
     
