@@ -11,16 +11,14 @@ class SettingsProcessor implements Processor
         'scope' => ''
     ];
     
-    public function __construct(array $settings)
+    public function __construct(array $settings = [])
     {
-        $this->setSettings($settings);
-        
-        add_action('plugins_loaded', [$this, 'init']);
+        if ($settings) $this->setSettings($settings);
     }
     
     public function init()
     {
-        //
+        add_action('plugins_loaded', [$this, 'handle']);
     }
     
     public function getSetting($key)
@@ -34,5 +32,10 @@ class SettingsProcessor implements Processor
             $this->settings = array_merge($this->settings, $key);
         
         $this->settings[$key] = $value;
+    }
+    
+    public function handle()
+    {
+        // TODO: Implement handle() method.
     }
 }
