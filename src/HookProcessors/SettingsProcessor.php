@@ -6,7 +6,7 @@ namespace WordProof\Wordpress\HookProcessors;
 
 class SettingsProcessor implements Processor
 {
-    private array $settings = [
+    private $settings = [
         'endpoint' => 'http://my.wordproof.com',
         'scope' => ''
     ];
