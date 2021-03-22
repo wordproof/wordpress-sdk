@@ -11,17 +11,17 @@ use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
 {
-    private int $clientId;
+    private $clientId;
     
-    private string $clientSecret;
+    private $clientSecret;
     
-    private BulkProcessor $bulkProcessor;
+    private $bulkProcessor;
     
-    private MetaBoxesProcessor $metaBoxesProcessor;
+    private $metaBoxesProcessor;
     
-    private SettingsProcessor $settingsProcessor;
+    private $settingsProcessor;
     
-    private WordProofApi $client;
+    private $client;
     
     public function __construct(int $clientId, string $clientSecret)
     {
@@ -33,8 +33,21 @@ class WordProofTimestamp
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
         
-        add_action('wp_ajax_nopriv_wordproof_webhook_handle', [$this, 'webhookHandle']);
-        add_action('wp_ajax_nopriv_wordproof_authorize_redirect', [$this, 'authorizeRedirect']);
+        $pluginsLoadedClosure = function () {
+            $this->initAjaxHandlers();
+        };
+        $pluginsLoadedClosure->bindTo($this);
+        add_action('plugins_loaded', $pluginsLoadedClosure);
+    }
+    
+    private function initAjaxHandlers()
+    {
+        $webhookHandleClosure = function () {
+            $this->webhookHandle();
+        };
+        $webhookHandleClosure->bindTo($this);
+        add_action('wp_ajax_wordproof_webhook_handle', $webhookHandleClosure);
+        add_action('wp_ajax_nopriv_wordproof_webhook_handle', $webhookHandleClosure);
     }
     
     public function withMetaBoxes(): self
@@ -55,8 +68,8 @@ class WordProofTimestamp
         $this->settingsProcessor->init();
         return $this;
     }
-    
-    public function webhookHandle()
+
+    private function webhookHandle()
     {
         $data = $_GET;
         do_action('wordproof_webhook_handle', $data);
