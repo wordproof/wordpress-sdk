@@ -33,8 +33,8 @@ class WordProofTimestamp
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
         
-        add_action('admin_action_wordproof_webhook_handle', [$this, 'webhookHandle']);
-        add_action('admin_action_wordproof_authorize_redirect', [$this, 'authorizeRedirect']);
+        add_action('wp_ajax_nopriv_wordproof_webhook_handle', [$this, 'webhookHandle']);
+        add_action('wp_ajax_nopriv_wordproof_authorize_redirect', [$this, 'authorizeRedirect']);
     }
     
     public function withMetaBoxes(): self
