@@ -107,7 +107,7 @@ class WordProofTimestamp
     
         try {
             $response = $this->client->sendRequest(new Request("POST", $url, [], http_build_query($params)));
-            return json_decode($response->getBody()->getContents());
+            return json_decode((string)$response->getBody());
         } catch (Exception $exception) {
             // TODO: do something with exception
             throw $exception;
