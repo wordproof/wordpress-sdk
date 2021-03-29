@@ -4,9 +4,11 @@
 namespace WordProof\Wordpress;
 
 
+use Exception;
 use WordProof\Wordpress\HookProcessors\BulkProcessor;
 use WordProof\Wordpress\HookProcessors\MetaBoxesProcessor;
 use WordProof\Wordpress\HookProcessors\SettingsProcessor;
+use WordProof\Wordpress\Vendor\Nyholm\Psr7\Request;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
@@ -89,5 +91,26 @@ class WordProofTimestamp
         header("Location: " . $url);
         
         die();
+    }
+    
+    public function exchangeCodeToToken($code)
+    {
+        $params = [
+            'grant_type' => 'authorization_code',
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'redirect_uri' => $this->settingsProcessor->getSetting('redirect_uri'),
+            'code' => $code
+        ];
+    
+        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/token?" . http_build_query($params);
+    
+        try {
+            $response = $this->client->sendRequest(new Request("POST", $url, [], http_build_query($params)));
+            return json_decode((string)$response->getBody());
+        } catch (Exception $exception) {
+            // TODO: do something with exception
+            throw $exception;
+        }
     }
 }
