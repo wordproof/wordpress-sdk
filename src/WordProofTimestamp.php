@@ -207,7 +207,7 @@ class WordProofTimestamp
             'code' => $code
         ];
     
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/token?" . http_build_query($params);
+        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/token";
     
         return $this->send("POST", $url, $params);
     }
