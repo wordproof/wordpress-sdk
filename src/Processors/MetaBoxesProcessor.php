@@ -1,7 +1,7 @@
 <?php
 
 
-namespace WordProof\Wordpress\HookProcessors;
+namespace WordProof\Wordpress\Processors;
 
 
 class MetaBoxesProcessor implements Processor
