@@ -10,11 +10,12 @@ use WordProof\Wordpress\Processors\BulkProcessor;
 use WordProof\Wordpress\Processors\MetaBoxesProcessor;
 use WordProof\Wordpress\Processors\SettingsProcessor;
 use WordProof\Wordpress\Traits\CanMakeRequest;
+use WordProof\Wordpress\Traits\HasHooks;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
 {
-    use CanMakeRequest;
+    use CanMakeRequest, HasHooks;
     
     /**
      * @var int
@@ -56,6 +57,8 @@ class WordProofTimestamp
         $this->bulkProcessor = new BulkProcessor();
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
+        
+        $this->registerHooks();
         
         $this->setWordpressDomain();
         
