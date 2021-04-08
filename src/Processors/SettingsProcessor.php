@@ -1,14 +1,14 @@
 <?php
 
 
-namespace WordProof\Wordpress\HookProcessors;
+namespace WordProof\Wordpress\Processors;
 
 
 class SettingsProcessor implements Processor
 {
     private $settings = [
         'endpoint' => 'http://my.wordproof.com',
-        'scope' => ''
+        'scope' => '*'
     ];
     
     public function __construct(array $settings = [])

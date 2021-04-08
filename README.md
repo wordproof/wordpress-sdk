@@ -11,7 +11,7 @@ composer require wordproof/wordpress-sdk
 
 ## Usage
 
-```injectablephp
+```php
 use WordProof\Wordpress\WordProofTimestamp;
 
 $clientId = 123;
@@ -19,5 +19,5 @@ $clientSecret = "YOURCLIENTSECRET";
 
 $wordproof = new WordProofTimestamp($clientId, $clientSecret);
 
-$wordproof->authorizeRedirect();
+$wordproof->login(); // redirect to Wordproof for getting OAuth token
 ```

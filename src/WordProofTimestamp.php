@@ -6,15 +6,16 @@ namespace WordProof\Wordpress;
 
 use Throwable;
 use WordProof\Wordpress\Exceptions\ValidationException;
-use WordProof\Wordpress\HookProcessors\BulkProcessor;
-use WordProof\Wordpress\HookProcessors\MetaBoxesProcessor;
-use WordProof\Wordpress\HookProcessors\SettingsProcessor;
+use WordProof\Wordpress\Processors\BulkProcessor;
+use WordProof\Wordpress\Processors\MetaBoxesProcessor;
+use WordProof\Wordpress\Processors\SettingsProcessor;
 use WordProof\Wordpress\Traits\CanMakeRequest;
+use WordProof\Wordpress\Traits\HasHooks;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
 {
-    use CanMakeRequest;
+    use CanMakeRequest, HasHooks;
     
     /**
      * @var int
@@ -57,6 +58,8 @@ class WordProofTimestamp
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
         
+        $this->registerHooks();
+        
         $this->setWordpressDomain();
         
         $pluginsLoadedClosure = function () {
@@ -64,6 +67,11 @@ class WordProofTimestamp
         };
         $pluginsLoadedClosure->bindTo($this);
         add_action('plugins_loaded', $pluginsLoadedClosure);
+    }
+    
+    public static function getRootDir()
+    {
+        return realpath(__DIR__ . "/../");
     }
     
     private function setWordpressDomain()
@@ -154,9 +162,8 @@ class WordProofTimestamp
             ])->exchangeCodeToToken($data['code']);
             
             add_option('wordproof_oauth_tokens', $auth, '', 'yes');
-    
-            echo file_get_contents(__DIR__ . "/../assets/oauth_success.php");
-            die();
+            
+            do_action('wordproof_tokens_received');
         }
     }
     
@@ -207,7 +214,7 @@ class WordProofTimestamp
             'code' => $code
         ];
     
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/token?" . http_build_query($params);
+        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/token";
     
         return $this->send("POST", $url, $params);
     }
@@ -220,6 +227,17 @@ class WordProofTimestamp
     public function makeSource($data)
     {
         $url = $this->settingsProcessor->getSetting('endpoint') . "/api/sources";
+        return $this->authenticate()->send("POST", $url, $data);
+    }
+    
+    /**
+     * @param $data
+     * @return mixed
+     * @throws Throwable
+     */
+    public function makeClient($data)
+    {
+        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/clients";
         return $this->send("POST", $url, $data);
     }
 }
