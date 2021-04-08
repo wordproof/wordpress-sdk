@@ -28,16 +28,11 @@ trait HasHooks
     
     public function handlerGotSource($source)
     {
-        $oldSource = get_option('wordproof_source');
-        $isAdded = false;
-        if ($source) {
-            if ($oldSource) {
-                $isAdded = update_option('wordproof_source', $source);
-            } else {
-                $isAdded = add_option('wordproof_source', $source);
-            }
+        $isAdded = update_option('wordproof_source', $source);
+        
+        if (!$isAdded) {
+            $isAdded = get_option('wordproof_source') == $source;
         }
-        $isAdded = !$isAdded ? $oldSource == $source : false;
         
         if (!$isAdded) {
             include WordProofTimestamp::getRootDir() . "/resources/assets/source_error.php";
