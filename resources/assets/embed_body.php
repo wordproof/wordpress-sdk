@@ -1,0 +1,1 @@
+<?php include "components/settings_form.php"; ?>
