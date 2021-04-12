@@ -9,13 +9,14 @@ use WordProof\Wordpress\Exceptions\ValidationException;
 use WordProof\Wordpress\Processors\BulkProcessor;
 use WordProof\Wordpress\Processors\MetaBoxesProcessor;
 use WordProof\Wordpress\Processors\SettingsProcessor;
+use WordProof\Wordpress\Traits\CanAddActions;
 use WordProof\Wordpress\Traits\CanMakeRequest;
 use WordProof\Wordpress\Traits\HasHooks;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
 {
-    use CanMakeRequest, HasHooks;
+    use CanMakeRequest, HasHooks, CanAddActions;
     
     /**
      * @var int
@@ -62,11 +63,10 @@ class WordProofTimestamp
         
         $this->setWordpressDomain();
         
-        $pluginsLoadedClosure = function () {
-            $this->initAjaxHandlers();
-        };
-        $pluginsLoadedClosure->bindTo($this);
-        add_action('plugins_loaded', $pluginsLoadedClosure);
+        $this->add_action('plugins_loaded', 'initAjaxHandlers');
+        
+        $this->add_action('admin_head', 'embedHeader');
+        $this->add_action('admin_footer', 'embedBody');
     }
     
     public static function getRootDir()
@@ -111,12 +111,26 @@ class WordProofTimestamp
      */
     private function initAjaxHandlers()
     {
-        $webhookHandleClosure = function () {
-            $this->webhookHandle();
-        };
-        $webhookHandleClosure->bindTo($this);
-        add_action('wp_ajax_wordproof_webhook_handle', $webhookHandleClosure);
-        add_action('wp_ajax_nopriv_wordproof_webhook_handle', $webhookHandleClosure);
+        $this->add_action('wp_ajax_wordproof_webhook_handle', 'webhookHandle');
+        $this->add_action('wp_ajax_nopriv_wordproof_webhook_handle', 'webhookHandle');
+        
+        $this->add_action('wp_ajax_wordproof_login', 'login');
+        $this->add_action('wp_ajax_nopriv_wordproof_login', 'login');
+    
+        $this->add_action('wp_ajax_wordproof_settings_form', 'settingsForm');
+        $this->add_action('wp_ajax_nopriv_wordproof_settings_form', 'settingsForm');
+    }
+    
+    public function embedHeader()
+    {
+        $rootDir = self::getRootDir();
+        include WordProofTimestamp::getRootDir() . "/resources/assets/embed_header.php";
+    }
+    
+    public function embedBody()
+    {
+        $rootDir = self::getRootDir();
+        include WordProofTimestamp::getRootDir() . "/resources/assets/embed_body.php";
     }
     
     /**
@@ -227,7 +241,7 @@ class WordProofTimestamp
     public function makeSource($data)
     {
         $url = $this->settingsProcessor->getSetting('endpoint') . "/api/sources";
-        return $this->authenticate()->send("POST", $url, $data);
+        return $this->authenticate()->send("POST", $url, $data, ['Accept' => 'application/json',]);
     }
     
     /**
@@ -238,6 +252,17 @@ class WordProofTimestamp
     public function makeClient($data)
     {
         $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/clients";
-        return $this->send("POST", $url, $data);
+        return $this->send("POST", $url, $data, ['Accept' => 'application/json',]);
+    }
+    
+    public function settingsForm()
+    {
+        $source = get_option('wordproof_source');
+//        $url = $this->settingsProcessor->getSetting('endpoint') . "/api/sources/".$source->id."/settings";
+//        $response = $this->authenticate()->send("GET", $url);
+//        echo $response;
+        $url = $this->settingsProcessor->getSetting('endpoint') . "/sources/".$source->id."/settings";
+        header("Location: $url");
+        die();
     }
 }
