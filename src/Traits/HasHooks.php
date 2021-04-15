@@ -4,7 +4,7 @@
 namespace WordProof\Wordpress\Traits;
 
 
-use WordProof\Wordpress\WordProofTimestamp;
+use WordProof\Wordpress\Support\Template;
 
 trait HasHooks
 {
@@ -35,9 +35,11 @@ trait HasHooks
         }
         
         if (!$isAdded) {
-            include WordProofTimestamp::getRootDir() . "/resources/assets/source_error.php";
+            $message = "You successfully authorized with Wordproof.<br>You can close this window now.";
         } else {
-            include WordProofTimestamp::getRootDir() . "/resources/assets/oauth_success.php";
+            $message = "Something went wrong.<br>Please try again";
         }
+        
+        Template::view("message.html", ["message" => $message]);
     }
 }

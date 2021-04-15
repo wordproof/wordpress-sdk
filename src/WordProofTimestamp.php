@@ -9,6 +9,7 @@ use WordProof\Wordpress\Exceptions\ValidationException;
 use WordProof\Wordpress\Processors\BulkProcessor;
 use WordProof\Wordpress\Processors\MetaBoxesProcessor;
 use WordProof\Wordpress\Processors\SettingsProcessor;
+use WordProof\Wordpress\Support\Template;
 use WordProof\Wordpress\Traits\CanAddActions;
 use WordProof\Wordpress\Traits\CanMakeRequest;
 use WordProof\Wordpress\Traits\HasHooks;
@@ -54,6 +55,9 @@ class WordProofTimestamp
         $this->clientId = $clientId;
         $this->clientSecret = str_replace('"','', str_replace("'","", $clientSecret));
         $this->client = new WordProofApi();
+        
+        Template::setCachePath(self::getRootDir() . "/resources/cache/");
+        Template::setTemplatePath(self::getRootDir() . "/resources/assets/templates/");
         
         $this->bulkProcessor = new BulkProcessor();
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
@@ -123,14 +127,15 @@ class WordProofTimestamp
     
     public function embedHeader()
     {
-        $rootDir = self::getRootDir();
-        include WordProofTimestamp::getRootDir() . "/resources/assets/embed_header.php";
+        Template::render("embed_header.html", [
+            "endpoint" => $this->settingsProcessor->getSetting('endpoint'),
+            "assets_url" => plugin_dir_url(__DIR__) . "resources/assets/"
+        ]);
     }
     
     public function embedBody()
     {
-        $rootDir = self::getRootDir();
-        include WordProofTimestamp::getRootDir() . "/resources/assets/embed_body.php";
+        Template::render("embed_body.html");
     }
     
     /**
