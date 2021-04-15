@@ -121,8 +121,8 @@ class WordProofTimestamp
         $this->add_action('wp_ajax_wordproof_login', 'login');
         $this->add_action('wp_ajax_nopriv_wordproof_login', 'login');
     
-        $this->add_action('wp_ajax_wordproof_settings_form', 'settingsForm');
-        $this->add_action('wp_ajax_nopriv_wordproof_settings_form', 'settingsForm');
+        $this->add_action('wp_ajax_wordproof_settings_form', 'settingsFormRedirect');
+        $this->add_action('wp_ajax_nopriv_wordproof_settings_form', 'settingsFormRedirect');
     }
     
     public function embedHeader()
@@ -260,12 +260,9 @@ class WordProofTimestamp
         return $this->send("POST", $url, $data, ['Accept' => 'application/json',]);
     }
     
-    public function settingsForm()
+    private function settingsFormRedirect()
     {
         $source = get_option('wordproof_source');
-//        $url = $this->settingsProcessor->getSetting('endpoint') . "/api/sources/".$source->id."/settings";
-//        $response = $this->authenticate()->send("GET", $url);
-//        echo $response;
         $url = $this->settingsProcessor->getSetting('endpoint') . "/sources/".$source->id."/settings";
         header("Location: $url");
         die();
