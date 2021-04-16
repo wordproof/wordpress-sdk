@@ -9,13 +9,15 @@ use WordProof\Wordpress\Exceptions\ValidationException;
 use WordProof\Wordpress\Processors\BulkProcessor;
 use WordProof\Wordpress\Processors\MetaBoxesProcessor;
 use WordProof\Wordpress\Processors\SettingsProcessor;
+use WordProof\Wordpress\Support\Template;
+use WordProof\Wordpress\Traits\CanAddActions;
 use WordProof\Wordpress\Traits\CanMakeRequest;
 use WordProof\Wordpress\Traits\HasHooks;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
 class WordProofTimestamp
 {
-    use CanMakeRequest, HasHooks;
+    use CanMakeRequest, HasHooks, CanAddActions;
     
     /**
      * @var int
@@ -54,6 +56,9 @@ class WordProofTimestamp
         $this->clientSecret = str_replace('"','', str_replace("'","", $clientSecret));
         $this->client = new WordProofApi();
         
+        Template::setCachePath(self::getRootDir() . "/resources/cache/");
+        Template::setTemplatePath(self::getRootDir() . "/resources/assets/templates/");
+        
         $this->bulkProcessor = new BulkProcessor();
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
@@ -62,11 +67,10 @@ class WordProofTimestamp
         
         $this->setWordpressDomain();
         
-        $pluginsLoadedClosure = function () {
-            $this->initAjaxHandlers();
-        };
-        $pluginsLoadedClosure->bindTo($this);
-        add_action('plugins_loaded', $pluginsLoadedClosure);
+        $this->add_action('plugins_loaded', 'initAjaxHandlers');
+        
+        $this->add_action('admin_head', 'embedHeader');
+        $this->add_action('admin_footer', 'embedBody');
     }
     
     public static function getRootDir()
@@ -111,12 +115,27 @@ class WordProofTimestamp
      */
     private function initAjaxHandlers()
     {
-        $webhookHandleClosure = function () {
-            $this->webhookHandle();
-        };
-        $webhookHandleClosure->bindTo($this);
-        add_action('wp_ajax_wordproof_webhook_handle', $webhookHandleClosure);
-        add_action('wp_ajax_nopriv_wordproof_webhook_handle', $webhookHandleClosure);
+        $this->add_action('wp_ajax_wordproof_webhook_handle', 'webhookHandle');
+        $this->add_action('wp_ajax_nopriv_wordproof_webhook_handle', 'webhookHandle');
+        
+        $this->add_action('wp_ajax_wordproof_login', 'login');
+        $this->add_action('wp_ajax_nopriv_wordproof_login', 'login');
+    
+        $this->add_action('wp_ajax_wordproof_settings_form', 'settingsFormRedirect');
+        $this->add_action('wp_ajax_nopriv_wordproof_settings_form', 'settingsFormRedirect');
+    }
+    
+    public function embedHeader()
+    {
+        Template::render("embed_header.html", [
+            "endpoint" => $this->settingsProcessor->getSetting('endpoint'),
+            "assets_url" => plugin_dir_url(__DIR__) . "resources/assets/"
+        ]);
+    }
+    
+    public function embedBody()
+    {
+        Template::render("embed_body.html");
     }
     
     /**
@@ -227,7 +246,7 @@ class WordProofTimestamp
     public function makeSource($data)
     {
         $url = $this->settingsProcessor->getSetting('endpoint') . "/api/sources";
-        return $this->authenticate()->send("POST", $url, $data);
+        return $this->authenticate()->send("POST", $url, $data, ['Accept' => 'application/json',]);
     }
     
     /**
@@ -238,6 +257,14 @@ class WordProofTimestamp
     public function makeClient($data)
     {
         $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/clients";
-        return $this->send("POST", $url, $data);
+        return $this->send("POST", $url, $data, ['Accept' => 'application/json',]);
+    }
+    
+    private function settingsFormRedirect()
+    {
+        $source = get_option('wordproof_source');
+        $url = $this->settingsProcessor->getSetting('endpoint') . "/sources/".$source->id."/settings";
+        header("Location: $url");
+        die();
     }
 }

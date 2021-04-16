@@ -38,7 +38,6 @@ trait CanMakeRequest
         }
         
         $this->headers = [
-            'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $token
         ];
         
@@ -56,7 +55,7 @@ trait CanMakeRequest
     public function send(string $method, string $url, $data = [], $headers = [])
     {
         if ($this->headers) {
-            $headers = array_merge($headers, $this->headers);
+            $headers = array_merge($this->headers, $headers);
         }
         
         try {

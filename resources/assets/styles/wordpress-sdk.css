@@ -1,0 +1,55 @@
+[x-cloak] { display: none; }
+
+#wordproof-popup-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+#wordproof-popup-wrapper .wordproof-popup-overflow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 30%;
+    z-index: 1;
+}
+
+#wordproof-popup-wrapper .wordproof-popup-content-wrapper {
+    width: 80%;
+    height: 80%;
+    text-align: center;
+    font-size: 2em;
+    z-index: 99999;
+    background-color: white;
+    box-shadow: 0 0 26px 0 rgba(0, 0, 0, 0.75);
+    position: relative;
+}
+
+#wordproof-popup-wrapper .wordproof-popup-content-wrapper .wordproof-popup-content-wrapper-content {
+    width: 100%;
+    height: 100%;
+    padding: 0 1px 0 0;
+    box-sizing: border-box;
+}
+
+#wordproof-popup-wrapper .wordproof-popup-content-wrapper .wordproof-popup-content-wrapper-close {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 30px;
+    color: #0000008f;
+    background-color: white;
+    border-radius: 15px;
+}
+
+#wordproof-popup-wrapper .wordproof-popup-content-wrapper .wordproof-popup-content-wrapper-close:hover {
+    color: black;
+    cursor: pointer;
+}
