@@ -12,6 +12,15 @@ class Template {
     private static $cache_enabled = true;
     private static $store_cache = false;
     
+    public static function setOptions(array $options)
+    {
+        foreach ($options as $optionName => $optionValue) {
+            if (property_exists(__CLASS__, $optionName)) {
+                self::${$optionName} = $optionValue;
+            }
+        }
+    }
+    
     public static function setCachePath($path)
     {
         self::$cache_path = $path;
