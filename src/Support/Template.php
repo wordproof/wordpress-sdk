@@ -10,6 +10,7 @@ class Template {
     private static $cache_path = 'cache/';
     private static $template_path = 'templates/';
     private static $cache_enabled = true;
+    private static $store_cache = false;
     
     public static function setCachePath($path)
     {
@@ -28,9 +29,17 @@ class Template {
     }
     
     public static function view($file, $data = array()) {
-        $cached_file = self::cache($file);
-        extract($data, EXTR_SKIP);
-        require $cached_file;
+        if (self::$store_cache) {
+            $cached_file = self::cache($file);
+            extract($data, EXTR_SKIP);
+            require $cached_file;
+        } else {
+            $code = self::includeFiles($file);
+            $code = self::compileCode($code);
+            $code = '?>' . PHP_EOL . $code . PHP_EOL . "<?php";
+            extract($data, EXTR_SKIP);
+            eval($code);
+        }
     }
     
     private static function cache($file) {
