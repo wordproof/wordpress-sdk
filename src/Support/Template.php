@@ -76,7 +76,7 @@ class Template {
         $code = self::compileEscapedEchos($code);
         $code = self::compileEchos($code);
         $code = self::compilePHP($code);
-        return str_replace(array("\r", "\n"), '', $code);
+        return $code;
     }
     
     private static function includeFiles($file) {
