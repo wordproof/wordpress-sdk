@@ -14,8 +14,11 @@ class LoadTemplateTest extends TestCase
         $path = WordProofTimestamp::getRootDir();
         $path = $path . "/tests/testfiles/resources";
         
-        Template::setCachePath($path . '/cache/');
-        Template::setTemplatePath($path . '/templates/');
+        Template::setOptions([
+            'cache_path' => $path . '/cache/',
+            'template_path' => $path . '/templates/',
+            'store_cache' => false
+        ]);
         
         $content = Template::render('about.html', [
             'title' => 'Home Page',
