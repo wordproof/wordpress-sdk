@@ -12,12 +12,12 @@ use WordProof\Wordpress\Processors\SettingsProcessor;
 use WordProof\Wordpress\Support\Template;
 use WordProof\Wordpress\Traits\CanAddActions;
 use WordProof\Wordpress\Traits\CanMakeRequest;
-use WordProof\Wordpress\Traits\HasHooks;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
+use WordProof\Wordpress\Workers\SourceWorker;
 
 class WordProofTimestamp
 {
-    use CanMakeRequest, HasHooks, CanAddActions;
+    use CanMakeRequest, CanAddActions;
     
     /**
      * @var int
@@ -63,15 +63,42 @@ class WordProofTimestamp
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
         
-        $this->registerHooks();
+        $this->initWorkers();
         
         $this->setWordpressDomain();
         
-        $this->add_action('plugins_loaded', 'initAjaxHandlers');
+        $this->initHooks();
         
+    }
+    
+    public function initWorkers()
+    {
+        // TODO: make this elegant, save worker instance
+        (new SourceWorker($this))->registerHooks();
+    }
+    
+    public function initHooks()
+    {
+        $this->add_action('plugins_loaded', 'initAjaxHandlers');
         $this->add_action('admin_head', 'embedHeader');
         $this->add_action('admin_footer', 'embedBody');
     }
+    
+    public function settings()
+    {
+        return $this->settingsProcessor;
+    }
+    
+    public function metaBoxes()
+    {
+        return $this->metaBoxesProcessor;
+    }
+    
+    public function bulk()
+    {
+        return $this->bulkProcessor;
+    }
+    
     
     public static function getRootDir()
     {
@@ -128,7 +155,7 @@ class WordProofTimestamp
     public function embedHeader()
     {
         Template::render("embed_header.html", [
-            "endpoint" => $this->settingsProcessor->getSetting('endpoint'),
+            "endpoint" => $this->settings()->getSetting('endpoint'),
             "assets_url" => plugin_dir_url(__DIR__) . "resources/assets/"
         ]);
     }
@@ -162,8 +189,8 @@ class WordProofTimestamp
      */
     public function withSettings(array $settings): self
     {
-        $this->settingsProcessor->setSettings($settings);
-        $this->settingsProcessor->init();
+        $this->settings()->setSettings($settings);
+        $this->settings()->init();
         return $this;
     }
     
@@ -176,8 +203,8 @@ class WordProofTimestamp
         $data = $_GET;
         if ($data['code']) {
             $auth = $this->withSettings([
-                'endpoint' => $this->settingsProcessor->getSetting('endpoint'),
-                'redirect_uri' => $this->settingsProcessor->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
+                'endpoint' => $this->settings()->getSetting('endpoint'),
+                'redirect_uri' => $this->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
             ])->exchangeCodeToToken($data['code']);
             
             add_option('wordproof_oauth_tokens', $auth, '', 'yes');
@@ -192,8 +219,8 @@ class WordProofTimestamp
     public function login()
     {
         $this->withSettings([
-            'endpoint' => $this->settingsProcessor->getSetting('endpoint'),
-            'redirect_uri' => $this->settingsProcessor->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
+            'endpoint' => $this->settings()->getSetting('endpoint'),
+            'redirect_uri' => $this->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
             'response_type' => 'code',
             'scope' => ''
         ])->authorizeRedirect();
@@ -206,12 +233,12 @@ class WordProofTimestamp
     {
         $params = [
             'client_id' => $this->clientId,
-            'redirect_uri' => $this->settingsProcessor->getSetting('redirect_uri'),
-            'response_type' => $this->settingsProcessor->getSetting('response_type'),
-            'scope' => $this->settingsProcessor->getSetting('scope'),
+            'redirect_uri' => $this->settings()->getSetting('redirect_uri'),
+            'response_type' => $this->settings()->getSetting('response_type'),
+            'scope' => $this->settings()->getSetting('scope'),
         ];
         
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/authorize?" . http_build_query($params);
+        $url = $this->settings()->getSetting('endpoint') . "/oauth/authorize?" . http_build_query($params);
         
         header("Location: " . $url);
         
@@ -229,11 +256,11 @@ class WordProofTimestamp
             'grant_type' => 'authorization_code',
             'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
-            'redirect_uri' => $this->settingsProcessor->getSetting('redirect_uri'),
+            'redirect_uri' => $this->settings()->getSetting('redirect_uri'),
             'code' => $code
         ];
     
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/token";
+        $url = $this->settings()->getSetting('endpoint') . "/oauth/token";
     
         return $this->send("POST", $url, $params);
     }
@@ -245,7 +272,7 @@ class WordProofTimestamp
      */
     public function makeSource($data)
     {
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/api/sources";
+        $url = $this->settings()->getSetting('endpoint') . "/api/sources";
         return $this->authenticate()->send("POST", $url, $data, ['Accept' => 'application/json',]);
     }
     
@@ -256,14 +283,14 @@ class WordProofTimestamp
      */
     public function makeClient($data)
     {
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/oauth/clients";
+        $url = $this->settings()->getSetting('endpoint') . "/oauth/clients";
         return $this->send("POST", $url, $data, ['Accept' => 'application/json',]);
     }
     
     private function settingsFormRedirect()
     {
         $source = get_option('wordproof_source');
-        $url = $this->settingsProcessor->getSetting('endpoint') . "/sources/".$source->id."/settings";
+        $url = $this->settings()->getSetting('endpoint') . "/sources/".$source->id."/settings";
         header("Location: $url");
         die();
     }
