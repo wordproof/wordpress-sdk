@@ -4,6 +4,8 @@
 namespace WordProof\Wordpress\Processors;
 
 
+use WordProof\Wordpress\Contracts\Processor;
+
 class SettingsProcessor implements Processor
 {
     private $settings = [

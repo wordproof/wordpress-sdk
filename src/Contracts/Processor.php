@@ -1,7 +1,7 @@
 <?php
 
 
-namespace WordProof\Wordpress\Processors;
+namespace WordProof\Wordpress\Contracts;
 
 
 interface Processor
