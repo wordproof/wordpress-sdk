@@ -1,13 +1,13 @@
 <?php
 
 
-namespace WordProof\Wordpress\Workers;
+namespace WordProof\Wordpress\Abstracts;
 
 
-use WordProof\Wordpress\Contracts\Worker;
+use WordProof\Wordpress\Contracts\WorkerInterface;
 use WordProof\Wordpress\WordProofTimestamp;
 
-abstract class BaseWorker implements Worker
+abstract class AbstractBaseWorker implements WorkerInterface
 {
     protected $wordProofTimestamp;
     

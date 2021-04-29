@@ -4,9 +4,9 @@
 namespace WordProof\Wordpress\Processors;
 
 
-use WordProof\Wordpress\Contracts\Processor;
+use WordProof\Wordpress\Contracts\ProcessorInterface;
 
-class BulkProcessor implements Processor
+class BulkProcessor implements ProcessorInterface
 {
     public function __construct()
     {

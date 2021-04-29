@@ -4,7 +4,7 @@
 namespace WordProof\Wordpress\Contracts;
 
 
-interface Worker
+interface WorkerInterface
 {
     public function registerHooks();
 }

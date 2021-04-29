@@ -4,9 +4,9 @@
 namespace WordProof\Wordpress\Processors;
 
 
-use WordProof\Wordpress\Contracts\Processor;
+use WordProof\Wordpress\Contracts\ProcessorInterface;
 
-class SettingsProcessor implements Processor
+class SettingsProcessor implements ProcessorInterface
 {
     private $settings = [
         'endpoint' => 'http://my.wordproof.com',

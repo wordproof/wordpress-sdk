@@ -4,9 +4,11 @@
 namespace WordProof\Wordpress\Workers;
 
 
+use WordProof\Wordpress\Abstracts\AbstractBaseWorker;
+use WordProof\Wordpress\Entities\Source;
 use WordProof\Wordpress\Support\Template;
 
-class SourceWorker extends BaseWorker
+class SourceWorkerAbstract extends AbstractBaseWorker
 {
     public function registerHooks()
     {
@@ -16,16 +18,19 @@ class SourceWorker extends BaseWorker
     
     public function handlerTokensReceived()
     {
-        $source = $this->wordProofTimestamp->makeSource([
+        $source = new Source((array)$this->wordProofTimestamp->makeSource([
             'url'         => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain'),
             'webhook_url' => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
             'type'        => 'wordpress',
             'blockchain_key'  => 'eos_free',
-        ]);
+        ]));
         
         do_action('wordproof_got_source', $source);
     }
     
+    /**
+     * @param Source $source
+     */
     public function handlerGotSource($source)
     {
         $isAdded = update_option('wordproof_source', $source);

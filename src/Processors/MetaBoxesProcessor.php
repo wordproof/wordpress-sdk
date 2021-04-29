@@ -4,9 +4,9 @@
 namespace WordProof\Wordpress\Processors;
 
 
-use WordProof\Wordpress\Contracts\Processor;
+use WordProof\Wordpress\Contracts\ProcessorInterface;
 
-class MetaBoxesProcessor implements Processor
+class MetaBoxesProcessor implements ProcessorInterface
 {
     public function __construct()
     {

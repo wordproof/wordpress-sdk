@@ -10,7 +10,7 @@ use WordProof\Wordpress\Exceptions\ValidationException;
 use WordProof\Wordpress\Vendor\Nyholm\Psr7\Request;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
 
-trait CanMakeRequest
+trait CanMakeRequestTrait
 {
     /**
      * @var array

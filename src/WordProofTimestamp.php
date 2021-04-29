@@ -10,14 +10,14 @@ use WordProof\Wordpress\Processors\BulkProcessor;
 use WordProof\Wordpress\Processors\MetaBoxesProcessor;
 use WordProof\Wordpress\Processors\SettingsProcessor;
 use WordProof\Wordpress\Support\Template;
-use WordProof\Wordpress\Traits\CanAddActions;
-use WordProof\Wordpress\Traits\CanMakeRequest;
+use WordProof\Wordpress\Traits\CanAddActionsTrait;
+use WordProof\Wordpress\Traits\CanMakeRequestTrait;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
-use WordProof\Wordpress\Workers\SourceWorker;
+use WordProof\Wordpress\Workers\SourceWorkerAbstract;
 
 class WordProofTimestamp
 {
-    use CanMakeRequest, CanAddActions;
+    use CanMakeRequestTrait, CanAddActionsTrait;
     
     /**
      * @var int
@@ -74,7 +74,7 @@ class WordProofTimestamp
     public function initWorkers()
     {
         // TODO: make this elegant, save worker instance
-        (new SourceWorker($this))->registerHooks();
+        (new SourceWorkerAbstract($this))->registerHooks();
     }
     
     public function initHooks()
