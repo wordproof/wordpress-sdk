@@ -71,12 +71,20 @@ class WordProofTimestamp
         
     }
     
+    /**
+     * Initialize workers
+     * @return void
+     */
     public function initWorkers()
     {
         // TODO: make this elegant, save worker instance
         (new SourceWorkerAbstract($this))->registerHooks();
     }
     
+    /**
+     * Initialize Wordproof SDK with Wordpress hooks
+     * @return void
+     */
     public function initHooks()
     {
         $this->add_action('plugins_loaded', 'initAjaxHandlers');
@@ -84,27 +92,44 @@ class WordProofTimestamp
         $this->add_action('admin_footer', 'embedBody');
     }
     
+    /**
+     * @return SettingsProcessor
+     */
     public function settings()
     {
         return $this->settingsProcessor;
     }
     
+    /**
+     * @return MetaBoxesProcessor
+     */
     public function metaBoxes()
     {
         return $this->metaBoxesProcessor;
     }
     
+    /**
+     * @return BulkProcessor
+     */
     public function bulk()
     {
         return $this->bulkProcessor;
     }
     
     
+    /**
+     * Get Wordpress SDK root dir real path
+     * @return false|string
+     */
     public static function getRootDir()
     {
         return realpath(__DIR__ . "/../");
     }
     
+    /**
+     * Calculate Wordpress domain and save it in wordpress_domain setting
+     * @throws ValidationException
+     */
     private function setWordpressDomain()
     {
         $wordpressDomain = "";
@@ -137,6 +162,7 @@ class WordProofTimestamp
     }
     
     /**
+     * Add Wordpress SDK handlers for external calls
      * @return void
      * @throws Throwable
      */
@@ -152,6 +178,10 @@ class WordProofTimestamp
         $this->add_action('wp_ajax_nopriv_wordproof_settings_form', 'settingsFormRedirect');
     }
     
+    /**
+     * Add rendered HTML to the <head> tag of the page
+     * @return void
+     */
     public function embedHeader()
     {
         Template::render("embed_header.html", [
@@ -160,6 +190,10 @@ class WordProofTimestamp
         ]);
     }
     
+    /**
+     * Add rendered HTML to the <body> tag of the page
+     * @return void
+     */
     public function embedBody()
     {
         Template::render("embed_body.html");
@@ -214,6 +248,7 @@ class WordProofTimestamp
     }
     
     /**
+     * Redirect user to Wordproof for OAuth
      * @return void
      */
     public function login()
