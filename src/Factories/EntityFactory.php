@@ -2,6 +2,7 @@
 
 namespace WordProof\Wordpress\Factories;
 
+use Throwable;
 use WordProof\Wordpress\Abstracts\AbstractFactory;
 use WordProof\Wordpress\Entities\Client;
 use WordProof\Wordpress\Entities\Source;
@@ -11,7 +12,7 @@ class EntityFactory extends AbstractFactory
     /**
      * @param array $data
      * @return Source
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function source($data)
     {
@@ -22,7 +23,7 @@ class EntityFactory extends AbstractFactory
     /**
      * @param array $data
      * @return Client
-     * @throws \Exception
+     * @throws Throwable
      */
     public function client($data)
     {

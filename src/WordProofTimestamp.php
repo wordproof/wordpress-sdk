@@ -6,6 +6,7 @@ namespace WordProof\Wordpress;
 
 use Throwable;
 use WordProof\Wordpress\Exceptions\ValidationException;
+use WordProof\Wordpress\Factories\EntityFactory;
 use WordProof\Wordpress\Processors\BulkProcessor;
 use WordProof\Wordpress\Processors\MetaBoxesProcessor;
 use WordProof\Wordpress\Processors\SettingsProcessor;
@@ -13,7 +14,7 @@ use WordProof\Wordpress\Support\Template;
 use WordProof\Wordpress\Traits\CanAddActionsTrait;
 use WordProof\Wordpress\Traits\CanMakeRequestTrait;
 use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
-use WordProof\Wordpress\Workers\SourceWorkerAbstract;
+use WordProof\Wordpress\Workers\SourceWorker;
 
 class WordProofTimestamp
 {
@@ -45,6 +46,11 @@ class WordProofTimestamp
     private $settingsProcessor;
     
     /**
+     * @var EntityFactory
+     */
+    private $entityFactory;
+    
+    /**
      * WordProofTimestamp constructor.
      * @param int $clientId
      * @param string $clientSecret
@@ -62,6 +68,8 @@ class WordProofTimestamp
         $this->bulkProcessor = new BulkProcessor();
         $this->metaBoxesProcessor = new MetaBoxesProcessor();
         $this->settingsProcessor = new SettingsProcessor();
+        
+        $this->entityFactory = new EntityFactory($this);
         
         $this->initWorkers();
         
@@ -301,25 +309,11 @@ class WordProofTimestamp
     }
     
     /**
-     * @param $data
-     * @return mixed
-     * @throws Throwable
+     * @return EntityFactory
      */
-    public function makeSource($data)
+    public function make()
     {
-        $url = $this->settings()->getSetting('endpoint') . "/api/sources";
-        return $this->authenticate()->send("POST", $url, $data, ['Accept' => 'application/json',]);
-    }
-    
-    /**
-     * @param $data
-     * @return mixed
-     * @throws Throwable
-     */
-    public function makeClient($data)
-    {
-        $url = $this->settings()->getSetting('endpoint') . "/oauth/clients";
-        return $this->send("POST", $url, $data, ['Accept' => 'application/json',]);
+        return $this->entityFactory;
     }
     
     private function settingsFormRedirect()
