@@ -4,10 +4,9 @@
 namespace WordProof\Wordpress\Abstracts;
 
 
-use WordProof\Wordpress\Contracts\WorkerInterface;
 use WordProof\Wordpress\Traits\ReceiveWordProofTimestampTrait;
 
-abstract class AbstractBaseWorker implements WorkerInterface
+abstract class AbstractFactory
 {
     use ReceiveWordProofTimestampTrait;
 }
