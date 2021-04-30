@@ -8,7 +8,7 @@ use WordProof\Wordpress\Abstracts\AbstractBaseWorker;
 use WordProof\Wordpress\Entities\Source;
 use WordProof\Wordpress\Support\Template;
 
-class SourceWorkerAbstract extends AbstractBaseWorker
+class SourceWorker extends AbstractBaseWorker
 {
     public function registerHooks()
     {
@@ -18,12 +18,12 @@ class SourceWorkerAbstract extends AbstractBaseWorker
     
     public function handlerTokensReceived()
     {
-        $source = new Source((array)$this->wordProofTimestamp->makeSource([
+        $source = $this->wordProofTimestamp->make()->source([
             'url'         => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain'),
             'webhook_url' => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
             'type'        => 'wordpress',
             'blockchain_key'  => 'eos_free',
-        ]));
+        ]);
         
         do_action('wordproof_got_source', $source);
     }

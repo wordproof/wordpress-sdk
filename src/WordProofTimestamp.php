@@ -78,7 +78,7 @@ class WordProofTimestamp
     public function initWorkers()
     {
         // TODO: make this elegant, save worker instance
-        (new SourceWorkerAbstract($this))->registerHooks();
+        (new SourceWorker($this))->registerHooks();
     }
     
     /**
