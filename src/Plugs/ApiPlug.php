@@ -13,20 +13,22 @@ class ApiPlug
             'methods'  => 'GET',
             'callback' => [$this, 'oauthCallback'],
         ]);
-        register_rest_route('wordproof/v1', '/settings', [
+        
+        register_rest_route('wordproof/v1', '/webhook', [
             'methods'  => 'POST',
-            'callback' => [$this, 'settings'],
+            'callback' => [$this, 'webhook'],
         ]);
     }
     
     public function oauthCallback()
     {
         Authentication::token();
+        //TODO what now?
     }
     
-    public function settings()
+    public function webhook(\WP_REST_Request $request)
     {
-        ray('TODO save settings');
+        ray($request);
     }
 
 }
