@@ -1,34 +1,23 @@
 <?php
 
-
-namespace WordProof\Wordpress;
-
+namespace WordProof\SDK;
 
 use Throwable;
-use WordProof\Wordpress\Exceptions\ValidationException;
-use WordProof\Wordpress\Factories\EntityFactory;
-use WordProof\Wordpress\Processors\BulkProcessor;
-use WordProof\Wordpress\Processors\MetaBoxesProcessor;
-use WordProof\Wordpress\Processors\SettingsProcessor;
-use WordProof\Wordpress\Support\Template;
-use WordProof\Wordpress\Traits\CanAddActionsTrait;
-use WordProof\Wordpress\Traits\CanMakeRequestTrait;
-use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
-use WordProof\Wordpress\Workers\SourceWorker;
+use WordProof\SDK\Factories\EntityFactory;
+use WordProof\SDK\Processors\BulkProcessor;
+use WordProof\SDK\Processors\MetaBoxesProcessor;
+use WordProof\SDK\Processors\SettingsProcessor;
+use WordProof\SDK\Support\Authentication;
+use WordProof\SDK\Support\Loader;
+use WordProof\SDK\Support\Webhook;
+use WordProof\SDK\Traits\CanAddActionsTrait;
+use WordProof\SDK\Traits\CanMakeRequestTrait;
+use WordProof\SDK\Vendor\WordProof\ApiClient\WordProofApi;
+use WordProof\SDK\Workers\SourceWorker;
 
 class WordProofTimestamp
 {
     use CanMakeRequestTrait, CanAddActionsTrait;
-    
-    /**
-     * @var int
-     */
-    private $clientId;
-    
-    /**
-     * @var string|string[]
-     */
-    private $clientSecret;
     
     /**
      * @var BulkProcessor
@@ -51,32 +40,47 @@ class WordProofTimestamp
     private $entityFactory;
     
     /**
+     * @var Loader
+     */
+    private $loader;
+    
+    /**
      * WordProofTimestamp constructor.
-     * @param int $clientId
-     * @param string $clientSecret
      * @throws Throwable
      */
-    public function __construct(int $clientId, string $clientSecret)
+    public function __construct()
     {
-        $this->clientId = $clientId;
-        $this->clientSecret = str_replace('"','', str_replace("'","", $clientSecret));
-        $this->client = new WordProofApi();
+        ray('Hi!');
+//        $this->client = new WordProofApi();
+        $this->loader = new Loader();
+    
+        $this->authentication();
+        $this->webhook();
+
+//        Template::setCachePath(self::getRootDir() . "/resources/cache/");
+//        Template::setTemplatePath(self::getRootDir() . "/resources/assets/templates/");
+
+//        $this->bulkProcessor = new BulkProcessor();
+//        $this->metaBoxesProcessor = new MetaBoxesProcessor();
+//        $this->settingsProcessor = new SettingsProcessor();
+
+//        $this->entityFactory = new EntityFactory($this);
+
+//        $this->initWorkers();
         
-        Template::setCachePath(self::getRootDir() . "/resources/cache/");
-        Template::setTemplatePath(self::getRootDir() . "/resources/assets/templates/");
+        $this->loader->run();
+    }
+    
+    public function authentication() {
+        $class = new Authentication();
         
-        $this->bulkProcessor = new BulkProcessor();
-        $this->metaBoxesProcessor = new MetaBoxesProcessor();
-        $this->settingsProcessor = new SettingsProcessor();
+        $this->loader->add_action('wordproof_authenticate', $class, 'redirect');
+    }
+    
+    public function webhook() {
+        $class = new Webh();
         
-        $this->entityFactory = new EntityFactory($this);
-        
-        $this->initWorkers();
-        
-        $this->setWordpressDomain();
-        
-        $this->initHooks();
-        
+        $this->loader->add_action('wordproof_webhook', $class, 'webhook');
     }
     
     /**
@@ -90,14 +94,13 @@ class WordProofTimestamp
     }
     
     /**
-     * Initialize Wordproof SDK with Wordpress hooks
      * @return void
      */
     public function initHooks()
     {
-        $this->add_action('plugins_loaded', 'initAjaxHandlers');
-        $this->add_action('admin_head', 'embedHeader');
-        $this->add_action('admin_footer', 'embedBody');
+//        $this->add_action('plugins_loaded', 'initAjaxHandlers');
+//        $this->add_action('admin_head', 'embedHeader');
+//        $this->add_action('admin_footer', 'embedBody');
     }
     
     /**
@@ -124,53 +127,8 @@ class WordProofTimestamp
         return $this->bulkProcessor;
     }
     
-    
     /**
-     * Get Wordpress SDK root dir real path
-     * @return false|string
-     */
-    public static function getRootDir()
-    {
-        return realpath(__DIR__ . "/../");
-    }
-    
-    /**
-     * Calculate Wordpress domain and save it in wordpress_domain setting
-     * @throws ValidationException
-     */
-    private function setWordpressDomain()
-    {
-        $wordpressDomain = "";
-        
-        if (isset($_SERVER['REQUEST_SCHEME'])) {
-            $wordpressDomain .= $_SERVER['REQUEST_SCHEME'];
-        } else {
-            $wordpressDomain .= "http";
-        }
-        
-        $wordpressDomain .= "://";
-    
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $wordpressDomain .= $_SERVER['HTTP_HOST'];
-        } else {
-            if (isset($_SERVER['REQUEST_SCHEME'])) {
-                $wordpressDomain .= $_SERVER['REQUEST_SCHEME'];
-            } else {
-                $wordpressDomain .= "localhost";
-            }
-        }
-        
-        if (!preg_match("|^http[s]?://([а-яА-Яa-zA-Z-0-9]+)(\.([а-яА-Яa-zA-Z-0-9]+\.?){1,4})$|", $wordpressDomain)) {
-            throw new ValidationException("Wordpress domain can not be resolved from headers");
-        }
-        
-        $this->withSettings([
-            'wordpress_domain' => $wordpressDomain
-        ]);
-    }
-    
-    /**
-     * Add Wordpress SDK handlers for external calls
+     * Add SDK SDK handlers for external calls
      * @return void
      * @throws Throwable
      */
@@ -186,26 +144,26 @@ class WordProofTimestamp
         $this->add_action('wp_ajax_nopriv_wordproof_settings_form', 'settingsFormRedirect');
     }
     
-    /**
-     * Add rendered HTML to the <head> tag of the page
-     * @return void
-     */
-    public function embedHeader()
-    {
-        Template::render("embed_header.html", [
-            "endpoint" => $this->settings()->getSetting('endpoint'),
-            "assets_url" => plugin_dir_url(__DIR__) . "resources/assets/"
-        ]);
-    }
-    
-    /**
-     * Add rendered HTML to the <body> tag of the page
-     * @return void
-     */
-    public function embedBody()
-    {
-        Template::render("embed_body.html");
-    }
+//    /**
+//     * Add rendered HTML to the <head> tag of the page
+//     * @return void
+//     */
+//    public function embedHeader()
+//    {
+//        Template::render("embed_header.html", [
+//            "endpoint" => $this->settings()->getSetting('endpoint'),
+//            "assets_url" => plugin_dir_url(__DIR__) . "resources/assets/"
+//        ]);
+//    }
+//
+//    /**
+//     * Add rendered HTML to the <body> tag of the page
+//     * @return void
+//     */
+//    public function embedBody()
+//    {
+//        Template::render("embed_body.html");
+//    }
     
     /**
      * @return $this
