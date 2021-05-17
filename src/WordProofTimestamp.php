@@ -4,12 +4,13 @@ namespace WordProof\SDK;
 
 use Throwable;
 use WordProof\SDK\Factories\EntityFactory;
+use WordProof\SDK\Plugs\ApiPlug;
+use WordProof\SDK\Plugs\AuthenticationPlug;
+use WordProof\SDK\Plugs\WebhookPlug;
 use WordProof\SDK\Processors\BulkProcessor;
 use WordProof\SDK\Processors\MetaBoxesProcessor;
 use WordProof\SDK\Processors\SettingsProcessor;
-use WordProof\SDK\Support\Authentication;
 use WordProof\SDK\Support\Loader;
-use WordProof\SDK\Support\Webhook;
 use WordProof\SDK\Traits\CanAddActionsTrait;
 use WordProof\SDK\Traits\CanMakeRequestTrait;
 use WordProof\SDK\Vendor\WordProof\ApiClient\WordProofApi;
@@ -50,35 +51,35 @@ class WordProofTimestamp
      */
     public function __construct()
     {
-        ray('Hi!');
-//        $this->client = new WordProofApi();
         $this->loader = new Loader();
     
+        $this->constants();
         $this->authentication();
+        $this->api();
         $this->webhook();
 
-//        Template::setCachePath(self::getRootDir() . "/resources/cache/");
-//        Template::setTemplatePath(self::getRootDir() . "/resources/assets/templates/");
-
-//        $this->bulkProcessor = new BulkProcessor();
-//        $this->metaBoxesProcessor = new MetaBoxesProcessor();
-//        $this->settingsProcessor = new SettingsProcessor();
-
-//        $this->entityFactory = new EntityFactory($this);
-
-//        $this->initWorkers();
-        
         $this->loader->run();
     }
     
+    public function constants() {
+        define('WORDPROOF_URL', 'https://myv2.test');
+        define('WORDPROOF_CLIENT', 'wordpress-sdk');
+    }
+    
     public function authentication() {
-        $class = new Authentication();
+        $class = new AuthenticationPlug();
+
+        $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
+    }
+    
+    public function api() {
+        $class = new ApiPlug();
         
-        $this->loader->add_action('wordproof_authenticate', $class, 'redirect');
+        $this->loader->add_action('rest_api_init', $class, 'init');
     }
     
     public function webhook() {
-        $class = new Webh();
+        $class = new WebhookPlug();
         
         $this->loader->add_action('wordproof_webhook', $class, 'webhook');
     }
@@ -92,17 +93,7 @@ class WordProofTimestamp
         // TODO: make this elegant, save worker instance
         (new SourceWorker($this))->registerHooks();
     }
-    
-    /**
-     * @return void
-     */
-    public function initHooks()
-    {
-//        $this->add_action('plugins_loaded', 'initAjaxHandlers');
-//        $this->add_action('admin_head', 'embedHeader');
-//        $this->add_action('admin_footer', 'embedBody');
-    }
-    
+
     /**
      * @return SettingsProcessor
      */
@@ -193,78 +184,7 @@ class WordProofTimestamp
         $this->settings()->init();
         return $this;
     }
-    
-    /**
-     * @return void
-     * @throws Throwable
-     */
-    private function webhookHandle()
-    {
-        $data = $_GET;
-        if ($data['code']) {
-            $auth = $this->withSettings([
-                'endpoint' => $this->settings()->getSetting('endpoint'),
-                'redirect_uri' => $this->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
-            ])->exchangeCodeToToken($data['code']);
-            
-            add_option('wordproof_oauth_tokens', $auth, '', 'yes');
-            
-            do_action('wordproof_tokens_received');
-        }
-    }
-    
-    /**
-     * Redirect user to Wordproof for OAuth
-     * @return void
-     */
-    public function login()
-    {
-        $this->withSettings([
-            'endpoint' => $this->settings()->getSetting('endpoint'),
-            'redirect_uri' => $this->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
-            'response_type' => 'code',
-            'scope' => ''
-        ])->authorizeRedirect();
-    }
-    
-    /**
-     * @return void
-     */
-    public function authorizeRedirect()
-    {
-        $params = [
-            'client_id' => $this->clientId,
-            'redirect_uri' => $this->settings()->getSetting('redirect_uri'),
-            'response_type' => $this->settings()->getSetting('response_type'),
-            'scope' => $this->settings()->getSetting('scope'),
-        ];
-        
-        $url = $this->settings()->getSetting('endpoint') . "/oauth/authorize?" . http_build_query($params);
-        
-        header("Location: " . $url);
-        
-        die();
-    }
-    
-    /**
-     * @param $code
-     * @return mixed
-     * @throws Throwable
-     */
-    public function exchangeCodeToToken($code)
-    {
-        $params = [
-            'grant_type' => 'authorization_code',
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'redirect_uri' => $this->settings()->getSetting('redirect_uri'),
-            'code' => $code
-        ];
-    
-        $url = $this->settings()->getSetting('endpoint') . "/oauth/token";
-    
-        return $this->send("POST", $url, $params);
-    }
+
     
     /**
      * @return EntityFactory
