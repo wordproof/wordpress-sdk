@@ -45,15 +45,19 @@ class Authentication
             'code'          => $_REQUEST['code'],
         ];
         
-        $response =  json_decode(self::post('/api/wordpress-sdk/token', $data));
-    
-        update_option('wordproof_access_token', $response->access_token);
+        $response = json_decode(self::post('/api/wordpress-sdk/token', $data));
         
-        //TODO get or create source
+        $accessToken =  $response->access_token;
+        ray($response)->blue();
+        update_option('wordproof_access_token', $accessToken);
         
-        //TODO save source
+        $data = [
+            'webhook_url' => get_rest_url(null, 'wordproof/v1/webhook'),
+            'url'         => preg_replace('#^https?://#', '', get_site_url()),
+        ];
         
-        //TODO show settings?
+        $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
+        update_option('wordproof_source_id', $response->source_id);
     }
     
     private static function getCallbackUrl()
@@ -67,25 +71,31 @@ class Authentication
         header("Location: " . $location);
     }
     
-    private static function post($endpoint, $parameters)
+    private static function post($endpoint, $body, $bearerToken = null)
     {
         $location = WORDPROOF_URL . $endpoint;
-        $body = wp_json_encode($parameters);
+        $body = wp_json_encode($body);
+        
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept'       => 'application/json'
+        ];
+        
+        $headers = ($bearerToken) ? array_merge($headers, ['Authorization' => 'Bearer ' . $bearerToken]) : $headers;
         
         $options = [
             'body'        => $body,
-            'headers'     => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ],
+            'headers'     => $headers,
             'timeout'     => 60,
             'redirection' => 5,
             'blocking'    => true,
             'data_format' => 'body',
-            'sslverify' => false //TODO remove
+            'sslverify'   => false //TODO remove
         ];
         
-        $response = wp_remote_post($location, $options);
-        return $response['body'];
+        $request = wp_remote_post($location, $options);
+        $response = wp_remote_retrieve_body($request);
+        ray($response)->blue();
+        return $response;
     }
 }
