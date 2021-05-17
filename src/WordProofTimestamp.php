@@ -6,6 +6,7 @@ use Throwable;
 use WordProof\SDK\Factories\EntityFactory;
 use WordProof\SDK\Plugs\ApiPlug;
 use WordProof\SDK\Plugs\AuthenticationPlug;
+use WordProof\SDK\Plugs\CertificatePlug;
 use WordProof\SDK\Plugs\WebhookPlug;
 use WordProof\SDK\Processors\BulkProcessor;
 use WordProof\SDK\Processors\MetaBoxesProcessor;
@@ -57,13 +58,14 @@ class WordProofTimestamp
         $this->authentication();
         $this->api();
         $this->webhook();
+        $this->certificate();
 
         $this->loader->run();
     }
     
     public function constants() {
         define('WORDPROOF_URL', 'https://myv2.test');
-        define('WORDPROOF_CLIENT', 'wordpress-sdk');
+        define('WORDPROOF_CLIENT', 3);
     }
     
     public function authentication() {
@@ -83,6 +85,15 @@ class WordProofTimestamp
         
         $this->loader->add_action('wordproof_webhook', $class, 'webhook');
     }
+    
+    
+    public function certificate() {
+        $class = new CertificatePlug();
+    
+        $this->loader->add_action('wp_head', $class, 'head');
+        $this->loader->add_filter('the_content', $class, 'certificateTag');
+    }
+    
     
     /**
      * Initialize workers
