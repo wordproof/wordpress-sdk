@@ -1,6 +1,6 @@
 <?php
 
-namespace WordProof\Wordpress\Abstracts;
+namespace WordProof\SDK\Abstracts;
 
 abstract class AbstractEntity
 {

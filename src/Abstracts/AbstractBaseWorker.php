@@ -1,11 +1,9 @@
 <?php
 
+namespace WordProof\SDK\Abstracts;
 
-namespace WordProof\Wordpress\Abstracts;
-
-
-use WordProof\Wordpress\Contracts\WorkerInterface;
-use WordProof\Wordpress\Traits\ReceiveWordProofTimestampTrait;
+use WordProof\SDK\Contracts\WorkerInterface;
+use WordProof\SDK\Traits\ReceiveWordProofTimestampTrait;
 
 abstract class AbstractBaseWorker implements WorkerInterface
 {

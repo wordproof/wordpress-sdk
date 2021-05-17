@@ -1,10 +1,8 @@
 <?php
 
+namespace WordProof\SDK\Abstracts;
 
-namespace WordProof\Wordpress\Abstracts;
-
-
-use WordProof\Wordpress\Traits\ReceiveWordProofTimestampTrait;
+use WordProof\SDK\Traits\ReceiveWordProofTimestampTrait;
 
 abstract class AbstractFactory
 {

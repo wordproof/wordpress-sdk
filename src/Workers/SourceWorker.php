@@ -1,12 +1,10 @@
 <?php
 
+namespace WordProof\SDK\Workers;
 
-namespace WordProof\Wordpress\Workers;
-
-
-use WordProof\Wordpress\Abstracts\AbstractBaseWorker;
-use WordProof\Wordpress\Entities\Source;
-use WordProof\Wordpress\Support\Template;
+use WordProof\SDK\Abstracts\AbstractBaseWorker;
+use WordProof\SDK\Entities\Source;
+use WordProof\SDK\Support\Template;
 
 class SourceWorker extends AbstractBaseWorker
 {

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace WordProof\Wordpress\Tests;
+namespace WordProof\SDK\Tests;
 
 
-use WordProof\Wordpress\Support\Template;
-use WordProof\Wordpress\WordProofTimestamp;
+use WordProof\SDK\Support\Template;
+use WordProof\SDK\WordProofTimestamp;
 
 class LoadTemplateTest extends TestCase
 {

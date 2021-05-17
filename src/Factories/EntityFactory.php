@@ -1,11 +1,11 @@
 <?php
 
-namespace WordProof\Wordpress\Factories;
+namespace WordProof\SDK\Factories;
 
 use Throwable;
-use WordProof\Wordpress\Abstracts\AbstractFactory;
-use WordProof\Wordpress\Entities\Client;
-use WordProof\Wordpress\Entities\Source;
+use WordProof\SDK\Abstracts\AbstractFactory;
+use WordProof\SDK\Entities\Client;
+use WordProof\SDK\Entities\Source;
 
 class EntityFactory extends AbstractFactory
 {

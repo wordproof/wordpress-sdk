@@ -1,8 +1,6 @@
 <?php
 
-
-namespace WordProof\Wordpress\Traits;
-
+namespace WordProof\SDK\Traits;
 
 trait CanAddActionsTrait
 {

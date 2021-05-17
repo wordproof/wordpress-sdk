@@ -1,14 +1,12 @@
 <?php
 
-
-namespace WordProof\Wordpress\Traits;
-
+namespace WordProof\SDK\Traits;
 
 use Exception;
 use Throwable;
-use WordProof\Wordpress\Exceptions\ValidationException;
-use WordProof\Wordpress\Vendor\Nyholm\Psr7\Request;
-use WordProof\Wordpress\Vendor\WordProof\ApiClient\WordProofApi;
+use WordProof\SDK\Exceptions\ValidationException;
+use WordProof\SDK\Vendor\Nyholm\Psr7\Request;
+use WordProof\SDK\Vendor\WordProof\ApiClient\WordProofApi;
 
 trait CanMakeRequestTrait
 {

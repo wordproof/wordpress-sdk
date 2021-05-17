@@ -1,8 +1,8 @@
-# Wordproof SDK for Wordpress
+# Wordproof SDK for SDK
 
 ## Requirements
 
-- PHP 7.4+
+- PHP 7.1.3+
 
 ## Installation
 ```
@@ -12,12 +12,10 @@ composer require wordproof/wordpress-sdk
 ## Usage
 
 ```php
-use WordProof\Wordpress\WordProofTimestamp;
+use WordProof\SDK\WordProofTimestamp;
 
-$clientId = 123;
-$clientSecret = "YOURCLIENTSECRET";
+$wordproof = new WordProofTimestamp();
+$wordproof->login();
 
-$wordproof = new WordProofTimestamp($clientId, $clientSecret);
-
-$wordproof->login(); // redirect to Wordproof for getting OAuth token
+do_action('wordproof_oauth_authenticate');
 ```

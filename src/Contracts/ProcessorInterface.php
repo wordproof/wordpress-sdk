@@ -1,8 +1,6 @@
 <?php
 
-
-namespace WordProof\Wordpress\Contracts;
-
+namespace WordProof\SDK\Contracts;
 
 interface ProcessorInterface
 {

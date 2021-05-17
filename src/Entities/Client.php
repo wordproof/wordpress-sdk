@@ -1,8 +1,8 @@
 <?php
 
-namespace WordProof\Wordpress\Entities;
+namespace WordProof\SDK\Entities;
 
-use WordProof\Wordpress\Abstracts\AbstractEntity;
+use WordProof\SDK\Abstracts\AbstractEntity;
 
 class Client extends AbstractEntity
 {

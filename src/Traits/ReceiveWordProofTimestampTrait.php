@@ -1,10 +1,8 @@
 <?php
 
+namespace WordProof\SDK\Traits;
 
-namespace WordProof\Wordpress\Traits;
-
-
-use WordProof\Wordpress\WordProofTimestamp;
+use WordProof\SDK\WordProofTimestamp;
 
 trait ReceiveWordProofTimestampTrait
 {

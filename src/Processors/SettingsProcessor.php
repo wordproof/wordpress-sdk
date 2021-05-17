@@ -1,10 +1,8 @@
 <?php
 
+namespace WordProof\SDK\Processors;
 
-namespace WordProof\Wordpress\Processors;
-
-
-use WordProof\Wordpress\Contracts\ProcessorInterface;
+use WordProof\SDK\Contracts\ProcessorInterface;
 
 class SettingsProcessor implements ProcessorInterface
 {

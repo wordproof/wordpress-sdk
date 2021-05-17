@@ -1,7 +1,7 @@
 <?php
 
 
-namespace WordProof\Wordpress\Tests;
+namespace WordProof\SDK\Tests;
 
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
