@@ -7,7 +7,6 @@ use WordProof\SDK\Plugs\ApiPlug;
 use WordProof\SDK\Plugs\AuthenticationPlug;
 use WordProof\SDK\Plugs\CertificatePlug;
 use WordProof\SDK\Plugs\TimestampPlug;
-use WordProof\SDK\Plugs\WebhookPlug;
 use WordProof\SDK\Support\Loader;
 
 class WordProofTimestamp
@@ -32,7 +31,6 @@ class WordProofTimestamp
         $this->constants();
         $this->authentication();
         $this->api();
-//        $this->webhook();
         $this->certificate();
         $this->timestamp();
         
@@ -41,8 +39,8 @@ class WordProofTimestamp
     
     public function constants()
     {
-        define('WORDPROOF_URL', 'https://myv2.test');
-        define('WORDPROOF_CLIENT', 3);
+        define('WORDPROOF_URL', 'https://staging.wordproof.com');
+        define('WORDPROOF_CLIENT', 77);
     }
     
     public function authentication()
@@ -57,13 +55,6 @@ class WordProofTimestamp
         $class = new ApiPlug();
         
         $this->loader->add_action('rest_api_init', $class, 'init');
-    }
-    
-    public function webhook()
-    {
-        $class = new WebhookPlug();
-        
-//        $this->loader->add_action('wordproof_webhook', $class, 'webhook');
     }
     
     public function certificate()

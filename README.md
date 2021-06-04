@@ -1,4 +1,4 @@
-# Wordproof SDK for SDK
+# WordProof SDK for SDK
 
 ## Requirements
 
@@ -12,10 +12,14 @@ composer require wordproof/wordpress-sdk
 ## Usage
 
 ```php
+
+//Initialize during load
 use WordProof\SDK\WordProofTimestamp;
+new \WordProof\SDK\WordProofTimestamp();
 
-$wordproof = new WordProofTimestamp();
-$wordproof->login();
+//Authenticate on staging.wordproof.com
+do_action('wordproof_authenticate');
 
-do_action('wordproof_oauth_authenticate');
+//Timestamp a post
+do_action('wordproof_timestamp', $postId);
 ```
