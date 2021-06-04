@@ -1,12 +1,10 @@
 <?php
 
+namespace WordProof\SDK\Processors;
 
-namespace WordProof\Wordpress\Processors;
+use WordProof\SDK\Contracts\ProcessorInterface;
 
-
-use WordProof\Wordpress\Contracts\Processor;
-
-class SettingsProcessor implements Processor
+class SettingsProcessor implements ProcessorInterface
 {
     private $settings = [
         'endpoint' => 'http://my.wordproof.com',

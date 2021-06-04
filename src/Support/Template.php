@@ -1,8 +1,6 @@
 <?php
 
-
-namespace WordProof\Wordpress\Support;
-
+namespace WordProof\SDK\Support;
 
 class Template {
     

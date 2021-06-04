@@ -1,12 +1,16 @@
 {
     "name": "wordproof/wordpress-sdk",
-    "description": "Wordpress SDK",
+    "description": "WordPress SDK",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
         {
-            "name": "yurii",
+            "name": "Yurii",
             "email": "yurii@wordproof.com"
+        },
+        {
+            "name": "Marijn",
+            "email": "marijn@wordproof.com"
         }
     ],
     "require": {
@@ -21,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "WordProof\\Wordpress\\": "src"
+            "WordProof\\SDK\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "WordProof\\Wordpress\\Tests\\": "tests"
+            "WordProof\\SDK\\Tests\\": "tests"
         }
     },
     "config": {
@@ -34,7 +38,7 @@
     },
     "extra": {
         "imposter": {
-            "namespace": "WordProof\\Wordpress\\Vendor",
+            "namespace": "WordProof\\SDK\\Vendor",
             "excludes": []
         }
     },

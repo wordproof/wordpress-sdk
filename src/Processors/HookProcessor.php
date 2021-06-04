@@ -1,12 +1,10 @@
 <?php
 
+namespace WordProof\SDK\Processors;
 
-namespace WordProof\Wordpress\Processors;
+use WordProof\SDK\Contracts\ProcessorInterface;
 
-
-use WordProof\Wordpress\Contracts\Processor;
-
-class HookProcessor implements Processor
+class HookProcessor implements ProcessorInterface
 {
     
     public function __construct()

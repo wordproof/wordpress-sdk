@@ -1,13 +1,10 @@
 <?php
 
+namespace WordProof\SDK\Traits;
 
-namespace WordProof\Wordpress\Workers;
+use WordProof\SDK\WordProofTimestamp;
 
-
-use WordProof\Wordpress\Contracts\Worker;
-use WordProof\Wordpress\WordProofTimestamp;
-
-abstract class BaseWorker implements Worker
+trait ReceiveWordProofTimestampTrait
 {
     protected $wordProofTimestamp;
     

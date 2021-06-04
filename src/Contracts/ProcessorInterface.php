@@ -1,10 +1,8 @@
 <?php
 
+namespace WordProof\SDK\Contracts;
 
-namespace WordProof\Wordpress\Contracts;
-
-
-interface Processor
+interface ProcessorInterface
 {
     public function init();
     

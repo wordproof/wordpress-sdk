@@ -1,10 +1,10 @@
 <?php
 
-namespace WordProof\Wordpress\Exceptions;
+namespace WordProof\SDK\Exceptions;
 
 use Exception;
 
 class ValidationException extends Exception
 {
-    
+
 }

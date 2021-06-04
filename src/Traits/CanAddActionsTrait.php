@@ -1,10 +1,8 @@
 <?php
 
+namespace WordProof\SDK\Traits;
 
-namespace WordProof\Wordpress\Traits;
-
-
-trait CanAddActions
+trait CanAddActionsTrait
 {
     public function add_action($action, $handler, $priority = 10, $accepted_args = 1)
     {

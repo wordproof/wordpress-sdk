@@ -1,15 +1,15 @@
 <?php
 
 
-namespace WordProof\Wordpress\Tests;
+namespace WordProof\SDK\Tests;
 
 
-use WordProof\Wordpress\Support\Template;
-use WordProof\Wordpress\WordProofTimestamp;
+use WordProof\SDK\Support\Template;
+use WordProof\SDK\WordProofTimestamp;
 
 class LoadTemplateTest extends TestCase
 {
-    public function testFileLoadedSuccessfully()
+    public function testRenderedSuccessfully()
     {
         $path = WordProofTimestamp::getRootDir();
         $path = $path . "/tests/testfiles/resources";
@@ -21,9 +21,9 @@ class LoadTemplateTest extends TestCase
         ]);
         
         $content = Template::render('about.html', [
-            'title' => 'Home Page',
-            'colors' => ['red','blue','green']
+            'title' => 'Home Page'
         ]);
-        ray($content);
+        
+        $this->assertStringContainsString('Home Page', $content);
     }
 }

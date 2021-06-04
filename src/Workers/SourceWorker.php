@@ -1,12 +1,12 @@
 <?php
 
+namespace WordProof\SDK\Workers;
 
-namespace WordProof\Wordpress\Workers;
+use WordProof\SDK\Abstracts\AbstractBaseWorker;
+use WordProof\SDK\Entities\Source;
+use WordProof\SDK\Support\Template;
 
-
-use WordProof\Wordpress\Support\Template;
-
-class SourceWorker extends BaseWorker
+class SourceWorker extends AbstractBaseWorker
 {
     public function registerHooks()
     {
@@ -16,7 +16,7 @@ class SourceWorker extends BaseWorker
     
     public function handlerTokensReceived()
     {
-        $source = $this->wordProofTimestamp->makeSource([
+        $source = $this->wordProofTimestamp->make()->source([
             'url'         => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain'),
             'webhook_url' => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
             'type'        => 'wordpress',
@@ -26,6 +26,9 @@ class SourceWorker extends BaseWorker
         do_action('wordproof_got_source', $source);
     }
     
+    /**
+     * @param Source $source
+     */
     public function handlerGotSource($source)
     {
         $isAdded = update_option('wordproof_source', $source);
