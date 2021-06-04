@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Plugs;
 
+use WordProof\SDK\Helpers\PostMeta;
 use WordProofTimestamp\includes\Controller\SchemaController;
 
 class CertificatePlug
@@ -11,13 +12,16 @@ class CertificatePlug
      */
     public function head()
     {
-        if (!$this->allowed()) {
+        if (!$this->show())
             return;
-        }
-        
+    
         global $post;
         
+        $schema = "\n" . '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
+        $schema .= PostMeta::get($post->ID, 'wordproof_schema');
+        $schema .= "</script>" . "\n";
         
+        echo $schema;
     }
     
     /**
@@ -25,16 +29,23 @@ class CertificatePlug
      */
     public function certificateTag($content)
     {
-        if (!$this->allowed()) {
+        if (!$this->show())
             return $content;
-        }
         
-        
-        
+        return $content;
+    
     }
     
-    private function allowed(): bool
+    private function show(): bool
     {
-        return is_singular && is_main_query();
+        if (!is_singular)
+            return false;
+
+        if (!is_main_query())
+            return false;
+    
+        global $post;
+        return PostMeta::has($post->ID, 'wordproof_schema');
     }
+
 }
