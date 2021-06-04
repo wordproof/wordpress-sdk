@@ -48,7 +48,6 @@ class Authentication
         $response = json_decode(self::post('/api/wordpress-sdk/token', $data));
         
         $accessToken =  $response->access_token;
-        ray($response)->blue();
         update_option('wordproof_access_token', $accessToken);
         
         $data = [
@@ -58,6 +57,16 @@ class Authentication
         
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
         update_option('wordproof_source_id', $response->source_id);
+    
+        nocache_headers();
+        return wp_safe_redirect(admin_url('admin.php?page=wordproof-clara'));
+    }
+    
+    public static function isValidRequest(\WP_REST_Request $request) {
+        $hashedToken = hash('sha256', get_option('wordproof_access_token'));
+        $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
+    
+        return $request->get_header('signature') === $hmac;
     }
     
     private static function getCallbackUrl()
