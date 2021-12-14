@@ -2,7 +2,7 @@
 
 name: Notify about new version
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -22,15 +22,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
-      
+
       - name: Get tag
         id: tag
         uses: dawidd6/action-get-tag@v1
-        
-      - name: Telegram Notify
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          args: Wordpress SDK; New version ${{steps.tag.outputs.tag}} published.
+
+#      - name: Telegram Notify
+#        uses: appleboy/telegram-action@master
+#        with:
+#          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+#          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+#          args: WordPress SDK; New version ${{steps.tag.outputs.tag}} published.
 
