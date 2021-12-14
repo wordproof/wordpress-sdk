@@ -5,13 +5,13 @@ namespace WordProof\SDK\Tests;
 
 
 use WordProof\SDK\Support\Template;
-use WordProof\SDK\WordProofTimestamp;
+use WordProof\SDK\WordProofSDK;
 
 class LoadTemplateTest extends TestCase
 {
     public function testRenderedSuccessfully()
     {
-        $path = WordProofTimestamp::getRootDir();
+        $path = WordProofSDK::getRootDir();
         $path = $path . "/tests/testfiles/resources";
         
         Template::setOptions([

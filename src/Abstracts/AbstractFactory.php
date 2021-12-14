@@ -2,9 +2,9 @@
 
 namespace WordProof\SDK\Abstracts;
 
-use WordProof\SDK\Traits\ReceiveWordProofTimestampTrait;
+use WordProof\SDK\Traits\ReceiveWordProofSDKTrait;
 
 abstract class AbstractFactory
 {
-    use ReceiveWordProofTimestampTrait;
+    use ReceiveWordProofSDKTrait;
 }

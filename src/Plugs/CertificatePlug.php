@@ -3,7 +3,7 @@
 namespace WordProof\SDK\Plugs;
 
 use WordProof\SDK\Helpers\PostMeta;
-use WordProofTimestamp\includes\Controller\SchemaController;
+use WordProofSDK\includes\Controller\SchemaController;
 
 class CertificatePlug
 {
@@ -36,9 +36,9 @@ class CertificatePlug
     
     }
     
-    private function show(): bool
+    private function show()
     {
-        if (!is_singular)
+        if (!is_singular())
             return false;
 
         if (!is_main_query())

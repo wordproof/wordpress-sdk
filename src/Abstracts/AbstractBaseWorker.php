@@ -3,9 +3,9 @@
 namespace WordProof\SDK\Abstracts;
 
 use WordProof\SDK\Contracts\WorkerInterface;
-use WordProof\SDK\Traits\ReceiveWordProofTimestampTrait;
+use WordProof\SDK\Traits\ReceiveWordProofSDKTrait;
 
 abstract class AbstractBaseWorker implements WorkerInterface
 {
-    use ReceiveWordProofTimestampTrait;
+    use ReceiveWordProofSDKTrait;
 }

@@ -2,55 +2,52 @@
 
 namespace WordProof\SDK;
 
-use Throwable;
 use WordProof\SDK\Plugs\ApiPlug;
 use WordProof\SDK\Plugs\AuthenticationPlug;
 use WordProof\SDK\Plugs\CertificatePlug;
 use WordProof\SDK\Plugs\TimestampPlug;
 use WordProof\SDK\Support\Loader;
 
-class WordProofTimestamp
+class WordProofSDK
 {
-    
     /**
      * @var Loader
      */
     private $loader;
     
     /**
-     * WordProofTimestamp constructor.
-     * @throws Throwable
+     * WordProofSDK constructor.
+     * @throws \Exception
      */
     public function __construct()
     {
         $this->loader = new Loader();
-    
+        
         if (!headers_sent() && !session_id())
             session_start();
         
         $this->constants();
         $this->authentication();
         $this->api();
-        $this->certificate();
         $this->timestamp();
         
         $this->loader->run();
     }
     
-    public function constants()
+    private function constants()
     {
         define('WORDPROOF_URL', 'https://staging.wordproof.com');
         define('WORDPROOF_CLIENT', 77);
     }
     
-    public function authentication()
+    private function authentication()
     {
         $class = new AuthenticationPlug();
         
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
     }
     
-    public function api()
+    private function api()
     {
         $class = new ApiPlug();
         
@@ -65,12 +62,11 @@ class WordProofTimestamp
         $this->loader->add_filter('the_content', $class, 'certificateTag');
     }
     
-    public function timestamp()
+    private function timestamp()
     {
         $class = new TimestampPlug();
         
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
     }
-    
     
 }

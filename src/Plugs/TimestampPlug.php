@@ -4,7 +4,6 @@ namespace WordProof\SDK\Plugs;
 
 use WordProof\SDK\Requests\TimestampRequest;
 use WordProof\SDK\Helpers\PostMeta;
-use WordProofTimestamp\includes\Controller\SchemaController;
 
 class TimestampPlug
 {
