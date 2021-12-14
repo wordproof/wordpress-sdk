@@ -29,26 +29,25 @@ class WordProofSDK
         $this->constants();
         $this->authentication();
         $this->api();
-        $this->certificate();
         $this->timestamp();
         
         $this->loader->run();
     }
     
-    public function constants()
+    private function constants()
     {
         define('WORDPROOF_URL', 'https://staging.wordproof.com');
         define('WORDPROOF_CLIENT', 77);
     }
     
-    public function authentication()
+    private function authentication()
     {
         $class = new AuthenticationPlug();
         
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
     }
     
-    public function api()
+    private function api()
     {
         $class = new ApiPlug();
         
@@ -63,7 +62,7 @@ class WordProofSDK
         $this->loader->add_filter('the_content', $class, 'certificateTag');
     }
     
-    public function timestamp()
+    private function timestamp()
     {
         $class = new TimestampPlug();
         
