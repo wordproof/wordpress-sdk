@@ -3,7 +3,6 @@
 namespace WordProof\SDK\Traits;
 
 use Exception;
-use Throwable;
 use WordProof\SDK\Exceptions\ValidationException;
 use WordProof\SDK\Vendor\Nyholm\Psr7\Request;
 use WordProof\SDK\Vendor\WordProof\ApiClient\WordProofApi;
@@ -23,7 +22,7 @@ trait CanMakeRequestTrait
     /**
      * @param string $token
      * @return self
-     * @throws Throwable
+     * @throws Exception
      */
     public function authenticate($token = "")
     {
@@ -50,7 +49,7 @@ trait CanMakeRequestTrait
      * @return mixed
      * @throws Exception
      */
-    public function send(string $method, string $url, $data = [], $headers = [])
+    public function send($method, $url, $data = [], $headers = [])
     {
         if ($this->headers) {
             $headers = array_merge($this->headers, $headers);

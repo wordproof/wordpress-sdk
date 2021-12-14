@@ -3,7 +3,7 @@
 namespace WordProof\SDK\Plugs;
 
 use WordProof\SDK\Helpers\PostMeta;
-use WordProofTimestamp\includes\Controller\SchemaController;
+use WordProofSDK\includes\Controller\SchemaController;
 
 class CertificatePlug
 {

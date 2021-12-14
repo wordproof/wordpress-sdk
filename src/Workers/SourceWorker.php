@@ -16,9 +16,9 @@ class SourceWorker extends AbstractBaseWorker
     
     public function handlerTokensReceived()
     {
-        $source = $this->wordProofTimestamp->make()->source([
-            'url'         => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain'),
-            'webhook_url' => $this->wordProofTimestamp->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
+        $source = $this->wordProofSDK->make()->source([
+            'url'         => $this->wordProofSDK->settings()->getSetting('wordpress_domain'),
+            'webhook_url' => $this->wordProofSDK->settings()->getSetting('wordpress_domain') . '/wp-admin/admin-ajax.php?action=wordproof_webhook_handle',
             'type'        => 'wordpress',
             'blockchain_key'  => 'eos_free',
         ]);
