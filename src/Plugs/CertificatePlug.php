@@ -36,9 +36,9 @@ class CertificatePlug
     
     }
     
-    private function show(): bool
+    private function show()
     {
-        if (!is_singular)
+        if (!is_singular())
             return false;
 
         if (!is_main_query())

@@ -20,7 +20,6 @@ class ApiPlug
             'methods'  => 'POST',
             'callback' => [$this, 'webhook'],
             'permission_callback' => function () { return true; }
-
         ]);
         
         register_rest_route('wordproof/v1', '/posts/(?P<id>\d+)/hashinput', [
