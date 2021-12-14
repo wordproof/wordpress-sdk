@@ -19,14 +19,14 @@ class WordProofSDK
      * WordProofSDK constructor.
      * @throws \Exception
      */
-    public function __construct($production = true)
+    public function __construct()
     {
         $this->loader = new Loader();
         
         if (!headers_sent() && !session_id())
             session_start();
         
-        $this->constants($production);
+        $this->constants();
         $this->authentication();
         $this->api();
         $this->certificate();
@@ -35,15 +35,10 @@ class WordProofSDK
         $this->loader->run();
     }
     
-    public function constants($production)
+    public function constants()
     {
-        if ($production) {
-            define('WORDPROOF_URL', 'https://my.wordproof.com');
-            define('WORDPROOF_CLIENT', 0);
-        } else {
-            define('WORDPROOF_URL', 'https://staging.wordproof.com');
-            define('WORDPROOF_CLIENT', 77);
-        }
+        define('WORDPROOF_URL', 'https://staging.wordproof.com');
+        define('WORDPROOF_CLIENT', 77);
     }
     
     public function authentication()
