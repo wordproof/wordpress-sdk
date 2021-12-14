@@ -13,17 +13,26 @@ class ApiPlug
         register_rest_route('wordproof/v1', '/oauth/callback', [
             'methods'  => 'GET',
             'callback' => [$this, 'oauthCallback'],
+            'permission_callback' => function () { return true; }
         ]);
         
         register_rest_route('wordproof/v1', '/webhook', [
             'methods'  => 'POST',
             'callback' => [$this, 'webhook'],
+            'permission_callback' => function () { return true; }
+
         ]);
         
         register_rest_route('wordproof/v1', '/posts/(?P<id>\d+)/hashinput', [
             'methods'  => 'GET',
             'callback' => [$this, 'hashInput'],
+            'permission_callback' => [$this, 'hashInputPermission'],
         ]);
+    }
+    
+    public function hashInputPermission()
+    {
+       return current_user_can('publish_posts');
     }
     
     public function hashInput(\WP_REST_Request $request)
