@@ -8,7 +8,7 @@ use WordProof\SDK\Controllers\CertificateController;
 use WordProof\SDK\Controllers\TimestampController;
 use WordProof\SDK\Support\Loader;
 
-class WordProofSDK
+class WordPressSDK
 {
     /**
      * @var Loader
@@ -45,6 +45,10 @@ class WordProofSDK
         $class = new AuthenticationController();
         
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
+    
+        //Add hidden admin page that redirects to the WordProof login page.
+        $this->loader->add_action('admin_menu', $class, 'redirect_on_load_page');
+        $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirect_on_load');
     }
     
     private function api()
@@ -64,11 +68,12 @@ class WordProofSDK
     public function certificate()
     {
         $class = new CertificateController();
-        
+    
+        ray('with certificate');
+    
         $this->loader->add_action('wp_head', $class, 'head');
         $this->loader->add_filter('the_content', $class, 'certificateTag');
+        
+        return $this;
     }
-    
-
-    
 }
