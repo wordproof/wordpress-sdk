@@ -8,9 +8,13 @@ class Authentication
     {
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
+        $originalUrl = admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
         
         $_SESSION['wordproof_authorize_state'] = $state;
         $_SESSION['wordproof_authorize_code_verifier'] = $codeVerifier;
+        $_SESSION['wordproof_authorize_current_url'] = admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
+        
+        ray($state, $codeVerifier, $originalUrl);
         
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
@@ -32,6 +36,7 @@ class Authentication
     {
         $state = $_SESSION['wordproof_authorize_state'];
         $codeVerifier = $_SESSION['wordproof_authorize_code_verifier'];
+        $originalUrl = $_SESSION['wordproof_authorize_current_url'];
         
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
             throw new \Exception('WordProof: No state or code found');
@@ -59,7 +64,7 @@ class Authentication
         update_option('wordproof_source_id', $response->source_id);
     
         nocache_headers();
-        return wp_safe_redirect(admin_url('admin.php?page=wordproof-clara'));
+        return wp_safe_redirect($originalUrl);
     }
     
     public static function isValidRequest(\WP_REST_Request $request) {

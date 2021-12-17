@@ -1,11 +1,11 @@
 <?php
 
-namespace WordProof\SDK\Plugs;
+namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Requests\TimestampRequest;
 use WordProof\SDK\Helpers\PostMeta;
 
-class TimestampPlug
+class TimestampController
 {
 
     public function timestamp(int $postId)

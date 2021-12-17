@@ -1,11 +1,11 @@
 <?php
 
-namespace WordProof\SDK\Plugs;
+namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\PostMeta;
 use WordProofSDK\includes\Controller\SchemaController;
 
-class CertificatePlug
+class CertificateController
 {
     /**
      * Add scripts and schema
@@ -16,11 +16,17 @@ class CertificatePlug
             return;
     
         global $post;
-        
-        $schema = "\n" . '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
+    
+        $schema = "\n";
+        $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit/dist/uikit/uikit.esm.js"></script>';
+        $schema .= "\n";
+        $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit/dist//uikit/uikit.js"></script>';
+        $schema .= "\n";
+        $schema .= '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
         $schema .= PostMeta::get($post->ID, 'wordproof_schema');
-        $schema .= "</script>" . "\n";
-        
+        $schema .= "</script>";
+        $schema .= "\n";
+    
         echo $schema;
     }
     
@@ -30,7 +36,7 @@ class CertificatePlug
     public function certificateTag($content)
     {
         if (!$this->show())
-            return $content;
+            return $content . "\n" . "<w-certificate></w-certificate>";
         
         return $content;
     

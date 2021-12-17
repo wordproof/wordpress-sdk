@@ -5,13 +5,13 @@ namespace WordProof\SDK\Tests;
 
 
 use WordProof\SDK\Support\Template;
-use WordProof\SDK\WordProofSDK;
+use WordProof\SDK\WordPressSDK;
 
 class LoadTemplateTest extends TestCase
 {
     public function testRenderedSuccessfully()
     {
-        $path = WordProofSDK::getRootDir();
+        $path = WordPressSDK::getRootDir();
         $path = $path . "/tests/testfiles/resources";
         
         Template::setOptions([

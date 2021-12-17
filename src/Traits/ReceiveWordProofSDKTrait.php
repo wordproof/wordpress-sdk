@@ -2,13 +2,13 @@
 
 namespace WordProof\SDK\Traits;
 
-use WordProof\SDK\WordProofSDK;
+use WordProof\SDK\WordPressSDK;
 
 trait ReceiveWordProofSDKTrait
 {
     protected $wordProofSDK;
 
-    public function __construct(WordProofSDK $wordProofSDK)
+    public function __construct(WordPressSDK $wordProofSDK)
     {
         $this->wordProofSDK = $wordProofSDK;
     }
