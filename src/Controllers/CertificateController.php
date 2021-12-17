@@ -1,11 +1,11 @@
 <?php
 
-namespace WordProof\SDK\Plugs;
+namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\PostMeta;
 use WordProofSDK\includes\Controller\SchemaController;
 
-class CertificatePlug
+class CertificateController
 {
     /**
      * Add scripts and schema

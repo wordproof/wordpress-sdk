@@ -1,11 +1,11 @@
 <?php
 
-namespace WordProof\SDK\Plugs;
+namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\PostMeta;
 use WordProof\SDK\Support\Authentication;
 
-class ApiPlug
+class RestApiController
 {
     
     public function init()

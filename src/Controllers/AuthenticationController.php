@@ -1,10 +1,10 @@
 <?php
 
-namespace WordProof\SDK\Plugs;
+namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Support\Authentication;
 
-class AuthenticationPlug
+class AuthenticationController
 {
     public function __construct()
     {}

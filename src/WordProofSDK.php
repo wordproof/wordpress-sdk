@@ -2,10 +2,10 @@
 
 namespace WordProof\SDK;
 
-use WordProof\SDK\Plugs\ApiPlug;
-use WordProof\SDK\Plugs\AuthenticationPlug;
-use WordProof\SDK\Plugs\CertificatePlug;
-use WordProof\SDK\Plugs\TimestampPlug;
+use WordProof\SDK\Controllers\RestApiController;
+use WordProof\SDK\Controllers\AuthenticationController;
+use WordProof\SDK\Controllers\CertificateController;
+use WordProof\SDK\Controllers\TimestampController;
 use WordProof\SDK\Support\Loader;
 
 class WordProofSDK
@@ -42,31 +42,33 @@ class WordProofSDK
     
     private function authentication()
     {
-        $class = new AuthenticationPlug();
+        $class = new AuthenticationController();
         
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
     }
     
     private function api()
     {
-        $class = new ApiPlug();
+        $class = new RestApiController();
         
         $this->loader->add_action('rest_api_init', $class, 'init');
     }
     
+    private function timestamp()
+    {
+        $class = new TimestampController();
+        
+        $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
+    }
+    
     public function certificate()
     {
-        $class = new CertificatePlug();
+        $class = new CertificateController();
         
         $this->loader->add_action('wp_head', $class, 'head');
         $this->loader->add_filter('the_content', $class, 'certificateTag');
     }
     
-    private function timestamp()
-    {
-        $class = new TimestampPlug();
-        
-        $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
-    }
+
     
 }
