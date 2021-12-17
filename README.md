@@ -14,8 +14,8 @@ composer require wordproof/wordpress-sdk
 ```php
 
 //Initialize during load
-use WordProof\SDK\WordProofSDK;
-new \WordProof\SDK\WordProofSDK();
+use WordProof\SDK\WordPressSDK;
+new \WordProof\SDK\WordPressSDK();
 
 //Authenticate on staging.wordproof.com
 do_action('wordproof_authenticate');

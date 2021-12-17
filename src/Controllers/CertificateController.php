@@ -51,7 +51,7 @@ class CertificateController
             return false;
     
         global $post;
-        return PostMeta::has($post->ID, "wordproof_schema');
+        return PostMeta::has($post->ID, 'wordproof_schema');
     }
 
 }
