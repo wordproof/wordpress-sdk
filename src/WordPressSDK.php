@@ -36,8 +36,8 @@ class WordPressSDK
     
     private function constants()
     {
-        define('WORDPROOF_URL', 'https://staging.wordproof.com');
-        define('WORDPROOF_CLIENT', 77);
+        define('WORDPROOF_URL', 'https://myv2.test');
+        define('WORDPROOF_CLIENT', 3);
     }
     
     private function authentication()
@@ -47,8 +47,9 @@ class WordPressSDK
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
     
         //Add hidden admin page that redirects to the WordProof login page.
-        $this->loader->add_action('admin_menu', $class, 'redirect_on_load_page');
-        $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirect_on_load');
+        $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
+        $this->loader->add_action('admin_menu', $class, 'addSelfDestructPage');
+        $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
     }
     
     private function api()

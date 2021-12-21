@@ -4,7 +4,7 @@ namespace WordProof\SDK\Support;
 
 class Authentication
 {
-    public static function authorize()
+    public static function authorize($redirectUrl = null)
     {
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
@@ -12,7 +12,7 @@ class Authentication
         
         $_SESSION['wordproof_authorize_state'] = $state;
         $_SESSION['wordproof_authorize_code_verifier'] = $codeVerifier;
-        $_SESSION['wordproof_authorize_current_url'] = admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
+        $_SESSION['wordproof_authorize_current_url'] = $redirectUrl ?: admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
         
         ray($state, $codeVerifier, $originalUrl);
         
