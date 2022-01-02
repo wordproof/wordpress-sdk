@@ -3,6 +3,7 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\PostMeta;
+use WordProof\SDK\Helpers\Settings;
 use WordProofSDK\includes\Controller\SchemaController;
 
 class CertificateController
@@ -36,10 +37,15 @@ class CertificateController
     public function certificateTag($content)
     {
         if (!$this->show())
-            return $content . "\n" . "<w-certificate></w-certificate>";
+            return $content;
+        
+        $text = Settings::certificateLinkText();
+    
+        $content.= "\n" . "<w-certificate></w-certificate>";
+        $content.= "\n" . "<w-certificate-button text='" . $text . "'></w-certificate-button>";
+        $content.= "\n";
         
         return $content;
-    
     }
     
     private function show()
@@ -48,6 +54,9 @@ class CertificateController
             return false;
 
         if (!is_main_query())
+            return false;
+        
+        if (!Settings::showRevisions())
             return false;
     
         global $post;
