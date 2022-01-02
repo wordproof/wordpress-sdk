@@ -16,7 +16,7 @@ class PostMeta
         return apply_filters('wordproof_get_post_meta_value', $value);
     }
     
-    public static function has($postId, $key): bool
+    public static function has($postId, $key)
     {
         return boolval(self::get($postId, $key));
     }
