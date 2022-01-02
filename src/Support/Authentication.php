@@ -2,8 +2,13 @@
 
 namespace WordProof\SDK\Support;
 
+use WordProof\SDK\Helpers\SDK;
+use WordProof\SDK\WordPressSDK;
+
 class Authentication
 {
+    private static $callbackEndpoint = 'wordproof/v1/oauth/callback';
+    
     public static function authorize($redirectUrl = null)
     {
         $state = wp_generate_password(40, false);
@@ -27,6 +32,7 @@ class Authentication
             'state'                 => $state,
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
+            'partner'               => SDK::getPartner(),
         ];
         
         self::redirect('/wordpress-sdk/authorize', $data);
@@ -52,34 +58,42 @@ class Authentication
         
         $response = json_decode(self::post('/api/wordpress-sdk/token', $data));
         
-        $accessToken =  $response->access_token;
+        $accessToken = $response->access_token;
         update_option('wordproof_access_token', $accessToken);
         
         $data = [
-            'webhook_url' => get_rest_url(null, 'wordproof/v1/webhook'),
-            'url'         => preg_replace('#^https?://#', '', get_site_url()),
+            'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
+            'url'                  => preg_replace('#^https?://#', '', get_site_url()),
+            'available_post_types' => array_values(get_post_types(['public' => true]))
         ];
         
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
+        
         update_option('wordproof_source_id', $response->source_id);
-    
+        
         nocache_headers();
         return wp_safe_redirect($originalUrl);
     }
     
-    public static function isValidRequest(\WP_REST_Request $request) {
+    public static function isValidRequest(\WP_REST_Request $request)
+    {
         $hashedToken = hash('sha256', get_option('wordproof_access_token'));
         $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
-    
+        
         return $request->get_header('signature') === $hmac;
+    }
+    
+    public static function isAuthenticated()
+    {
+        return (get_option('wordproof_access_token', false) && get_option('wordproof_source_id', false));
     }
     
     private static function getCallbackUrl()
     {
-        return get_rest_url(null, 'wordproof/v1/oauth/callback');
+        return get_rest_url(null, self::$callbackEndpoint);
     }
     
-    private static function redirect($endpoint, $parameters)
+    public static function redirect($endpoint, $parameters)
     {
         $location = WORDPROOF_URL . $endpoint . '?' . http_build_query($parameters);
         header("Location: " . $location);
@@ -109,7 +123,6 @@ class Authentication
         
         $request = wp_remote_post($location, $options);
         $response = wp_remote_retrieve_body($request);
-        ray($response)->blue();
         return $response;
     }
 }
