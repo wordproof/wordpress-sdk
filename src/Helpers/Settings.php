@@ -31,6 +31,11 @@ class Settings
         return self::get('certificate_link_text') ?: '';
     }
     
+    public static function hideCertificateLink()
+    {
+        return self::get('hide_certificate_link') ?: false;
+    }
+    
     public static function selectedPostTypes()
     {
         return self::get('selected_post_types') ?: [];
