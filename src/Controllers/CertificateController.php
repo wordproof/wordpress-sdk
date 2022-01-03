@@ -40,8 +40,9 @@ class CertificateController
             return $content;
         
         $text = Settings::certificateLinkText();
+        $showRevisions = Settings::showRevisions();
     
-        $content.= "\n" . "<w-certificate></w-certificate>";
+        $content.= "\n" . "<w-certificate show-revisions='" . $showRevisions . "'></w-certificate>";
         $content.= "\n" . "<w-certificate-button text='" . $text . "'></w-certificate-button>";
         $content.= "\n";
         
@@ -56,7 +57,7 @@ class CertificateController
         if (!is_main_query())
             return false;
         
-        if (!Settings::showRevisions())
+        if (Settings::hideCertificateLink())
             return false;
     
         global $post;
