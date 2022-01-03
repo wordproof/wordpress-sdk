@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Support;
 
+use WordProof\SDK\Helpers\Config;
 use WordProof\SDK\Helpers\SDK;
 use WordProof\SDK\WordPressSDK;
 
@@ -25,7 +26,7 @@ class Authentication
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
         
         $data = [
-            'client_id'             => WORDPROOF_CLIENT,
+            'client_id'             => Config::client(),
             'redirect_uri'          => self::getCallbackUrl(),
             'response_type'         => 'code',
             'scope'                 => '',
@@ -50,7 +51,7 @@ class Authentication
         
         $data = [
             'grant_type'    => 'authorization_code',
-            'client_id'     => WORDPROOF_CLIENT,
+            'client_id'     => Config::client(),
             'redirect_uri'  => self::getCallbackUrl(),
             'code_verifier' => $codeVerifier,
             'code'          => $_REQUEST['code'],
@@ -95,13 +96,13 @@ class Authentication
     
     public static function redirect($endpoint, $parameters)
     {
-        $location = WORDPROOF_URL . $endpoint . '?' . http_build_query($parameters);
+        $location = Config::url() . $endpoint . '?' . http_build_query($parameters);
         header("Location: " . $location);
     }
     
     private static function post($endpoint, $body, $bearerToken = null)
     {
-        $location = WORDPROOF_URL . $endpoint;
+        $location = Config::url() . $endpoint;
         $body = wp_json_encode($body);
         
         $headers = [
