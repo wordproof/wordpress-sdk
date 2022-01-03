@@ -15,4 +15,13 @@ class SDK
         
         return null;
     }
+    public static function getEnvironment()
+    {
+        $sdk = WordPressSDK::getInstance();
+        
+        if ($sdk)
+            return $sdk->environment;
+        
+        return null;
+    }
 }

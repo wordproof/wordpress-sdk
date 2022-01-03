@@ -12,28 +12,45 @@ use WordProof\SDK\Support\Loader;
 
 class WordPressSDK
 {
-    
+    /**
+     * Loader responsible for the WordPress hooks
+     * @var Loader
+     */
     private $loader;
     
+    /**
+     * The partner used for displaying custom auth pages
+     * @var mixed|null
+     */
     public $partner = null;
     
-    private static $instance = null;
-    
+    /**
+     * The environment being used. development|staging|production
+     * @var mixed|string
+     */
+    public $environment = 'production';
     
     /**
-     * WordProofSDK constructor.
+     * @var null|WordPressSDK
+     */
+    private static $instance = null;
+    
+    /**
+     * WordPressSDK constructor.
      * @throws \Exception
      */
-    public function __construct($partner = null)
+    public function __construct($partner = null, $env = 'production')
     {
-        $this->loader = new Loader();
-        
         if (!headers_sent() && !session_id())
             session_start();
-        
+    
+        $this->loader = new Loader();
+    
         $this->partner = $partner;
         
-        $this->constants();
+        if ($env)
+            $this->environment = $env;
+        
         $this->authentication();
         $this->api();
         $this->timestamp();
@@ -45,19 +62,12 @@ class WordPressSDK
         $this->loader->run();
     }
     
-    public static function getInstance($partner = null)
+    public static function getInstance($partner = null, $env = null)
     {
         if (self::$instance == null)
-            self::$instance = new WordPressSDK($partner);
+            self::$instance = new WordPressSDK($partner, $env);
         
-        ray('returning instance');
         return self::$instance;
-    }
-    
-    private function constants()
-    {
-        define('WORDPROOF_URL', 'https://myv2.test');
-        define('WORDPROOF_CLIENT', 3);
     }
     
     private function authentication()
