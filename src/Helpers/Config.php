@@ -8,9 +8,15 @@ class Config
     {
         return self::get('url');
     }
+    
     public static function client()
     {
         return self::get('client');
+    }
+    
+    public static function sslVerify()
+    {
+        return SDK::getEnvironment() !== 'development';
     }
     
     public static function get($key)

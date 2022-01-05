@@ -4,16 +4,23 @@ namespace WordProof\SDK\Helpers;
 
 class Timestamp
 {
-    public static function shouldBeTimestamped(\WP_Post $post)
+    public static function shouldBeTimestamped(\WP_Post $post, $data)
     {
         if (!in_array($post->post_status, ['publish', 'inherit']))
             return false;
+        
+        if (self::hashInputExists($data)) {
+            ray('hash input exists already', $data);
+            return false;
+        }
         
         if (Settings::postTypeIsInSelectedPostTypes($post->post_type))
             return true;
 
         if (self::hasPostMetaOverrideSetToTrue($post))
             return true;
+        
+        ray('nope!');
         
         return false;
     }
@@ -33,7 +40,6 @@ class Timestamp
             } else {
                 $value = boolval($meta[$key]);
             }
-            ray($value);
             
             if (!$value)
                 continue;
@@ -42,5 +48,9 @@ class Timestamp
         }
         
         return false;
+    }
+    
+    private static function hashInputExists($data) {
+        return PostMeta::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
 }

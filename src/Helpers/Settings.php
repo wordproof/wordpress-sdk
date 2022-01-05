@@ -15,8 +15,12 @@ class Settings
     {
         $settings = get_option(self::$key);
         
-        if ($setting)
-            return $settings->$setting;
+        if ($setting) {
+            if (isset($settings->$setting))
+                return $settings->$setting;
+            
+            return null;
+        }
     
         return $settings;
     }
@@ -28,7 +32,7 @@ class Settings
     
     public static function certificateLinkText()
     {
-        return self::get('certificate_link_text') ?: '';
+        return self::get('certificate_link_text') ?: "View this content's Timestamp certificate";
     }
     
     public static function hideCertificateLink()
