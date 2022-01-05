@@ -43,13 +43,10 @@ class WordPressSDK
     {
         if (!headers_sent() && !session_id())
             session_start();
-    
-        $this->loader = new Loader();
-    
-        $this->partner = $partner;
         
-        if ($env)
-            $this->environment = $env;
+        $this->loader = new Loader();
+        $this->partner = $partner;
+        $this->environment = $env;
         
         $this->authentication();
         $this->api();
@@ -57,17 +54,22 @@ class WordPressSDK
         $this->settings();
         $this->postEditor();
         
-        ray('SDK: Constructed')->red();
-        
-        $this->loader->run();
+        return $this;
     }
     
-    public static function getInstance($partner = null, $env = null)
+    public static function getInstance($partner = null, $environment = null)
     {
-        if (self::$instance == null)
-            self::$instance = new WordPressSDK($partner, $env);
+        if (self::$instance === null)
+            self::$instance = new WordPressSDK($partner, $environment);
         
         return self::$instance;
+    }
+    
+    
+    public function initialize()
+    {
+        $this->loader->run();
+        return $this;
     }
     
     private function authentication()
@@ -75,8 +77,7 @@ class WordPressSDK
         $class = new AuthenticationController();
         
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
-    
-        //Add hidden admin page that redirects to the WordProof login page.
+        
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('admin_menu', $class, 'addSelfDestructPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
@@ -92,10 +93,10 @@ class WordPressSDK
     private function timestamp()
     {
         $class = new TimestampController();
-    
-        $this->loader->add_action( 'rest_after_insert_post', $class, 'timestampAfterRestApiRequest' );
-        $this->loader->add_action( 'wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2 );
-    
+        
+        $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
+        $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
+        
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
     }
     
@@ -104,11 +105,10 @@ class WordPressSDK
         $class = new SettingsController();
         
         $this->loader->add_action('wordproof_settings', $class, 'redirect');
-    
-        //Add hidden admin page that redirects to the WordProof login page.
+        
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-settings', $class, 'redirectOnLoad');
-    
+        
     }
     
     private function postEditor()
