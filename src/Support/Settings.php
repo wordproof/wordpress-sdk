@@ -17,9 +17,14 @@ class Settings
             return;
         
         $endpoint = "/sources/" . $sourceId . "/settings";
+        
+        if (SDK::getPartner() === 'yoast')
+            $endpoint = '/yoast/dashboard';
+        
         Authentication::redirect($endpoint, [
             'redirect_uri' => $redirectUrl,
-            'partner' => SDK::getPartner()
+            'partner' => SDK::getPartner(),
+            'source_id' => $sourceId
         ]);
     }
     
