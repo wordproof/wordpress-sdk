@@ -12,14 +12,15 @@ composer require wordproof/wordpress-sdk
 ## Usage
 
 ```php
-
-//Initialize during load
 use WordProof\SDK\WordPressSDK;
-new \WordProof\SDK\WordPressSDK();
 
-//Authenticate on staging.wordproof.com
+add_action('init', 'init_sdk');
+
+function init_sdk() {
+    WordPressSDK('your-partner-slug', 'staging')->getInstance()->certificate()->initialize();
+}
+
+//Use in different parts of your application.
 do_action('wordproof_authenticate');
-
-//Timestamp a post
-do_action('wordproof_timestamp', $postId);
+do_action('wordproof_timestamp', $post);
 ```
