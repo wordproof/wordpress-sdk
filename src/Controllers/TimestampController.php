@@ -4,40 +4,43 @@ namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\Config;
 use WordProof\SDK\Helpers\Timestamp;
-use WordProof\SDK\Requests\TimestampRequest;
+use WordProof\SDK\DataTransferObjects\TimestampData;
 use WordProof\SDK\Helpers\PostMeta;
 
 class TimestampController
 {
     
-    public function timestamp($postId)
+    public function timestamp($data)
     {
         $sourceId = get_option('wordproof_source_id');
         
-        $data = TimestampRequest::fromPostId($postId);
-        $this->post($postId, '/api/sources/' . $sourceId . '/timestamps', $data);
+        $this->post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
     }
     
     public function timestampAfterPostRequest($postId, $post)
     {
         if (\defined('REST_REQUEST') && \REST_REQUEST)
             return;
-        
-        if (!Timestamp::shouldBeTimestamped($post))
+    
+        $data = TimestampData::fromPost($post);
+    
+        if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
         ray('timestampAfterPostRequest');
-        $this->timestamp($post->ID);
+        $this->timestamp($data);
         
     }
     
     public function timestampAfterRestApiRequest($post)
     {
-        if (!Timestamp::shouldBeTimestamped($post))
+        $data = TimestampData::fromPost($post);
+        
+        if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
         ray('timestampAfterRestApiRequest');
-        $this->timestamp($post->ID);
+        $this->timestamp($data);
     }
     
     /**
@@ -68,9 +71,9 @@ class TimestampController
             'redirection' => 5,
             'blocking'    => true,
             'data_format' => 'body',
-            'sslverify'   => false //TODO remove
+            'sslverify'   => Config::sslVerify()
         ];
-        
+    
         $request = wp_remote_post($location, $options);
         
         $status = wp_remote_retrieve_response_code($request);
@@ -81,7 +84,9 @@ class TimestampController
         
         $response = json_decode(wp_remote_retrieve_body($request));
         
-        PostMeta::set($postId, 'wordproof_hash_input', $response->hash_input);
+        $key = '_wordproof_hash_input_' . $response->hash;
+        ray($key)->red();
+        PostMeta::update($postId, $key, $response->hash_input);
         
         return $response;
     }
