@@ -3,6 +3,7 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\PostMeta;
+use WordProof\SDK\Helpers\Schema;
 use WordProof\SDK\Helpers\Settings;
 use WordProof\SDK\Support\Authentication;
 
@@ -29,10 +30,12 @@ class RestApiController
             }
         ]);
         
-        register_rest_route(self::API_V1_NAMESPACE, '/posts/(?P<id>\d+)/hashinput', [
+        register_rest_route(self::API_V1_NAMESPACE, '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})', [
             'methods'             => 'GET',
             'callback'            => [$this, 'hashInput'],
-            'permission_callback' => [$this, 'canPublishPermission'],
+            'permission_callback' => function () {
+                return true;
+            },
         ]);
         
         register_rest_route(self::API_V1_NAMESPACE, '/settings', [
@@ -58,12 +61,12 @@ class RestApiController
     
     public function authentication()
     {
-        $data = [
+        $data = (object)[
             'is_authenticated' => Authentication::isAuthenticated(),
             'status'           => 200
         ];
         
-        return new \WP_REST_Response((object)$data, $data['status']);
+        return new \WP_REST_Response($data, $data->status);
     }
     
     public function canPublishPermission()
@@ -74,9 +77,11 @@ class RestApiController
     public function hashInput(\WP_REST_Request $request)
     {
         $data = $request->get_params();
-        $postId = intval($data['id']);
         
-        return get_post_meta($postId, 'wordproof_hash_input', true);
+        $postId = intval($data['id']);
+        $hash = sanitize_text_field($data['hash']);
+        
+        return PostMeta::get($postId, '_wordproof_hash_input_' . $hash);
     }
     
     public function oauthCallback()
@@ -108,8 +113,12 @@ class RestApiController
          */
         if (isset($response->uid) && isset($response->schema)) {
             $postId = intval($response->uid);
-            $schema = $response->schema;
-            PostMeta::set($postId, 'wordproof_schema', $schema);
+            
+            $blockchainTransaction = Schema::getBlockchainTransaction($response);
+            PostMeta::add($postId, '_wordproof_blockchain_transaction', $blockchainTransaction);
+            
+            $schema = Schema::getSchema($postId);
+            PostMeta::update($postId, '_wordproof_schema', $schema);
         }
         
     }
