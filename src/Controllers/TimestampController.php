@@ -27,7 +27,6 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
-        ray('timestampAfterPostRequest');
         $this->timestamp($data);
         
     }
@@ -39,7 +38,6 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
-        ray('timestampAfterRestApiRequest');
         $this->timestamp($data);
     }
     
@@ -85,7 +83,6 @@ class TimestampController
         $response = json_decode(wp_remote_retrieve_body($request));
         
         $key = '_wordproof_hash_input_' . $response->hash;
-        ray($key)->red();
         PostMeta::update($postId, $key, json_decode($response->hash_input));
         
         return $response;
