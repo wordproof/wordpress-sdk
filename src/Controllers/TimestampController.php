@@ -86,7 +86,7 @@ class TimestampController
         
         $key = '_wordproof_hash_input_' . $response->hash;
         ray($key)->red();
-        PostMeta::update($postId, $key, $response->hash_input);
+        PostMeta::update($postId, $key, json_decode($response->hash_input));
         
         return $response;
     }
