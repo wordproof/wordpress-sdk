@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Helpers\Api;
 use WordProof\SDK\Helpers\PostMeta;
 use WordProof\SDK\Helpers\Schema;
 use WordProof\SDK\Helpers\Settings;
@@ -10,11 +11,9 @@ use WordProof\SDK\Support\Authentication;
 class RestApiController
 {
     
-    const API_V1_NAMESPACE = 'wordproof/v1';
-    
     public function init()
     {
-        register_rest_route(self::API_V1_NAMESPACE, '/oauth/callback', [
+        register_rest_route(Api::getNamespace(), Api::endpoint('callback'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'oauthCallback'],
             'permission_callback' => function () {
@@ -22,7 +21,7 @@ class RestApiController
             }
         ]);
         
-        register_rest_route(self::API_V1_NAMESPACE, '/webhook', [
+        register_rest_route(Api::getNamespace(), Api::endpoint('webhook'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'webhook'],
             'permission_callback' => function () {
@@ -30,7 +29,7 @@ class RestApiController
             }
         ]);
         
-        register_rest_route(self::API_V1_NAMESPACE, '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})', [
+        register_rest_route(Api::getNamespace(), Api::endpoint('hashInput'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'hashInput'],
             'permission_callback' => function () {
@@ -38,13 +37,13 @@ class RestApiController
             },
         ]);
         
-        register_rest_route(self::API_V1_NAMESPACE, '/settings', [
+        register_rest_route(Api::getNamespace(), Api::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
         
-        register_rest_route(self::API_V1_NAMESPACE, '/authentication', [
+        register_rest_route(Api::getNamespace(), Api::endpoint('authentication'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'authentication'],
             'permission_callback' => [$this, 'canPublishPermission'],
@@ -81,7 +80,9 @@ class RestApiController
         $postId = intval($data['id']);
         $hash = sanitize_text_field($data['hash']);
         
-        return PostMeta::get($postId, '_wordproof_hash_input_' . $hash);
+        $hashInput = PostMeta::get($postId, '_wordproof_hash_input_' . $hash);
+        
+        return new \WP_REST_Response((object)$hashInput);
     }
     
     public function oauthCallback()
