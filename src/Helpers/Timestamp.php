@@ -10,7 +10,6 @@ class Timestamp
             return false;
         
         if (self::hashInputExists($data)) {
-            ray('hash input exists already', $data);
             return false;
         }
         
@@ -19,8 +18,6 @@ class Timestamp
 
         if (self::hasPostMetaOverrideSetToTrue($post))
             return true;
-        
-        ray('nope!');
         
         return false;
     }
