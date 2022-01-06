@@ -7,7 +7,7 @@ class Schema
     public static function getBlockchainTransaction($response)
     {
         $postId = $response->uid;
-        $hashLink = null;
+        $hashLink = Api::getRestRoute('hashInput', [$postId, $response->hash]);
         
         return [
             '@type' => 'BlockchainTransaction',
