@@ -4,19 +4,21 @@ namespace WordProof\SDK\Helpers;
 
 class PostMeta
 {
-    public static function set($postId, $key, $value)
+    public static function add($postId, $key, $value)
     {
-        $value = apply_filters('wordproof_update_post_meta_value', $value);
+        return add_post_meta($postId, $key, $value, false);
+    }
+    public static function update($postId, $key, $value)
+    {
         return update_post_meta($postId, $key, $value);
     }
     
-    public static function get($postId, $key)
+    public static function get($postId, $key, $single = true)
     {
-        $value = get_post_meta($postId, $key, true);
-        return apply_filters('wordproof_get_post_meta_value', $value);
+        return get_post_meta($postId, $key, $single);
     }
     
-    public static function has($postId, $key): bool
+    public static function has($postId, $key)
     {
         return boolval(self::get($postId, $key));
     }

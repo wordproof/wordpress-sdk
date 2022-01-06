@@ -9,13 +9,12 @@ class AuthenticationController
     public function __construct()
     {}
     
-    public function authenticate()
+    public function authenticate($redirectUrl = null)
     {
-        ray('SDK: authenticate');
-        return Authentication::authorize();
+        return Authentication::authorize($redirectUrl);
     }
     
-    public function redirect_on_load_page()
+    public function addRedirectPage()
     {
         add_submenu_page(
             null,
@@ -23,13 +22,30 @@ class AuthenticationController
             'WordProof Authenticate',
             'manage_options',
             'wordproof-redirect-authenticate',
-            [$this, 'redirect_on_load']
+            [$this, 'redirectOnLoad']
         );
-        ray('SDK: redirect_on_load');
     }
     
-    public function redirect_on_load() {
-        do_action('wordproof_authenticate');
+    public function addSelfDestructPage()
+    {
+        add_submenu_page(
+            null,
+            'WordProof After Authenticate',
+            'WordProof After Authenticate',
+            'manage_options',
+            'wordproof-close-after-redirect',
+            [$this, 'closeOnLoad']
+        );
+    }
+    
+    public function redirectOnLoad() {
+        do_action('wordproof_authenticate', admin_url('admin.php?page=wordproof-close-after-redirect'));
+    }
+    
+    public function closeOnLoad() {
+        echo '<script type="text/javascript">';
+        echo 'window.close();';
+        echo '</script>';
     }
     
 }

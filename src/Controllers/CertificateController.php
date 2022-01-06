@@ -3,6 +3,7 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\PostMeta;
+use WordProof\SDK\Helpers\Settings;
 use WordProofSDK\includes\Controller\SchemaController;
 
 class CertificateController
@@ -20,10 +21,10 @@ class CertificateController
         $schema = "\n";
         $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit/dist/uikit/uikit.esm.js"></script>';
         $schema .= "\n";
-        $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit/dist//uikit/uikit.js"></script>';
+        $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit/dist/uikit/uikit.js"></script>';
         $schema .= "\n";
         $schema .= '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
-        $schema .= PostMeta::get($post->ID, 'wordproof_schema');
+        $schema .= json_encode(PostMeta::get($post->ID, '_wordproof_schema'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $schema .= "</script>";
         $schema .= "\n";
     
@@ -36,10 +37,18 @@ class CertificateController
     public function certificateTag($content)
     {
         if (!$this->show())
-            return $content . "\n" . "<w-certificate></w-certificate>";
+            return $content;
+        
+        $text = Settings::certificateLinkText();
+        $showRevisions = Settings::showRevisions();
+    
+        $content.= "\n" . "<w-certificate debug='true' show-revisions='" . $showRevisions . "'>";
+        $content.= $text;
+//        $content.= "\n" . "<w-certificate-button>" . $text . "</w-certificate-button>";
+        $content.= "\n" . "</w-certificate>";
+        $content.= "\n";
         
         return $content;
-    
     }
     
     private function show()
@@ -49,9 +58,12 @@ class CertificateController
 
         if (!is_main_query())
             return false;
+        
+        if (Settings::hideCertificateLink())
+            return false;
     
         global $post;
-        return PostMeta::has($post->ID, 'wordproof_schema');
+        return PostMeta::has($post->ID, '_wordproof_schema');
     }
 
 }
