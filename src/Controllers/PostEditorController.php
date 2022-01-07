@@ -33,5 +33,6 @@ class PostEditorController
         //TODO Register own script
         wp_localize_script('yoast-seo-post-edit', 'wordproofSdk', $data);
         wp_localize_script('yoast-seo-post-edit-classic', 'wordproofSdk', $data);
+        wp_localize_script('yoast-seo-elementor', 'wordproofSdk', $data);
     }
 }
