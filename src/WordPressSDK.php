@@ -114,8 +114,9 @@ class WordPressSDK
     private function postEditor()
     {
         $class = new PostEditorController();
-        
-        $this->loader->add_action('admin_enqueue_scripts', $class, 'localizeScripts');
+    
+        $this->loader->add_action('admin_enqueue_scripts', $class, 'localizePostEditors', \PHP_INT_MAX);
+        $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'localizeElementor', \PHP_INT_MAX);
     }
     
     public function certificate()
