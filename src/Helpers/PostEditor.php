@@ -2,12 +2,29 @@
 
 namespace WordProof\SDK\Helpers;
 
+use WordProof\SDK\Support\Authentication;
+
 class PostEditor
 {
     public static function isPostEdit($page)
     {
         return $page === 'post.php'
             || $page === 'post-new.php';
+    }
+    
+    public static function getPostEditorData() {
+        $currentPostType = self::getCurrentPostType();
+        
+        return [
+            'data' => [
+                'is_authenticated'                  => Authentication::isAuthenticated(),
+                'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
+                'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
+                'settings'                          => Settings::get(),
+                'timestamp_current_post_type'       => Settings::postTypeIsInSelectedPostTypes($currentPostType),
+                'current_post_type'       => $currentPostType,
+            ],
+        ];
     }
     
     public static function getCurrentPostType()
