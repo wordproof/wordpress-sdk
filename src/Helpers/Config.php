@@ -42,7 +42,7 @@ class Config
             default:
                 return [
                     'url'    => 'https://my.wordproof.com',
-                    'client' => 77
+                    'client' => 79
                 ];
         }
     }
