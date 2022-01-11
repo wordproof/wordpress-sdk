@@ -43,6 +43,11 @@ class Authentication
         $codeVerifier = $_SESSION['wordproof_authorize_code_verifier'];
         $originalUrl = $_SESSION['wordproof_authorize_current_url'];
         
+        if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
+            nocache_headers();
+            return wp_safe_redirect($originalUrl);
+        }
+        
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
             throw new \Exception('WordProof: No state or code found');
         }
