@@ -37,12 +37,12 @@ class Config
             case 'staging':
                 return [
                     'url'    => 'https://staging.wordproof.com',
-                    'client' => 77
+                    'client' => 78
                 ];
             default:
                 return [
                     'url'    => 'https://my.wordproof.com',
-                    'client' => 77
+                    'client' => 79
                 ];
         }
     }
