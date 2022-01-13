@@ -87,6 +87,11 @@ class Authentication
         return $request->get_header('signature') === $hmac;
     }
     
+    public static function logout()
+    {
+        return delete_option('wordproof_access_token') && delete_option('wordproof_source_id');
+    }
+    
     public static function isAuthenticated()
     {
         return (get_option('wordproof_access_token', false) && get_option('wordproof_source_id', false));

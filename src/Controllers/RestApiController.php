@@ -104,6 +104,8 @@ class RestApiController
             switch ($response->type) {
                 case 'source_settings':
                     return Settings::set($response->data);
+                case 'logout':
+                    return Authentication::logout();
                 default:
                     break;
             }
