@@ -4,16 +4,16 @@ namespace WordProof\SDK\Helpers;
 
 class Settings
 {
-    private static $key = 'wordproof_settings';
+    private static $key = 'settings';
     
     public static function set($data)
     {
-        return update_option(self::$key, $data);
+        return Options::set(self::$key, $data);
     }
     
     public static function get($setting = null)
     {
-        $settings = get_option(self::$key);
+        $settings = Options::get(self::$key);
         
         if ($setting) {
             if (isset($settings->$setting))
@@ -23,6 +23,11 @@ class Settings
         }
     
         return $settings;
+    }
+    
+    public static function reset()
+    {
+        return Options::delete(self::$key);
     }
     
     public static function showRevisions()

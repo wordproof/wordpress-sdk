@@ -25,6 +25,8 @@ class Timestamp
     private static function hasPostMetaOverrideSetToTrue(\WP_Post $post) {
         
         $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['wordproof_timestamp']);
+        
+        //Do not use PostMeta helper
         $meta = get_post_meta($post->ID);
         
         foreach ($timestampablePostMetaKeys as $key) {
