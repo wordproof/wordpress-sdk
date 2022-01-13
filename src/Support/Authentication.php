@@ -3,8 +3,9 @@
 namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\Config;
+use WordProof\SDK\Helpers\Options;
+use WordProof\SDK\Helpers\Settings;
 use WordProof\SDK\Helpers\SDK;
-use WordProof\SDK\WordPressSDK;
 
 class Authentication
 {
@@ -63,7 +64,7 @@ class Authentication
         $response = json_decode(self::post('/api/wordpress-sdk/token', $data));
         
         $accessToken = $response->access_token;
-        update_option('wordproof_access_token', $accessToken);
+        Options::setAccessToken($accessToken);
         
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
@@ -73,7 +74,7 @@ class Authentication
         
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
         
-        update_option('wordproof_source_id', $response->source_id);
+        Options::setSourceId($response->source_id);
         
         nocache_headers();
         return wp_safe_redirect($originalUrl);
@@ -81,7 +82,7 @@ class Authentication
     
     public static function isValidRequest(\WP_REST_Request $request)
     {
-        $hashedToken = hash('sha256', get_option('wordproof_access_token'));
+        $hashedToken = hash('sha256', Options::accessToken());
         $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
         
         return $request->get_header('signature') === $hmac;
@@ -89,12 +90,13 @@ class Authentication
     
     public static function logout()
     {
-        return delete_option('wordproof_access_token') && delete_option('wordproof_source_id');
+        return Options::reset() && Settings::reset();
     }
     
     public static function isAuthenticated()
     {
-        return (get_option('wordproof_access_token', false) && get_option('wordproof_source_id', false));
+        $options = Options::all();
+        return $options->access_token && $options->source_id;
     }
     
     private static function getCallbackUrl()

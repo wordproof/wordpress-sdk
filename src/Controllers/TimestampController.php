@@ -3,6 +3,7 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\Config;
+use WordProof\SDK\Helpers\Options;
 use WordProof\SDK\Helpers\Timestamp;
 use WordProof\SDK\DataTransferObjects\TimestampData;
 use WordProof\SDK\Helpers\PostMeta;
@@ -12,7 +13,7 @@ class TimestampController
     
     public function timestamp($data)
     {
-        $sourceId = get_option('wordproof_source_id');
+        $sourceId = Options::sourceId();
         
         $this->post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
     }
@@ -54,7 +55,7 @@ class TimestampController
         $location = Config::url() . $endpoint;
         $body = wp_json_encode($body);
         
-        $accessToken = get_option('wordproof_access_token');
+        $accessToken = Options::accessToken();
         
         $headers = [
             'Content-Type'  => 'application/json',

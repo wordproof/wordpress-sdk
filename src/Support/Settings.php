@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Support;
 
+use WordProof\SDK\Helpers\Options;
 use WordProof\SDK\Helpers\SDK;
 
 class Settings
@@ -10,13 +11,13 @@ class Settings
     {
         if (!Authentication::isAuthenticated())
             return;
+    
+        $options = Options::all();
         
-        $sourceId = get_option('wordproof_source_id');
-        
-        if (!$sourceId)
+        if (!$options->source_id)
             return;
         
-        $endpoint = "/sources/" . $sourceId . "/settings";
+        $endpoint = "/sources/" . $options->source_id . "/settings";
         
         if (SDK::getPartner() === 'yoast')
             $endpoint = '/yoast/dashboard';
@@ -24,7 +25,8 @@ class Settings
         Authentication::redirect($endpoint, [
             'redirect_uri' => $redirectUrl,
             'partner' => SDK::getPartner(),
-            'source_id' => $sourceId
+            'source_id' => $options->source_id,
+            'access_token' => $options->access_token
         ]);
     }
     
