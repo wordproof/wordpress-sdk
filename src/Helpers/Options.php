@@ -9,7 +9,7 @@ class Options
     
     public static function set($key, $value)
     {
-        return update_option(self::prefix . $key, $value);
+        return update_option(self::$prefix . $key, $value);
     }
     
     public static function delete($key)

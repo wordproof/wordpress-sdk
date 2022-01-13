@@ -26,7 +26,7 @@ class Settings
             'redirect_uri' => $redirectUrl,
             'partner' => SDK::getPartner(),
             'source_id' => $options->source_id,
-            'access_token' => $options->access_token
+            'access_token_login' => $options->access_token
         ]);
     }
     
