@@ -31,7 +31,7 @@ class Config
         switch ($env) {
             case 'development':
                 return [
-                    'url'    => 'https://myv2.test',
+                    'url'    => 'https://mywordproof.eu.ngrok.io',
                     'client' => 3
                 ];
             case 'staging':
