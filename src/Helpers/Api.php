@@ -23,6 +23,9 @@ class Api
             'callback'       => [
                 'endpoint' => '/oauth/callback'
             ],
+            'timestamp'        => [
+                'endpoint' => '/posts/(?P<id>\d+)/timestamp'
+            ],
             'webhook'        => [
                 'endpoint' => '/webhook'
             ],
