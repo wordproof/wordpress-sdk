@@ -4,8 +4,8 @@ namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\Config;
 use WordProof\SDK\Helpers\Options;
-use WordProof\SDK\Helpers\Settings;
 use WordProof\SDK\Helpers\SDK;
+use WordProof\SDK\Helpers\TransientHelper;
 
 class Authentication
 {
@@ -16,10 +16,10 @@ class Authentication
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
         $originalUrl = admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
-        
-        $_SESSION['wordproof_authorize_state'] = $state;
-        $_SESSION['wordproof_authorize_code_verifier'] = $codeVerifier;
-        $_SESSION['wordproof_authorize_current_url'] = $redirectUrl ?: admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
+    
+        set_site_transient('wordproof_authorize_state', $state);
+        set_site_transient('wordproof_authorize_code_verifier', $codeVerifier);
+        set_site_transient('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
         
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
@@ -40,9 +40,9 @@ class Authentication
     
     public static function token()
     {
-        $state = $_SESSION['wordproof_authorize_state'];
-        $codeVerifier = $_SESSION['wordproof_authorize_code_verifier'];
-        $originalUrl = $_SESSION['wordproof_authorize_current_url'];
+        $state = TransientHelper::getOnce('wordproof_authorize_state');
+        $codeVerifier = TransientHelper::getOnce('wordproof_authorize_code_verifier');
+        $originalUrl = TransientHelper::getOnce('wordproof_authorize_current_url');
         
         if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
             nocache_headers();
@@ -62,41 +62,30 @@ class Authentication
         ];
         
         $response = json_decode(self::post('/api/wordpress-sdk/token', $data));
-        
-        $accessToken = $response->access_token;
+
+        if (isset($response->error) && $response->error === 'invalid_grant') {
+            //TODO
+        }
+
+        if (!isset($response->access_token)) {
+            throw new \Exception('No access token found');
+        }
+
+        $accessToken = sanitize_text_field($response->access_token);
         Options::setAccessToken($accessToken);
-        
+
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => preg_replace('#^https?://#', '', get_site_url()),
             'available_post_types' => array_values(get_post_types(['public' => true]))
         ];
-        
+
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
-        
-        Options::setSourceId($response->source_id);
-        
+
+        Options::setSourceId(intval($response->source_id));
+
         nocache_headers();
         return wp_safe_redirect($originalUrl);
-    }
-    
-    public static function isValidRequest(\WP_REST_Request $request)
-    {
-        $hashedToken = hash('sha256', Options::accessToken());
-        $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
-        
-        return $request->get_header('signature') === $hmac;
-    }
-    
-    public static function logout()
-    {
-        return Options::reset() && Settings::reset();
-    }
-    
-    public static function isAuthenticated()
-    {
-        $options = Options::all();
-        return $options->access_token && $options->source_id;
     }
     
     private static function getCallbackUrl()
@@ -133,7 +122,6 @@ class Authentication
         ];
         
         $request = wp_remote_post($location, $options);
-        $response = wp_remote_retrieve_body($request);
-        return $response;
+        return wp_remote_retrieve_body($request);
     }
 }
