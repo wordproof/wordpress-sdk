@@ -16,7 +16,12 @@ class Config
     
     public static function sslVerify()
     {
-        return SDK::getEnvironment() !== 'development';
+        return ! Config::development();
+    }
+    
+    public static function development()
+    {
+        return SDK::getEnvironment() === 'development';
     }
     
     public static function get($key)
