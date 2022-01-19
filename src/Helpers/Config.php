@@ -27,12 +27,17 @@ class Config
     private static function values()
     {
         $env = SDK::getEnvironment();
-    
+        
         switch ($env) {
             case 'development':
                 return [
-                    'url'    => 'https://mywordproof.eu.ngrok.io',
+                    'url'    => 'https://myv2.test',
                     'client' => 3
+                ];
+            case 'development-ngrok':
+                return [
+                    'url'    => 'https://mywordproof.eu.ngrok.io',
+                    'client' => 4
                 ];
             case 'staging':
                 return [
