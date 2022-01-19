@@ -21,6 +21,8 @@ class Authentication
         set_site_transient('wordproof_authorize_code_verifier', $codeVerifier);
         set_site_transient('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
         
+        ray($state, $codeVerifier)->blue();
+        
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
         
@@ -48,7 +50,9 @@ class Authentication
             nocache_headers();
             return wp_safe_redirect($originalUrl);
         }
-        
+    
+        ray($state, $codeVerifier, $_REQUEST['state'], $_REQUEST['code'])->blue();
+    
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
             throw new \Exception('WordProof: No state or code found');
         }
