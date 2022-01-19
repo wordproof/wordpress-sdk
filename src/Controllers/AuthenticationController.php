@@ -6,14 +6,19 @@ use WordProof\SDK\Support\Authentication;
 
 class AuthenticationController
 {
-    public function __construct()
-    {}
-    
+    /**
+     * Triggers the authentication flow.
+     *
+     * @param null $redirectUrl
+     */
     public function authenticate($redirectUrl = null)
     {
         return Authentication::authorize($redirectUrl);
     }
     
+    /**
+     * Adds admin page that redirects to the authentication flow.
+     */
     public function addRedirectPage()
     {
         add_submenu_page(
@@ -22,10 +27,25 @@ class AuthenticationController
             'WordProof Authenticate',
             'manage_options',
             'wordproof-redirect-authenticate',
-            [$this, 'redirectOnLoad']
+            [$this, 'redirectPageContent']
         );
     }
     
+    /**
+     * The content for the redirect page.
+     */
+    public function redirectPageContent() {}
+    
+    /**
+     * Gets triggered by the 'load-admin_page_' hook of the redirect page
+     */
+    public function redirectOnLoad() {
+        do_action('wordproof_authenticate', admin_url('admin.php?page=wordproof-close-after-redirect'));
+    }
+    
+    /**
+     * Adds self destruct admin page.
+     */
     public function addSelfDestructPage()
     {
         add_submenu_page(
@@ -34,18 +54,16 @@ class AuthenticationController
             'WordProof After Authenticate',
             'manage_options',
             'wordproof-close-after-redirect',
-            [$this, 'closeOnLoad']
+            [$this, 'closeOnLoadContent']
         );
     }
     
-    public function redirectOnLoad() {
-        do_action('wordproof_authenticate', admin_url('admin.php?page=wordproof-close-after-redirect'));
-    }
-    
-    public function closeOnLoad() {
+    /**
+     * Adds a script to the loaded page to close on load.
+     */
+    public function closeOnLoadContent() {
         echo '<script type="text/javascript">';
         echo 'window.close();';
         echo '</script>';
     }
-    
 }
