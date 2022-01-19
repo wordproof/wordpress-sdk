@@ -12,8 +12,8 @@ class TimestampController
 {
     public static function timestamp($postId)
     {
-        $post = get_post($postId);
-        $data = TimestampData::fromPost($postId);
+        $post = get_post(intval($postId));
+        $data = TimestampData::fromPost($post);
     
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;

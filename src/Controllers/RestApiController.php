@@ -86,7 +86,7 @@ class RestApiController
         
         $postId = intval($data['id']);
         
-        return do_action('wordproof_timestamp', $postId);
+        return TimestampController::timestamp($postId);
     }
     
     public function hashInput(\WP_REST_Request $request)
