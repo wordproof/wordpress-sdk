@@ -6,6 +6,7 @@ use WordProof\SDK\Helpers\Api;
 use WordProof\SDK\Helpers\PostMeta;
 use WordProof\SDK\Helpers\Schema;
 use WordProof\SDK\Helpers\Settings;
+use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Support\Authentication;
 
 class RestApiController
@@ -87,12 +88,12 @@ class RestApiController
     
     public function oauthCallback()
     {
-        Authentication::token();
+        return Authentication::token();
     }
     
     public function webhook(\WP_REST_Request $request)
     {
-        if (!Authentication::isValidRequest($request))
+        if (!AuthenticationHelper::isValidWebhookRequest($request))
             return null;
         
         $response = json_decode($request->get_body());
