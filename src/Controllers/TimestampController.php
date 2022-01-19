@@ -10,12 +10,15 @@ use WordProof\SDK\Helpers\PostMeta;
 
 class TimestampController
 {
-    
-    public function timestamp($data)
+    public static function timestamp($postId)
     {
-        $sourceId = Options::sourceId();
+        $post = get_post($postId);
+        $data = TimestampData::fromPost($postId);
+    
+        if (!Timestamp::shouldBeTimestamped($post, $data))
+            return;
         
-        $this->post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
+        return self::postTimestamp($data);
     }
     
     public function timestampAfterPostRequest($postId, $post)
@@ -27,9 +30,8 @@ class TimestampController
     
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
-        
-        $this->timestamp($data);
-        
+    
+        return self::postTimestamp($data);
     }
     
     public function timestampAfterRestApiRequest($post)
@@ -39,18 +41,29 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
-        $this->timestamp($data);
+        return self::postTimestamp($data);
     }
+    
+    /**
+     * @param array $data
+     */
+    private static function postTimestamp($data)
+    {
+        $sourceId = Options::sourceId();
+        
+        return self::post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
+    }
+    
     
     /**
      * @param int $postId
      * @param string $endpoint
      * @param array $body
-     * @return mixed|void
+     * @return void
      *
      * TODO: Move
      */
-    private function post($postId, $endpoint, $body = [])
+    private static function post($postId, $endpoint, $body = [])
     {
         $location = Config::url() . $endpoint;
         $body = wp_json_encode($body);

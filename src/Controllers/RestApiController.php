@@ -38,6 +38,12 @@ class RestApiController
             },
         ]);
         
+        register_rest_route(Api::getNamespace(), Api::endpoint('timestamp'), [
+            'methods'             => 'POST',
+            'callback'            => [$this, 'timestamp'],
+            'permission_callback' => [$this, 'canPublishPermission'],
+        ]);
+        
         register_rest_route(Api::getNamespace(), Api::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
@@ -72,6 +78,15 @@ class RestApiController
     public function canPublishPermission()
     {
         return current_user_can('publish_posts') && current_user_can('publish_pages');
+    }
+    
+    public function timestamp(\WP_REST_Request $request)
+    {
+        $data = $request->get_params();
+        
+        $postId = intval($data['id']);
+        
+        return do_action('wordproof_timestamp', $postId);
     }
     
     public function hashInput(\WP_REST_Request $request)
