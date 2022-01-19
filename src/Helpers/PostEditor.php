@@ -13,6 +13,8 @@ class PostEditor
     }
     
     public static function getPostEditorData() {
+        global $post;
+        
         $currentPostType = self::getCurrentPostType();
         
         return [
@@ -23,6 +25,7 @@ class PostEditor
                 'settings'                          => Settings::get(),
                 'timestamp_current_post_type'       => Settings::postTypeIsInSelectedPostTypes($currentPostType),
                 'current_post_type'       => $currentPostType,
+                'timestamp_url' => Api::getRestRoute('timestamp', [$post->ID])
             ],
         ];
     }
