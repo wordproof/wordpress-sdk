@@ -22,13 +22,19 @@ class SettingsController
             'WordProof Settings',
             'manage_options',
             'wordproof-redirect-settings',
-            [$this, 'redirectOnLoad']
+            [$this, 'redirectPageContent']
         );
     }
     
+    /**
+     * The content for the redirect page.
+     */
+    public function redirectPageContent() {}
+    
+    /**
+     * Gets triggered by the 'load-admin_page_' hook of the redirect page
+     */
     public function redirectOnLoad() {
         do_action('wordproof_settings', admin_url('admin.php?page=wordproof-close-after-redirect'));
     }
-
-    
 }

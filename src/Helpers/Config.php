@@ -16,7 +16,12 @@ class Config
     
     public static function sslVerify()
     {
-        return SDK::getEnvironment() !== 'development';
+        return ! Config::development();
+    }
+    
+    public static function development()
+    {
+        return SDK::getEnvironment() === 'development';
     }
     
     public static function get($key)
@@ -27,12 +32,17 @@ class Config
     private static function values()
     {
         $env = SDK::getEnvironment();
-    
+        
         switch ($env) {
             case 'development':
                 return [
                     'url'    => 'https://myv2.test',
                     'client' => 3
+                ];
+            case 'development-ngrok':
+                return [
+                    'url'    => 'https://mywordproof.eu.ngrok.io',
+                    'client' => 4
                 ];
             case 'staging':
                 return [

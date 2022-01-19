@@ -63,7 +63,10 @@ class CertificateController
             return false;
     
         global $post;
-        return PostMeta::has($post->ID, '_wordproof_schema');
+        return apply_filters('wordproof_timestamp_show_certificate',
+            PostMeta::has($post->ID, '_wordproof_schema'),
+            $post
+        );
     }
 
 }
