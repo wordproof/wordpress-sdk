@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Support;
 
+use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Helpers\Options;
 use WordProof\SDK\Helpers\SDK;
 
@@ -9,7 +10,7 @@ class Settings
 {
     public static function redirect($redirectUrl = null)
     {
-        if (!Authentication::isAuthenticated())
+        if (!AuthenticationHelper::isAuthenticated())
             return;
     
         $options = Options::all();

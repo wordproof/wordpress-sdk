@@ -17,7 +17,7 @@ class PostEditor
         
         return [
             'data' => [
-                'is_authenticated'                  => Authentication::isAuthenticated(),
+                'is_authenticated'                  => AuthenticationHelper::isAuthenticated(),
                 'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
                 'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
                 'settings'                          => Settings::get(),

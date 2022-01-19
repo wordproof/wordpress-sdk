@@ -62,7 +62,7 @@ class RestApiController
     public function authentication()
     {
         $data = (object)[
-            'is_authenticated' => Authentication::isAuthenticated(),
+            'is_authenticated' => AuthenticationHelper::isAuthenticated(),
             'status'           => 200
         ];
         
@@ -106,7 +106,7 @@ class RestApiController
                 case 'source_settings':
                     return Settings::set($response->data);
                 case 'logout':
-                    return Authentication::logout();
+                    return AuthenticationHelper::logout();
                 default:
                     break;
             }
