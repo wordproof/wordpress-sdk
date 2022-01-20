@@ -11,12 +11,12 @@ class Settings
     public static function redirect($redirectUrl = null)
     {
         if (!AuthenticationHelper::isAuthenticated())
-            return;
+            return false;
     
         $options = Options::all();
         
         if (!$options->source_id)
-            return;
+            return false;
         
         $endpoint = "/sources/" . $options->source_id . "/settings";
         
