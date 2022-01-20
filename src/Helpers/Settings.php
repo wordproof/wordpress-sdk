@@ -11,7 +11,7 @@ class Settings
         return Options::set(self::$key, $data);
     }
     
-    public static function get($setting = null)
+    public static function get($setting = null, $default = null)
     {
         $settings = Options::get(self::$key);
         
@@ -19,7 +19,7 @@ class Settings
             if (isset($settings->$setting))
                 return $settings->$setting;
             
-            return null;
+            return $default;
         }
     
         return $settings;
@@ -32,22 +32,22 @@ class Settings
     
     public static function showRevisions()
     {
-        return self::get('show_revisions') ?: true;
+        return self::get('show_revisions', true);
     }
     
     public static function certificateLinkText()
     {
-        return self::get('certificate_link_text') ?: "View this content's Timestamp certificate";
+        return self::get('certificate_link_text', "View this content's Timestamp certificate");
     }
     
     public static function hideCertificateLink()
     {
-        return self::get('hide_certificate_link') ?: false;
+        return self::get('hide_certificate_link', false);
     }
     
     public static function selectedPostTypes()
     {
-        return self::get('selected_post_types') ?: [];
+        return self::get('selected_post_types', []);
     }
     
     public static function postTypeIsInSelectedPostTypes($postType)
