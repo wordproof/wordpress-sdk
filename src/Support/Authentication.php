@@ -77,7 +77,8 @@ class Authentication
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => preg_replace('#^https?://#', '', get_site_url()),
-            'available_post_types' => array_values(get_post_types(['public' => true]))
+            'available_post_types' => array_values(get_post_types(['public' => true])),
+            'partner'              => SDK::getPartner()
         ];
 
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
