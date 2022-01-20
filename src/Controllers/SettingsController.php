@@ -2,13 +2,11 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Helpers\Redirect;
 use WordProof\SDK\Support\Settings;
 
 class SettingsController
 {
-    public function __construct()
-    {}
-    
     public function redirect($redirectUrl = null)
     {
         return Settings::redirect($redirectUrl);
@@ -29,12 +27,18 @@ class SettingsController
     /**
      * The content for the redirect page.
      */
-    public function redirectPageContent() {}
+    public function redirectPageContent()
+    {
+    }
     
     /**
      * Gets triggered by the 'load-admin_page_' hook of the redirect page
      */
-    public function redirectOnLoad() {
-        do_action('wordproof_settings', admin_url('admin.php?page=wordproof-close-after-redirect'));
+    public function redirectOnLoad()
+    {
+        $closeWindowUrl = admin_url('admin.php?page=wordproof-close-after-redirect');
+        if ($this->redirect($closeWindowUrl) === false) {
+            do_action('wordproof_authenticate', $closeWindowUrl);
+        }
     }
 }
