@@ -4,6 +4,7 @@ namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\Config;
 use WordProof\SDK\Helpers\Options;
+use WordProof\SDK\Helpers\Redirect;
 use WordProof\SDK\Helpers\SDK;
 use WordProof\SDK\Helpers\TransientHelper;
 
@@ -45,8 +46,7 @@ class Authentication
         $originalUrl = TransientHelper::getOnce('wordproof_authorize_current_url');
         
         if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
-            nocache_headers();
-            return wp_safe_redirect($originalUrl);
+            Redirect::safe($originalUrl);
         }
         
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
@@ -84,9 +84,8 @@ class Authentication
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
 
         Options::setSourceId(intval($response->source_id));
-
-        nocache_headers();
-        return wp_safe_redirect($originalUrl);
+    
+        Redirect::safe($originalUrl);
     }
     
     private static function getCallbackUrl()

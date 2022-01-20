@@ -103,7 +103,7 @@ class RestApiController
     
     public function oauthCallback()
     {
-        return Authentication::token();
+        Authentication::token();
     }
     
     public function webhook(\WP_REST_Request $request)
