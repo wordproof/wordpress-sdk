@@ -38,6 +38,9 @@ class CertificateController
     {
         if (!$this->show())
             return $content;
+    
+        if (Settings::hideCertificateLink())
+            return false;
         
         $text = Settings::certificateLinkText();
         $showRevisions = Settings::showRevisions() ? 'true' : 'false';
@@ -57,9 +60,6 @@ class CertificateController
             return false;
 
         if (!is_main_query())
-            return false;
-        
-        if (Settings::hideCertificateLink())
             return false;
     
         global $post;
