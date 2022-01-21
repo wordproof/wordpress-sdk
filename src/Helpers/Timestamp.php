@@ -22,6 +22,18 @@ class Timestamp
         return false;
     }
     
+    public static function addNotice($response) {
+        if (self::timestampRequestIsSuccessful($response)) {
+            NoticeHelper::add('timestamp_success');
+        } else {
+            NoticeHelper::add('timestamp_failed');
+        }
+    }
+    
+    private static function timestampRequestIsSuccessful($response) {
+        return isset($response->hash);
+    }
+    
     private static function hasPostMetaOverrideSetToTrue(\WP_Post $post) {
         
         $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['wordproof_timestamp']);
@@ -52,4 +64,6 @@ class Timestamp
     private static function hashInputExists($data) {
         return PostMeta::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
+    
+    
 }
