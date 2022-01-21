@@ -64,6 +64,4 @@ class Timestamp
     private static function hashInputExists($data) {
         return PostMeta::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
-    
-    
 }
