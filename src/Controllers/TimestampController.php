@@ -31,7 +31,12 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
     
-        return self::postTimestamp($data);
+        $response = self::postTimestamp($data);
+        
+        //Add notice for the classic editor.
+        Timestamp::addNotice($response);
+        
+        return $response;
     }
     
     public function timestampAfterRestApiRequest($post)
@@ -53,7 +58,6 @@ class TimestampController
         
         return self::post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
     }
-    
     
     /**
      * @param int $postId

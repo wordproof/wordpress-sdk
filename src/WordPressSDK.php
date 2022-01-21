@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK;
 
+use WordProof\SDK\Controllers\NoticeController;
 use WordProof\SDK\Controllers\PostEditorController;
 use WordProof\SDK\Controllers\RestApiController;
 use WordProof\SDK\Controllers\AuthenticationController;
@@ -53,6 +54,7 @@ class WordPressSDK
         $this->timestamp();
         $this->settings();
         $this->postEditor();
+        $this->notice();
         
         return $this;
     }
@@ -117,6 +119,13 @@ class WordPressSDK
     
         $this->loader->add_action('admin_enqueue_scripts', $class, 'localizePostEditors', \PHP_INT_MAX);
         $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'localizeElementor', \PHP_INT_MAX);
+    }
+    
+    private function notice()
+    {
+        $class = new NoticeController();
+    
+        $this->loader->add_action('admin_notices', $class, 'show');
     }
     
     public function certificate()
