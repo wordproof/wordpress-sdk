@@ -23,13 +23,20 @@ class NoticeController
         }
 
         switch ($notice) {
+            case 'no_balance':
+                $type = 'error';
+                /* translators: %s expands to WordProof. */
+                $description = sprintf( __( 'You are out of timestamps. Please upgrade your account by opening the %s settings.', 'wordpress-seo'), 'WordProof');
+                break;
             case 'timestamp_success':
                 $type = 'success';
-                $description = sprintf(__('WordProof has successfully timestamped this page.', 'wordpress-seo'), get_preview_post_link());
+                /* translators: %s expands to WordProof. */
+                $description = sprintf( __( '%s has successfully timestamped this page.', 'wordpress-seo' ), 'WordProof' );
                 break;
             case 'timestamp_failed':
                 $type = 'error';
-                $description = __('WordProof failed to timestamp this page. Please check if you\'re correctly authenticated with WordProof and try to save this page again.', 'wordpress-seo');
+                /* translators: %s expands to WordProof. */
+                $description = sprintf( __('%s failed to timestamp this page. Please check if you\'re correctly authenticated with %s and try to save this page again.', 'wordpress-seo'), 'WordProof');
                 break;
             default:
                 break;
