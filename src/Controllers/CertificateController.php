@@ -46,8 +46,7 @@ class CertificateController
         $showRevisions = Settings::showRevisions() ? 'true' : 'false';
     
         $content.= "\n" . "<w-certificate show-revisions='" . $showRevisions . "'>";
-        $content.= $text;
-//        $content.= "\n" . "<w-certificate-button>" . $text . "</w-certificate-button>";
+        $content.= "\n" . "<p><w-certificate-button icon='shield' shape='text' text='$text'></w-certificate-button></p>";
         $content.= "\n" . "</w-certificate>";
         $content.= "\n";
         
