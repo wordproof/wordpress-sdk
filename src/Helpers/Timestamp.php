@@ -31,6 +31,9 @@ class Timestamp
     }
     
     private static function timestampRequestIsSuccessful($response) {
+        if (isset($response->balance) && $response->balance === 0)
+            return 'no_balance';
+        
         return isset($response->hash);
     }
     
@@ -62,6 +65,7 @@ class Timestamp
     }
     
     private static function hashInputExists($data) {
+//        ray()->blue();
         return PostMeta::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
 }
