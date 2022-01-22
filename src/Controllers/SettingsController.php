@@ -2,7 +2,6 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\Redirect;
 use WordProof\SDK\Support\Settings;
 
 class SettingsController

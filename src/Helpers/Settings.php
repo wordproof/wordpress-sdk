@@ -21,6 +21,9 @@ class Settings
             
             return $default;
         }
+        
+        if (!isset($settings))
+            return $default;
     
         return $settings;
     }

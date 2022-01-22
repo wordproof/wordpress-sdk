@@ -59,7 +59,7 @@ class RestApiController
     
     public function settings()
     {
-        $data = Settings::get();
+        $data = Settings::get(null, (object)[]);
         $data->status = 200;
         
         return new \WP_REST_Response($data, $data->status);
