@@ -43,11 +43,10 @@ class CertificateController
             return false;
         
         $text = Settings::certificateLinkText();
-        $showRevisions = Settings::showRevisions() ? 'true' : 'false';
+        $showRevisions = Settings::showRevisions() ? 1 : 0;
     
-        $content.= "\n" . "<w-certificate show-revisions='" . $showRevisions . "'>";
+        $content.= "\n" . "<w-certificate render-without-button='1' show-revisions='" . $showRevisions . "'></w-certificate>";
         $content.= "\n" . "<p><w-certificate-button icon='shield' shape='text' text='$text'></w-certificate-button></p>";
-        $content.= "\n" . "</w-certificate>";
         $content.= "\n";
         
         return $content;
