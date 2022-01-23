@@ -8,15 +8,15 @@ class AuthenticationHelper
     {
         $hashedToken = hash('sha256', OptionsHelper::accessToken());
         $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
-        
+
         return $request->get_header('signature') === $hmac;
     }
-    
+
     public static function logout()
     {
         return OptionsHelper::reset() && SettingsHelper::reset();
     }
-    
+
     public static function isAuthenticated()
     {
         $options = OptionsHelper::all();

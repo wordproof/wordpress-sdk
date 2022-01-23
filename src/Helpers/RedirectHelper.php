@@ -10,5 +10,4 @@ class RedirectHelper
         wp_safe_redirect($url);
         exit;
     }
-
 }
