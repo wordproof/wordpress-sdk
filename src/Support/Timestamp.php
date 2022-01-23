@@ -17,8 +17,8 @@ class Timestamp
         $endpoint = '/api/sources/' . $sourceId . '/timestamps';
         $response = Api::post($endpoint, $data);
         
-        if (!$response)
-            AuthenticationHelper::logout();
+        if (!$response || !isset($response->hash))
+            return AuthenticationHelper::logout();
     
         $key = '_wordproof_hash_input_' . $response->hash;
         PostMetaHelper::update($data['uid'], $key, json_decode($response->hash_input));

@@ -9,14 +9,21 @@ class TimestampHelper
 {
     public static function debounce(\WP_Post $post, $withClassicEditorNotice = false) {
     
+        $key = 'wordproof_timestamped_debounce_' . $post->id;
+    
         $data = TimestampData::fromPost($post);
         
         if (!self::shouldBeTimestamped($post, $data))
             return;
+    
+        $transient = TransientHelper::get($key);
+        
+        if ($transient)
+            return $transient;
         
         $response = Timestamp::sendPostRequest($data);
+        TransientHelper::set($key, $response, 5);
     
-        //Add notice for the classic editor.
         if ($withClassicEditorNotice)
             NoticeHelper::addTimestampNotice($response);
         
