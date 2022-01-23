@@ -8,31 +8,31 @@ class ConfigHelper
     {
         return self::get('url');
     }
-    
+
     public static function client()
     {
         return self::get('client');
     }
-    
+
     public static function sslVerify()
     {
         return ! ConfigHelper::development();
     }
-    
+
     public static function development()
     {
         return SdkHelper::getEnvironment() === 'development';
     }
-    
+
     public static function get($key)
     {
         return self::values()[$key];
     }
-    
+
     private static function values()
     {
         $env = SdkHelper::getEnvironment();
-        
+
         switch ($env) {
             case 'development':
                 return [

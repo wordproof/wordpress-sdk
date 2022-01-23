@@ -11,20 +11,20 @@ use WordProof\SDK\Helpers\TransientHelper;
 class Authentication
 {
     private static $callbackEndpoint = 'wordproof/v1/oauth/callback';
-    
+
     public static function authorize($redirectUrl = null)
     {
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
         $originalUrl = admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
-    
+
         set_site_transient('wordproof_authorize_state', $state);
         set_site_transient('wordproof_authorize_code_verifier', $codeVerifier);
         set_site_transient('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
-        
+
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
-        
+
         $data = [
             'client_id'             => ConfigHelper::client(),
             'redirect_uri'          => self::getCallbackUrl(),
@@ -35,24 +35,24 @@ class Authentication
             'code_challenge_method' => 'S256',
             'partner'               => SdkHelper::getPartner(),
         ];
-        
+
         self::redirect('/wordpress-sdk/authorize', $data);
     }
-    
+
     public static function token()
     {
         $state = TransientHelper::getOnce('wordproof_authorize_state');
         $codeVerifier = TransientHelper::getOnce('wordproof_authorize_code_verifier');
         $originalUrl = TransientHelper::getOnce('wordproof_authorize_current_url');
-        
+
         if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
             RedirectHelper::safe($originalUrl);
         }
-        
+
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
             throw new \Exception('WordProof: No state or code found');
         }
-        
+
         $data = [
             'grant_type'    => 'authorization_code',
             'client_id'     => ConfigHelper::client(),
@@ -60,7 +60,7 @@ class Authentication
             'code_verifier' => $codeVerifier,
             'code'          => $_REQUEST['code'],
         ];
-        
+
         $response = Api::post('/api/wordpress-sdk/token', $data);
 
         if (isset($response->error) && $response->error === 'invalid_grant') {
@@ -84,15 +84,15 @@ class Authentication
         $response = Api::post('/api/wordpress-sdk/source', $data);
 
         OptionsHelper::setSourceId(intval($response->source_id));
-        
+
         RedirectHelper::safe($originalUrl);
     }
-    
+
     private static function getCallbackUrl()
     {
         return get_rest_url(null, self::$callbackEndpoint);
     }
-    
+
     public static function redirect($endpoint, $parameters)
     {
         $location = ConfigHelper::url() . $endpoint . '?' . http_build_query($parameters);

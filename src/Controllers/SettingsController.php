@@ -10,7 +10,7 @@ class SettingsController
     {
         return Settings::redirect($redirectUrl);
     }
-    
+
     public function addRedirectPage()
     {
         add_submenu_page(
@@ -22,14 +22,14 @@ class SettingsController
             [$this, 'redirectPageContent']
         );
     }
-    
+
     /**
      * The content for the redirect page.
      */
     public function redirectPageContent()
     {
     }
-    
+
     /**
      * Gets triggered by the 'load-admin_page_' hook of the redirect page
      */

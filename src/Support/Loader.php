@@ -6,13 +6,13 @@ class Loader
 {
     protected $actions;
     protected $filters;
-    
+
     public function __construct()
     {
-        $this->actions = array();
-        $this->filters = array();
+        $this->actions = [];
+        $this->filters = [];
     }
-    
+
     /**
      * @param string $hook The name of the WordPress action that is being registered.
      * @param object $component A reference to the instance of the object on which the action is defined.
@@ -24,7 +24,7 @@ class Loader
     {
         $this->actions = $this->add($this->actions, $hook, $component, $callback, $priority, $accepted_args);
     }
-    
+
     /**
      * @param string $hook The name of the WordPress filter that is being registered.
      * @param object $component A reference to the instance of the object on which the filter is defined.
@@ -36,28 +36,28 @@ class Loader
     {
         $this->filters = $this->add($this->filters, $hook, $component, $callback, $priority, $accepted_args);
     }
-    
+
     public function run()
     {
         foreach ($this->filters as $hook) {
-            add_filter($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'], $hook['accepted_args']);
+            add_filter($hook['hook'], [$hook['component'], $hook['callback']], $hook['priority'], $hook['accepted_args']);
         }
-        
+
         foreach ($this->actions as $hook) {
-            add_action($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'], $hook['accepted_args']);
+            add_action($hook['hook'], [$hook['component'], $hook['callback']], $hook['priority'], $hook['accepted_args']);
         }
     }
-    
+
     private function add($hooks, $hook, $component, $callback, $priority, $accepted_args)
     {
-        $hooks[] = array(
+        $hooks[] = [
             'hook'          => $hook,
             'component'     => $component,
             'callback'      => $callback,
             'priority'      => $priority,
             'accepted_args' => $accepted_args
-        );
-        
+        ];
+
         return $hooks;
     }
 }

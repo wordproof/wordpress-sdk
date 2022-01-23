@@ -15,7 +15,7 @@ class AuthenticationController
     {
         return Authentication::authorize($redirectUrl);
     }
-    
+
     /**
      * Adds admin page that redirects to the authentication flow.
      */
@@ -30,19 +30,22 @@ class AuthenticationController
             [$this, 'redirectPageContent']
         );
     }
-    
+
     /**
      * The content for the redirect page.
      */
-    public function redirectPageContent() {}
-    
+    public function redirectPageContent()
+    {
+    }
+
     /**
      * Gets triggered by the 'load-admin_page_' hook of the redirect page
      */
-    public function redirectOnLoad() {
+    public function redirectOnLoad()
+    {
         do_action('wordproof_authenticate', admin_url('admin.php?page=wordproof-close-after-redirect'));
     }
-    
+
     /**
      * Adds self destruct admin page.
      */
@@ -57,11 +60,12 @@ class AuthenticationController
             [$this, 'closeOnLoadContent']
         );
     }
-    
+
     /**
      * Adds a script to the loaded page to close on load.
      */
-    public function closeOnLoadContent() {
+    public function closeOnLoadContent()
+    {
         echo '<script type="text/javascript">';
         echo 'window.close();';
         echo '</script>';

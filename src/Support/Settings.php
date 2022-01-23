@@ -10,19 +10,22 @@ class Settings
 {
     public static function redirect($redirectUrl = null)
     {
-        if (!AuthenticationHelper::isAuthenticated())
+        if (!AuthenticationHelper::isAuthenticated()) {
             return false;
-    
+        }
+
         $options = OptionsHelper::all();
-        
-        if (!$options->source_id)
+
+        if (!$options->source_id) {
             return false;
-        
+        }
+
         $endpoint = "/sources/" . $options->source_id . "/settings";
-        
-        if (SdkHelper::getPartner() === 'yoast')
+
+        if (SdkHelper::getPartner() === 'yoast') {
             $endpoint = '/yoast/dashboard';
-        
+        }
+
         Authentication::redirect($endpoint, [
             'redirect_uri' => $redirectUrl,
             'partner' => SdkHelper::getPartner(),
@@ -30,5 +33,4 @@ class Settings
             'access_token_login' => $options->access_token
         ]);
     }
-    
 }
