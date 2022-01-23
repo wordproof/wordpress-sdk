@@ -2,16 +2,31 @@
 
 namespace WordProof\SDK\Helpers;
 
+use WordProof\SDK\DataTransferObjects\TimestampData;
+use WordProof\SDK\Support\Timestamp;
+
 class TimestampHelper
 {
+    public static function debounce(\WP_Post $post, $withClassicEditorNotice = false) {
+    
+        $data = TimestampData::fromPost($post);
+        
+        if (!self::shouldBeTimestamped($post, $data))
+            return;
+        
+        $response = Timestamp::sendPostRequest($data);
+    
+        //Add notice for the classic editor.
+        if ($withClassicEditorNotice)
+            NoticeHelper::addTimestampNotice($response);
+        
+        return $response;
+    }
+    
     public static function shouldBeTimestamped(\WP_Post $post, $data)
     {
         if (!in_array($post->post_status, ['publish', 'inherit']))
             return false;
-        
-        if (self::hashInputExists($data)) {
-            return false;
-        }
         
         if (SettingsHelper::postTypeIsInSelectedPostTypes($post->post_type))
             return true;
@@ -20,22 +35,6 @@ class TimestampHelper
             return true;
         
         return false;
-    }
-    
-    public static function addNotice($response)
-    {
-        NoticeHelper::add(self::getNoticeKeyForTimestampResponse($response));
-    }
-    
-    private static function getNoticeKeyForTimestampResponse($response)
-    {
-        if (isset($response->balance) && $response->balance === 0)
-            return 'no_balance';
-        
-        if (isset($response->hash))
-            return 'timestamp_success';
-        
-        return 'timestamp_failed';
     }
     
     private static function hasPostMetaOverrideSetToTrue(\WP_Post $post)
@@ -64,11 +63,5 @@ class TimestampHelper
         }
         
         return false;
-    }
-    
-    private static function hashInputExists($data)
-    {
-//        ray()->blue(); //todo
-        return PostMetaHelper::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
 }
