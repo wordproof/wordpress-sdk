@@ -61,7 +61,7 @@ class Authentication
             'code'          => $_REQUEST['code'],
         ];
         
-        $response = json_decode(self::post('/api/wordpress-sdk/token', $data));
+        $response = Api::post('/api/wordpress-sdk/token', $data);
 
         if (isset($response->error) && $response->error === 'invalid_grant') {
             //TODO
@@ -81,10 +81,10 @@ class Authentication
             'partner'              => SdkHelper::getPartner()
         ];
 
-        $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
+        $response = Api::post('/api/wordpress-sdk/source', $data);
 
         OptionsHelper::setSourceId(intval($response->source_id));
-    
+        
         RedirectHelper::safe($originalUrl);
     }
     
@@ -97,31 +97,5 @@ class Authentication
     {
         $location = ConfigHelper::url() . $endpoint . '?' . http_build_query($parameters);
         header("Location: " . $location);
-    }
-    
-    private static function post($endpoint, $body, $bearerToken = null)
-    {
-        $location = ConfigHelper::url() . $endpoint;
-        $body = wp_json_encode($body);
-        
-        $headers = [
-            'Content-Type' => 'application/json',
-            'Accept'       => 'application/json'
-        ];
-        
-        $headers = ($bearerToken) ? array_merge($headers, ['Authorization' => 'Bearer ' . $bearerToken]) : $headers;
-        
-        $options = [
-            'body'        => $body,
-            'headers'     => $headers,
-            'timeout'     => 60,
-            'redirection' => 5,
-            'blocking'    => true,
-            'data_format' => 'body',
-            'sslverify'   => false //TODO remove
-        ];
-        
-        $request = wp_remote_post($location, $options);
-        return wp_remote_retrieve_body($request);
     }
 }
