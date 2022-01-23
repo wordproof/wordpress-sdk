@@ -4,7 +4,7 @@ namespace WordProof\SDK\Helpers;
 
 use WordProof\SDK\WordPressSDK;
 
-class SDK
+class SdkHelper
 {
     public static function getPartner()
     {

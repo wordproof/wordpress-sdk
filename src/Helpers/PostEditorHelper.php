@@ -2,9 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-use WordProof\SDK\Support\Authentication;
-
-class PostEditor
+class PostEditorHelper
 {
     public static function isPostEdit($page)
     {
@@ -22,10 +20,10 @@ class PostEditor
                 'is_authenticated'                  => AuthenticationHelper::isAuthenticated(),
                 'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
                 'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
-                'settings'                          => Settings::get(),
-                'timestamp_current_post_type'       => Settings::postTypeIsInSelectedPostTypes($currentPostType),
+                'settings'                          => SettingsHelper::get(),
+                'timestamp_current_post_type'       => SettingsHelper::postTypeIsInSelectedPostTypes($currentPostType),
                 'current_post_type'       => $currentPostType,
-                'timestamp_url' => Api::getRestRoute('timestamp', [$post->ID])
+                'timestamp_url' => RestApiHelper::getRestRoute('timestamp', [$post->ID])
             ],
         ];
     }

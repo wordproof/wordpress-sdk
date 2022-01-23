@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Config
+class ConfigHelper
 {
     public static function url()
     {
@@ -16,12 +16,12 @@ class Config
     
     public static function sslVerify()
     {
-        return ! Config::development();
+        return ! ConfigHelper::development();
     }
     
     public static function development()
     {
-        return SDK::getEnvironment() === 'development';
+        return SdkHelper::getEnvironment() === 'development';
     }
     
     public static function get($key)
@@ -31,7 +31,7 @@ class Config
     
     private static function values()
     {
-        $env = SDK::getEnvironment();
+        $env = SdkHelper::getEnvironment();
         
         switch ($env) {
             case 'development':

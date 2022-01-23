@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Api
+class RestApiHelper
 {
     private static function buildPath($endpoint)
     {

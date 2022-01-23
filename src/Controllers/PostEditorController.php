@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\PostEditor;
+use WordProof\SDK\Helpers\PostEditorHelper;
 
 class PostEditorController
 {
@@ -11,10 +11,10 @@ class PostEditorController
     
     public function localizePostEditors($hook)
     {
-        if ( ! PostEditor::isPostEdit($hook) )
+        if ( ! PostEditorHelper::isPostEdit($hook) )
             return;
         
-        $data = PostEditor::getPostEditorData();
+        $data = PostEditorHelper::getPostEditorData();
         
         //TODO Register own script
         wp_localize_script('yoast-seo-post-edit', 'wordproofSdk', $data);
@@ -22,7 +22,7 @@ class PostEditorController
     }
     
     public function localizeElementor($hook) {
-        $data = PostEditor::getPostEditorData();
+        $data = PostEditorHelper::getPostEditorData();
         wp_localize_script('yoast-seo-elementor', 'wordproofSdk', $data);
     }
 }

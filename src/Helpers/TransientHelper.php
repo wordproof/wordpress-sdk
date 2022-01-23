@@ -4,9 +4,9 @@ namespace WordProof\SDK\Helpers;
 
 class TransientHelper
 {
-    public static function set($key, $value)
+    public static function set($key, $value, $expiration = 0)
     {
-        return set_site_transient($key, $value);
+        return set_site_transient($key, $value, $expiration);
     }
     
     public static function getOnce($key)
@@ -15,6 +15,11 @@ class TransientHelper
         delete_site_transient($key);
         
         return $value;
+    }
+    
+    public static function get($key)
+    {
+        return get_site_transient($key);
     }
     
 }

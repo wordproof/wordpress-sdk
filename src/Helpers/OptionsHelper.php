@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Options
+class OptionsHelper
 {
     private static $prefix = 'wordproof_';
     private static $optionKeys = ['access_token', 'source_id'];

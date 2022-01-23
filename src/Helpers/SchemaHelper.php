@@ -2,12 +2,12 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Schema
+class SchemaHelper
 {
     public static function getBlockchainTransaction($response)
     {
         $postId = $response->uid;
-        $hashLink = Api::getRestRoute('hashInput', [$postId, $response->hash]);
+        $hashLink = RestApiHelper::getRestRoute('hashInput', [$postId, $response->hash]);
         
         return [
             '@type' => 'BlockchainTransaction',
@@ -23,7 +23,7 @@ class Schema
     
     public static function getSchema($postId)
     {
-        $transactions = PostMeta::get($postId, '_wordproof_blockchain_transaction', false);
+        $transactions = PostMetaHelper::get($postId, '_wordproof_blockchain_transaction', false);
         $latest = array_pop($transactions);
         
         if (count($transactions) === 0)
