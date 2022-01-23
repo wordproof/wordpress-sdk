@@ -46,8 +46,8 @@ class NoticeController
             $noticeClass = 'notice-' . $type;
             echo \sprintf(
                 '<div class="notice %1$s is-dismissible"><p>%2$s</p></div>',
-                $noticeClass,
-                $description
+                esc_attr($noticeClass),
+                esc_html($description)
             );
         }
     }

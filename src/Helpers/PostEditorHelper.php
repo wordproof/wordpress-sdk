@@ -45,9 +45,11 @@ class PostEditorHelper
             return $current_screen->post_type;
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification
         if (isset($_REQUEST['post_type'])) {
             return sanitize_key($_REQUEST['post_type']);
         }
+        // phpcs:enable WordPress.Security.NonceVerification
 
         return null;
     }

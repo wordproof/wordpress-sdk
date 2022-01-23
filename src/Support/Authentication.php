@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Support;
 
+use WordProof\SDK\Helpers\AdminHelper;
 use WordProof\SDK\Helpers\ConfigHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\RedirectHelper;
@@ -16,7 +17,7 @@ class Authentication
     {
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
-        $originalUrl = admin_url(sprintf(basename($_SERVER['REQUEST_URI'])));
+        $originalUrl = AdminHelper::currentUrl();
 
         set_site_transient('wordproof_authorize_state', $state);
         set_site_transient('wordproof_authorize_code_verifier', $codeVerifier);
@@ -45,10 +46,12 @@ class Authentication
         $codeVerifier = TransientHelper::getOnce('wordproof_authorize_code_verifier');
         $originalUrl = TransientHelper::getOnce('wordproof_authorize_current_url');
 
+        // phpcs:ignore WordPress.Security.NonceVerification
         if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
             RedirectHelper::safe($originalUrl);
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
             throw new \Exception('WordProof: No state or code found');
         }
@@ -58,7 +61,8 @@ class Authentication
             'client_id'     => ConfigHelper::client(),
             'redirect_uri'  => self::getCallbackUrl(),
             'code_verifier' => $codeVerifier,
-            'code'          => $_REQUEST['code'],
+            // phpcs:ignore WordPress.Security.NonceVerification
+            'code'          => sanitize_text_field(wp_unslash($_REQUEST['code'])),
         ];
 
         $response = Api::post('/api/wordpress-sdk/token', $data);

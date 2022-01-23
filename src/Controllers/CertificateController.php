@@ -29,6 +29,7 @@ class CertificateController
         $schema .= "</script>";
         $schema .= "\n";
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $schema;
     }
 
