@@ -3,7 +3,7 @@
 namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\AuthenticationHelper;
-use WordProof\SDK\Helpers\Options;
+use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\SDK;
 
 class Settings
@@ -13,7 +13,7 @@ class Settings
         if (!AuthenticationHelper::isAuthenticated())
             return false;
     
-        $options = Options::all();
+        $options = OptionsHelper::all();
         
         if (!$options->source_id)
             return false;

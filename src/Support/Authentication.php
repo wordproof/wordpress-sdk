@@ -3,7 +3,7 @@
 namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\Config;
-use WordProof\SDK\Helpers\Options;
+use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\Redirect;
 use WordProof\SDK\Helpers\SDK;
 use WordProof\SDK\Helpers\TransientHelper;
@@ -72,7 +72,7 @@ class Authentication
         }
 
         $accessToken = sanitize_text_field($response->access_token);
-        Options::setAccessToken($accessToken);
+        OptionsHelper::setAccessToken($accessToken);
 
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
@@ -83,7 +83,7 @@ class Authentication
 
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
 
-        Options::setSourceId(intval($response->source_id));
+        OptionsHelper::setSourceId(intval($response->source_id));
     
         Redirect::safe($originalUrl);
     }

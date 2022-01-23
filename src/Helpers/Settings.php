@@ -8,12 +8,12 @@ class Settings
     
     public static function set($data)
     {
-        return Options::set(self::$key, $data);
+        return OptionsHelper::set(self::$key, $data);
     }
     
     public static function get($setting = null, $default = null)
     {
-        $settings = Options::get(self::$key);
+        $settings = OptionsHelper::get(self::$key);
         
         if ($setting) {
             if (isset($settings->$setting))
@@ -30,7 +30,7 @@ class Settings
     
     public static function reset()
     {
-        return Options::delete(self::$key);
+        return OptionsHelper::delete(self::$key);
     }
     
     public static function showRevisions()

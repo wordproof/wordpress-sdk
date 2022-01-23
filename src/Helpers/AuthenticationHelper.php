@@ -6,7 +6,7 @@ class AuthenticationHelper
 {
     public static function isValidWebhookRequest(\WP_REST_Request $request)
     {
-        $hashedToken = hash('sha256', Options::accessToken());
+        $hashedToken = hash('sha256', OptionsHelper::accessToken());
         $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
         
         return $request->get_header('signature') === $hmac;
@@ -14,12 +14,12 @@ class AuthenticationHelper
     
     public static function logout()
     {
-        return Options::reset() && Settings::reset();
+        return OptionsHelper::reset() && Settings::reset();
     }
     
     public static function isAuthenticated()
     {
-        $options = Options::all();
+        $options = OptionsHelper::all();
         return $options->access_token && $options->source_id;
     }
 }
