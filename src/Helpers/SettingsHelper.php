@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Settings
+class SettingsHelper
 {
     private static $key = 'settings';
     

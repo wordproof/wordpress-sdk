@@ -2,8 +2,8 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\PostMeta;
-use WordProof\SDK\Helpers\Settings;
+use WordProof\SDK\Helpers\PostMetaHelper;
+use WordProof\SDK\Helpers\SettingsHelper;
 use WordProofSDK\includes\Controller\SchemaController;
 
 class CertificateController
@@ -24,7 +24,7 @@ class CertificateController
         $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit/dist/uikit/uikit.js"></script>';
         $schema .= "\n";
         $schema .= '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
-        $schema .= json_encode(PostMeta::get($post->ID, '_wordproof_schema'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $schema .= json_encode(PostMetaHelper::get($post->ID, '_wordproof_schema'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $schema .= "</script>";
         $schema .= "\n";
     
@@ -39,11 +39,11 @@ class CertificateController
         if (!$this->show())
             return $content;
     
-        if (Settings::hideCertificateLink())
+        if (SettingsHelper::hideCertificateLink())
             return false;
         
-        $text = Settings::certificateLinkText();
-        $showRevisions = Settings::showRevisions() ? 1 : 0;
+        $text = SettingsHelper::certificateLinkText();
+        $showRevisions = SettingsHelper::showRevisions() ? 1 : 0;
     
         $content.= "\n" . "<w-certificate render-without-button='1' show-revisions='" . $showRevisions . "'></w-certificate>";
         $content.= "\n" . "<p><w-certificate-button icon='shield' shape='text' text='$text'></w-certificate-button></p>";
@@ -62,7 +62,7 @@ class CertificateController
     
         global $post;
         return apply_filters('wordproof_timestamp_show_certificate',
-            PostMeta::has($post->ID, '_wordproof_schema'),
+            PostMetaHelper::has($post->ID, '_wordproof_schema'),
             $post
         );
     }

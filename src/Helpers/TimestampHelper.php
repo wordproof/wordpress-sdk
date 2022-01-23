@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Timestamp
+class TimestampHelper
 {
     public static function shouldBeTimestamped(\WP_Post $post, $data)
     {
@@ -13,7 +13,7 @@ class Timestamp
             return false;
         }
         
-        if (Settings::postTypeIsInSelectedPostTypes($post->post_type))
+        if (SettingsHelper::postTypeIsInSelectedPostTypes($post->post_type))
             return true;
         
         if (self::hasPostMetaOverrideSetToTrue($post))
@@ -69,6 +69,6 @@ class Timestamp
     private static function hashInputExists($data)
     {
 //        ray()->blue(); //todo
-        return PostMeta::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
+        return PostMetaHelper::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
 }

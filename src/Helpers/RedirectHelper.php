@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class Redirect
+class RedirectHelper
 {
     public static function safe($url)
     {

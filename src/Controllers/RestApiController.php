@@ -2,10 +2,10 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\Api;
-use WordProof\SDK\Helpers\PostMeta;
-use WordProof\SDK\Helpers\Schema;
-use WordProof\SDK\Helpers\Settings;
+use WordProof\SDK\Helpers\RestApiHelper;
+use WordProof\SDK\Helpers\PostMetaHelper;
+use WordProof\SDK\Helpers\SchemaHelper;
+use WordProof\SDK\Helpers\SettingsHelper;
 use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Support\Authentication;
 
@@ -14,7 +14,7 @@ class RestApiController
     
     public function init()
     {
-        register_rest_route(Api::getNamespace(), Api::endpoint('callback'), [
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('callback'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'oauthCallback'],
             'permission_callback' => function () {
@@ -22,7 +22,7 @@ class RestApiController
             }
         ]);
         
-        register_rest_route(Api::getNamespace(), Api::endpoint('webhook'), [
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('webhook'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'webhook'],
             'permission_callback' => function () {
@@ -30,7 +30,7 @@ class RestApiController
             }
         ]);
         
-        register_rest_route(Api::getNamespace(), Api::endpoint('hashInput'), [
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('hashInput'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'hashInput'],
             'permission_callback' => function () {
@@ -38,19 +38,19 @@ class RestApiController
             },
         ]);
         
-        register_rest_route(Api::getNamespace(), Api::endpoint('timestamp'), [
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'timestamp'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
         
-        register_rest_route(Api::getNamespace(), Api::endpoint('settings'), [
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
         
-        register_rest_route(Api::getNamespace(), Api::endpoint('authentication'), [
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'authentication'],
             'permission_callback' => [$this, 'canPublishPermission'],
@@ -59,7 +59,7 @@ class RestApiController
     
     public function settings()
     {
-        $data = Settings::get(null, (object)[]);
+        $data = SettingsHelper::get(null, (object)[]);
         $data->status = 200;
         
         return new \WP_REST_Response($data, $data->status);
@@ -96,7 +96,7 @@ class RestApiController
         $postId = intval($data['id']);
         $hash = sanitize_text_field($data['hash']);
         
-        $hashInput = PostMeta::get($postId, '_wordproof_hash_input_' . $hash);
+        $hashInput = PostMetaHelper::get($postId, '_wordproof_hash_input_' . $hash);
         
         return new \WP_REST_Response((object)$hashInput);
     }
@@ -119,7 +119,7 @@ class RestApiController
         if (isset($response->type) && isset($response->data)) {
             switch ($response->type) {
                 case 'source_settings':
-                    return Settings::set($response->data);
+                    return SettingsHelper::set($response->data);
                 case 'logout':
                     return AuthenticationHelper::logout();
                 default:
@@ -133,11 +133,11 @@ class RestApiController
         if (isset($response->uid) && isset($response->schema)) {
             $postId = intval($response->uid);
             
-            $blockchainTransaction = Schema::getBlockchainTransaction($response);
-            PostMeta::add($postId, '_wordproof_blockchain_transaction', $blockchainTransaction);
+            $blockchainTransaction = SchemaHelper::getBlockchainTransaction($response);
+            PostMetaHelper::add($postId, '_wordproof_blockchain_transaction', $blockchainTransaction);
             
-            $schema = Schema::getSchema($postId);
-            PostMeta::update($postId, '_wordproof_schema', $schema);
+            $schema = SchemaHelper::getSchema($postId);
+            PostMetaHelper::update($postId, '_wordproof_schema', $schema);
         }
         
     }

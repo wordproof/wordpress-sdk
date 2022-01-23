@@ -2,10 +2,10 @@
 
 namespace WordProof\SDK\Support;
 
-use WordProof\SDK\Helpers\Config;
+use WordProof\SDK\Helpers\ConfigHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
-use WordProof\SDK\Helpers\Redirect;
-use WordProof\SDK\Helpers\SDK;
+use WordProof\SDK\Helpers\RedirectHelper;
+use WordProof\SDK\Helpers\SdkHelper;
 use WordProof\SDK\Helpers\TransientHelper;
 
 class Authentication
@@ -26,14 +26,14 @@ class Authentication
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
         
         $data = [
-            'client_id'             => Config::client(),
+            'client_id'             => ConfigHelper::client(),
             'redirect_uri'          => self::getCallbackUrl(),
             'response_type'         => 'code',
             'scope'                 => '',
             'state'                 => $state,
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
-            'partner'               => SDK::getPartner(),
+            'partner'               => SdkHelper::getPartner(),
         ];
         
         self::redirect('/wordpress-sdk/authorize', $data);
@@ -46,7 +46,7 @@ class Authentication
         $originalUrl = TransientHelper::getOnce('wordproof_authorize_current_url');
         
         if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
-            Redirect::safe($originalUrl);
+            RedirectHelper::safe($originalUrl);
         }
         
         if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
@@ -55,7 +55,7 @@ class Authentication
         
         $data = [
             'grant_type'    => 'authorization_code',
-            'client_id'     => Config::client(),
+            'client_id'     => ConfigHelper::client(),
             'redirect_uri'  => self::getCallbackUrl(),
             'code_verifier' => $codeVerifier,
             'code'          => $_REQUEST['code'],
@@ -78,14 +78,14 @@ class Authentication
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => preg_replace('#^https?://#', '', get_site_url()),
             'available_post_types' => array_values(get_post_types(['public' => true])),
-            'partner'              => SDK::getPartner()
+            'partner'              => SdkHelper::getPartner()
         ];
 
         $response = json_decode(self::post('/api/wordpress-sdk/source', $data, $accessToken));
 
         OptionsHelper::setSourceId(intval($response->source_id));
     
-        Redirect::safe($originalUrl);
+        RedirectHelper::safe($originalUrl);
     }
     
     private static function getCallbackUrl()
@@ -95,13 +95,13 @@ class Authentication
     
     public static function redirect($endpoint, $parameters)
     {
-        $location = Config::url() . $endpoint . '?' . http_build_query($parameters);
+        $location = ConfigHelper::url() . $endpoint . '?' . http_build_query($parameters);
         header("Location: " . $location);
     }
     
     private static function post($endpoint, $body, $bearerToken = null)
     {
-        $location = Config::url() . $endpoint;
+        $location = ConfigHelper::url() . $endpoint;
         $body = wp_json_encode($body);
         
         $headers = [

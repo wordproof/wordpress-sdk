@@ -14,7 +14,7 @@ class AuthenticationHelper
     
     public static function logout()
     {
-        return OptionsHelper::reset() && Settings::reset();
+        return OptionsHelper::reset() && SettingsHelper::reset();
     }
     
     public static function isAuthenticated()

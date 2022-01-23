@@ -3,11 +3,11 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\AuthenticationHelper;
-use WordProof\SDK\Helpers\Config;
+use WordProof\SDK\Helpers\ConfigHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
-use WordProof\SDK\Helpers\Timestamp;
+use WordProof\SDK\Helpers\TimestampHelper;
 use WordProof\SDK\DataTransferObjects\TimestampData;
-use WordProof\SDK\Helpers\PostMeta;
+use WordProof\SDK\Helpers\PostMetaHelper;
 
 class TimestampController
 {
@@ -16,7 +16,7 @@ class TimestampController
         $post = get_post(intval($postId));
         $data = TimestampData::fromPost($post);
     
-        if (!Timestamp::shouldBeTimestamped($post, $data))
+        if (!TimestampHelper::shouldBeTimestamped($post, $data))
             return;
         
         return self::sendPostRequest($data);
@@ -29,13 +29,13 @@ class TimestampController
     
         $data = TimestampData::fromPost($post);
     
-        if (!Timestamp::shouldBeTimestamped($post, $data))
+        if (!TimestampHelper::shouldBeTimestamped($post, $data))
             return;
     
         $response = self::sendPostRequest($data);
         
         //Add notice for the classic editor.
-        Timestamp::addNotice($response);
+        TimestampHelper::addNotice($response);
         
         return $response;
     }
@@ -44,7 +44,7 @@ class TimestampController
     {
         $data = TimestampData::fromPost($post);
         
-        if (!Timestamp::shouldBeTimestamped($post, $data))
+        if (!TimestampHelper::shouldBeTimestamped($post, $data))
             return;
         
         return self::sendPostRequest($data);
@@ -74,7 +74,7 @@ class TimestampController
      */
     private static function post($postId, $endpoint, $body = [])
     {
-        $location = Config::url() . $endpoint;
+        $location = ConfigHelper::url() . $endpoint;
         $body = wp_json_encode($body);
         
         $accessToken = OptionsHelper::accessToken();
@@ -92,7 +92,7 @@ class TimestampController
             'redirection' => 5,
             'blocking'    => true,
             'data_format' => 'body',
-            'sslverify'   => Config::sslVerify()
+            'sslverify'   => ConfigHelper::sslVerify()
         ];
     
         $request = wp_remote_post($location, $options);
@@ -106,7 +106,7 @@ class TimestampController
         $response = json_decode(wp_remote_retrieve_body($request));
         
         $key = '_wordproof_hash_input_' . $response->hash;
-        PostMeta::update($postId, $key, json_decode($response->hash_input));
+        PostMetaHelper::update($postId, $key, json_decode($response->hash_input));
         
         return $response;
     }

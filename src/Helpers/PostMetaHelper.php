@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class PostMeta
+class PostMetaHelper
 {
     public static function add($postId, $key, $value)
     {
