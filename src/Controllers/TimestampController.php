@@ -2,8 +2,9 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Helpers\Config;
-use WordProof\SDK\Helpers\Options;
+use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\Timestamp;
 use WordProof\SDK\DataTransferObjects\TimestampData;
 use WordProof\SDK\Helpers\PostMeta;
@@ -18,7 +19,7 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
-        return self::postTimestamp($data);
+        return self::sendPostRequest($data);
     }
     
     public function timestampAfterPostRequest($postId, $post)
@@ -31,7 +32,7 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
     
-        $response = self::postTimestamp($data);
+        $response = self::sendPostRequest($data);
         
         //Add notice for the classic editor.
         Timestamp::addNotice($response);
@@ -46,17 +47,23 @@ class TimestampController
         if (!Timestamp::shouldBeTimestamped($post, $data))
             return;
         
-        return self::postTimestamp($data);
+        return self::sendPostRequest($data);
+        
     }
     
     /**
      * @param array $data
      */
-    private static function postTimestamp($data)
+    private static function sendPostRequest($data)
     {
-        $sourceId = Options::sourceId();
+        $sourceId = OptionsHelper::sourceId();
+    
+        $response =  self::post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
         
-        return self::post($data['uid'], '/api/sources/' . $sourceId . '/timestamps', $data);
+        if (!$response)
+            AuthenticationHelper::logout();
+
+        return $response;
     }
     
     /**
@@ -64,15 +71,13 @@ class TimestampController
      * @param string $endpoint
      * @param array $body
      * @return void
-     *
-     * TODO: Move
      */
     private static function post($postId, $endpoint, $body = [])
     {
         $location = Config::url() . $endpoint;
         $body = wp_json_encode($body);
         
-        $accessToken = Options::accessToken();
+        $accessToken = OptionsHelper::accessToken();
         
         $headers = [
             'Content-Type'  => 'application/json',
