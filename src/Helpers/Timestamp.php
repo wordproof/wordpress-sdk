@@ -15,29 +15,31 @@ class Timestamp
         
         if (Settings::postTypeIsInSelectedPostTypes($post->post_type))
             return true;
-
+        
         if (self::hasPostMetaOverrideSetToTrue($post))
             return true;
         
         return false;
     }
     
-    public static function addNotice($response) {
-        if (self::timestampRequestIsSuccessful($response)) {
-            NoticeHelper::add('timestamp_success');
-        } else {
-            NoticeHelper::add('timestamp_failed');
-        }
+    public static function addNotice($response)
+    {
+        NoticeHelper::add(self::getNoticeKeyForTimestampResponse($response));
     }
     
-    private static function timestampRequestIsSuccessful($response) {
+    private static function getNoticeKeyForTimestampResponse($response)
+    {
         if (isset($response->balance) && $response->balance === 0)
             return 'no_balance';
         
-        return isset($response->hash);
+        if (isset($response->hash))
+            return 'timestamp_success';
+        
+        return 'timestamp_failed';
     }
     
-    private static function hasPostMetaOverrideSetToTrue(\WP_Post $post) {
+    private static function hasPostMetaOverrideSetToTrue(\WP_Post $post)
+    {
         
         $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['wordproof_timestamp']);
         
@@ -45,10 +47,10 @@ class Timestamp
         $meta = get_post_meta($post->ID);
         
         foreach ($timestampablePostMetaKeys as $key) {
-
+            
             if (!isset($meta[$key]))
                 continue;
-        
+            
             if (is_array($meta[$key])) {
                 $value = boolval($meta[$key][0]);
             } else {
@@ -57,15 +59,16 @@ class Timestamp
             
             if (!$value)
                 continue;
-        
+            
             return true;
         }
         
         return false;
     }
     
-    private static function hashInputExists($data) {
-//        ray()->blue();
+    private static function hashInputExists($data)
+    {
+//        ray()->blue(); //todo
         return PostMeta::has($data['uid'], '_wordproof_hash_input_' . $data['hash']);
     }
 }
