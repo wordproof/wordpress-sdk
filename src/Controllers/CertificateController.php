@@ -45,12 +45,15 @@ class CertificateController
         if (SettingsHelper::hideCertificateLink()) {
             return false;
         }
+        
+        global $post;
+        $identifier = $post->ID;
 
         $text = SettingsHelper::certificateLinkText();
         $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
 
-        $content.= "\n" . '<w-certificate render-without-button="true" show-revisions="' . $showRevisions . '"></w-certificate>';
-        $content.= "\n" . '<p><w-certificate-button icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
+        $content.= "\n" . '<w-certificate shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '"></w-certificate>';
+        $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
         $content.= "\n";
 
         return $content;
