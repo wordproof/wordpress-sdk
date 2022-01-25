@@ -47,9 +47,9 @@ class CertificateController
         }
 
         $text = SettingsHelper::certificateLinkText();
-        $showRevisions = SettingsHelper::showRevisions() ? 1 : 0;
+        $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
 
-        $content.= "\n" . '<w-certificate render-without-button="1" show-revisions="' . $showRevisions . '"></w-certificate>';
+        $content.= "\n" . '<w-certificate render-without-button="true" show-revisions="' . $showRevisions . '"></w-certificate>';
         $content.= "\n" . '<p><w-certificate-button icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
         $content.= "\n";
 
