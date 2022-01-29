@@ -7,7 +7,6 @@ use WordProof\SDK\Config\OptionsConfig;
 class OptionsHelper
 {
     private static $prefix = 'wordproof_';
-    private static $optionKeys = ['access_token', 'source_id', 'settings'];
     
     /**
      * Sets site option while properly sanitizing the data.
@@ -51,15 +50,20 @@ class OptionsHelper
     
     public static function all()
     {
-        foreach (self::$optionKeys as $key) {
+        $optionKeys = array_keys(OptionsConfig::get());
+        
+        foreach ($optionKeys as $key) {
             $options[$key] = self::get($key);
         }
+        
         return (object)$options;
     }
     
     public static function reset()
     {
-        foreach (self::$optionKeys as $key) {
+        $optionKeys = array_keys(OptionsConfig::get());
+        
+        foreach ($optionKeys as $key) {
             self::delete($key);
         }
     }
