@@ -11,6 +11,13 @@ use WordProof\SDK\Support\Authentication;
 
 class RestApiController
 {
+    
+    /**
+     * Registers the rest api endpoints.
+     *
+     * @action rest_api_init
+     * @throws \Exception
+     */
     public function init()
     {
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('callback'), [
@@ -55,7 +62,12 @@ class RestApiController
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
     }
-
+    
+    /**
+     * Returns an object containing the settings.
+     *
+     * @return \WP_REST_Response Returns the settings.
+     */
     public function settings()
     {
         $data = SettingsHelper::get(null, (object)[]);
@@ -63,7 +75,12 @@ class RestApiController
 
         return new \WP_REST_Response($data, $data->status);
     }
-
+    
+    /**
+     * Returns if the user is authenticated.
+     *
+     * @return \WP_REST_Response Returns if the user is authenticated.
+     */
     public function authentication()
     {
         $data = (object)[
@@ -73,12 +90,23 @@ class RestApiController
 
         return new \WP_REST_Response($data, $data->status);
     }
-
+    
+    /**
+     * Checks if the user has permission to publish a post.
+     *
+     * @return bool Returns if a user has permission to publish.
+     */
     public function canPublishPermission()
     {
         return current_user_can('publish_posts') && current_user_can('publish_pages');
     }
-
+    
+    /**
+     * Send a post request to WordProof to timestamp a post.
+     *
+     * @param \WP_REST_Request $request The Rest Request.
+     * @return bool|void Returns if the request was successful.
+     */
     public function timestamp(\WP_REST_Request $request)
     {
         $data = $request->get_params();
@@ -87,7 +115,13 @@ class RestApiController
 
         return TimestampController::timestamp($postId);
     }
-
+    
+    /**
+     * Returns the hash input of a post.
+     *
+     * @param \WP_REST_Request $request The Rest Request.
+     * @return \WP_REST_Response The hash input of a post.
+     */
     public function hashInput(\WP_REST_Request $request)
     {
         $data = $request->get_params();
@@ -99,12 +133,23 @@ class RestApiController
 
         return new \WP_REST_Response((object)$hashInput);
     }
-
+    
+    /**
+     * Retrieves the access token on callback by WordProof.
+     *
+     * @throws \Exception
+     */
     public function oauthCallback()
     {
         Authentication::token();
     }
-
+    
+    /**
+     * Handles webhooks sent by WordProof.
+     *
+     * @param \WP_REST_Request $request The Rest Request.
+     * @return bool|null The value returned by the action undertaken.
+     */
     public function webhook(\WP_REST_Request $request)
     {
         if (!AuthenticationHelper::isValidWebhookRequest($request)) {
