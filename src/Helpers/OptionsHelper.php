@@ -19,28 +19,10 @@ class OptionsHelper
     public static function set($key, $value)
     {
         if (self::optionContainsOptions($key)) {
-    
-            if (is_object($value)) {
-                $value = (array)$value;
-            }
             
-            if (is_array($value)) {
-                
-                $values = [];
-                
-                foreach ($value as $optionKey => $optionValue) {
-                    $optionConfig = self::getOptionFromConfig($key . '.options.' . $optionKey);
-                    
-                    if (!$optionConfig) {
-                        continue;
-                    }
-                    
-                    $sanitizedValue = SanitizeHelper::sanitize($optionValue, $optionConfig['escape']);
-                    $values[$optionKey] = $sanitizedValue;
-                }
-                
-                return update_site_option(self::$prefix . $key, $values);
-            }
+            $sanitizedValue = self::secureOptionWithOptions($key, $value, 'sanitize');
+            
+            return update_site_option(self::$prefix . $key, $sanitizedValue);
             
         } else {
             $option = self::getOptionFromConfig($key);
@@ -60,7 +42,11 @@ class OptionsHelper
         $option = self::getOptionFromConfig($key);
         $value = get_site_option(self::$prefix . $key);
         
-        return EscapeHelper::escape($value, $option['escape']);
+        if (self::optionContainsOptions($key)) {
+            return self::secureOptionWithOptions($key, $value, 'escape');
+        } else {
+            return EscapeHelper::escape($value, $option['escape']);
+        }
     }
     
     public static function all()
@@ -114,5 +100,43 @@ class OptionsHelper
         $option = OptionsConfig::get($key);
         
         return ($option && array_key_exists('options', $option));
+    }
+    
+    private static function secureOptionWithOptions($key, $value, $method = 'sanitize')
+    {
+        $isObject = is_object($value);
+        
+        if (is_object($value)) {
+            $value = (array)$value;
+        }
+        
+        if (is_array($value)) {
+            
+            $values = [];
+            
+            foreach ($value as $optionKey => $optionValue) {
+                $optionConfig = self::getOptionFromConfig($key . '.options.' . $optionKey);
+                
+                if (!$optionConfig) {
+                    continue;
+                }
+                
+                if ($method === 'escape') {
+                    $securedValue = EscapeHelper::escape($optionValue, $optionConfig['escape']);
+                } else {
+                    $securedValue = SanitizeHelper::sanitize($optionValue, $optionConfig['escape']);
+                }
+                
+                $values[$optionKey] = $securedValue;
+            }
+            
+            if ($isObject) {
+                return (object)$values;
+            }
+            
+            return $values;
+        }
+        
+        return [];
     }
 }
