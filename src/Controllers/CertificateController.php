@@ -43,7 +43,7 @@ class CertificateController
         }
 
         if (SettingsHelper::hideCertificateLink()) {
-            return false;
+            return $content;
         }
         
         global $post;
