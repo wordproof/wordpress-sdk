@@ -8,7 +8,12 @@ use WordProof\SDK\Helpers\TransientHelper;
 class NoticeController
 {
     private $screens = ['post'];
-
+    
+    /**
+     * Showing notices for the classic editor.
+     *
+     * @action admin_notices
+     */
     public function show()
     {
         $screen = get_current_screen();

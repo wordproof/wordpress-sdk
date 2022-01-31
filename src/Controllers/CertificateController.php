@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Helpers\CertificateHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
 use WordProof\SDK\Helpers\SettingsHelper;
 use WordProofSDK\includes\Controller\SchemaController;
@@ -9,11 +10,13 @@ use WordProofSDK\includes\Controller\SchemaController;
 class CertificateController
 {
     /**
-     * Add scripts and schema
+     * Add scripts and schema to the head of the current page.
+     *
+     * @action wp_head
      */
     public function head()
     {
-        if (!$this->show()) {
+        if (!CertificateHelper::show()) {
             return;
         }
 
@@ -32,18 +35,22 @@ class CertificateController
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $schema;
     }
-
+    
     /**
-     * Add certificate html tag
+     * Adds the certificate tag to the content before rendering it.
+     *
+     * @param $content
+     * @return mixed|string Content string from 'the_content' filter
+     * @filter the_content
      */
     public function certificateTag($content)
     {
-        if (!$this->show()) {
+        if (!CertificateHelper::show()) {
             return $content;
         }
 
         if (SettingsHelper::hideCertificateLink()) {
-            return false;
+            return $content;
         }
         
         global $post;
@@ -58,22 +65,6 @@ class CertificateController
 
         return $content;
     }
+    
 
-    private function show()
-    {
-        if (!is_singular()) {
-            return false;
-        }
-
-        if (!is_main_query()) {
-            return false;
-        }
-
-        global $post;
-        return apply_filters(
-            'wordproof_timestamp_show_certificate',
-            PostMetaHelper::has($post->ID, '_wordproof_schema'),
-            $post
-        );
-    }
 }

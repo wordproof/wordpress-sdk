@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Support;
 
-use WordProof\SDK\Helpers\ConfigHelper;
+use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 
 class Api
@@ -14,7 +14,7 @@ class Api
      */
     public static function post($endpoint, $body = [])
     {
-        $location = ConfigHelper::url() . $endpoint;
+        $location = EnvironmentHelper::url() . $endpoint;
         $body = wp_json_encode($body);
 
         $accessToken = OptionsHelper::accessToken();
@@ -33,7 +33,7 @@ class Api
             'redirection' => 5,
             'blocking'    => true,
             'data_format' => 'body',
-            'sslverify'   => ConfigHelper::sslVerify()
+            'sslverify'   => EnvironmentHelper::sslVerify()
         ];
 
         $request = wp_remote_post($location, $options);

@@ -6,11 +6,22 @@ use WordProof\SDK\Support\Settings;
 
 class SettingsController
 {
+    /**
+     * Redirects user to the settings page. Returns false if not authenticated.
+     *
+     * @param null|string $redirectUrl
+     * @return false
+     */
     public function redirect($redirectUrl = null)
     {
         return Settings::redirect($redirectUrl);
     }
-
+    
+    /**
+     * Adds admin page that will redirect the user to a predefined url.
+     *
+     * @action admin_menu
+     */
     public function addRedirectPage()
     {
         add_submenu_page(
@@ -24,18 +35,22 @@ class SettingsController
     }
 
     /**
-     * The content for the redirect page.
+     * The content for the redirect page. Triggered by addRedirectPage().
      */
     public function redirectPageContent()
     {
+        return;
     }
 
     /**
-     * Gets triggered by the 'load-admin_page_' hook of the redirect page
+     * Redirects user on admin page load to the settings page on the WordProof My.
+     *
+     * @action load-admin_page_settings
      */
     public function redirectOnLoad()
     {
         $closeWindowUrl = admin_url('admin.php?page=wordproof-close-after-redirect');
+        
         if ($this->redirect($closeWindowUrl) === false) {
             do_action('wordproof_authenticate', $closeWindowUrl);
         }
