@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\RestApiHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
 use WordProof\SDK\Helpers\SchemaHelper;
@@ -70,7 +71,7 @@ class RestApiController
      */
     public function settings()
     {
-        $data = SettingsHelper::get(null, (object)[]);
+        $data = SettingsHelper::get();
         $data->status = 200;
 
         return new \WP_REST_Response($data, $data->status);
@@ -164,7 +165,7 @@ class RestApiController
         if (isset($response->type) && isset($response->data)) {
             switch ($response->type) {
                 case 'source_settings':
-                    return SettingsHelper::set($response->data);
+                    return OptionsHelper::set('settings', $response->data);
                 case 'logout':
                     return AuthenticationHelper::logout();
                 default:

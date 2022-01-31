@@ -2,57 +2,54 @@
 
 namespace WordProof\SDK\Helpers;
 
+use WordProof\SDK\Config\OptionsConfig;
+
 class SettingsHelper
 {
     private static $key = 'settings';
-
-    public static function set($data)
-    {
-        return OptionsHelper::set(self::$key, $data);
-    }
-
-    public static function get($setting = null, $default = null)
+    
+    /**
+     * Retrieving settings from the option.
+     *
+     * @param null $setting The key for the setting
+     * @return array|bool|int|mixed|object|string|null
+     */
+    public static function get($setting = null)
     {
         $settings = OptionsHelper::get(self::$key);
 
         if ($setting) {
-            if (isset($settings->$setting)) {
+            
+            $option = OptionsConfig::get('settings.options.' . $setting);
+            
+            if (isset($settings->$setting) && $option) {
                 return $settings->$setting;
             }
-
-            return $default;
+    
+            return $option['default'];
         }
-
-        if (!isset($settings)) {
-            return $default;
-        }
-
-        return $settings;
-    }
-
-    public static function reset()
-    {
-        return OptionsHelper::delete(self::$key);
+        
+        return (object)$settings;
     }
 
     public static function showRevisions()
     {
-        return self::get('show_revisions', true);
+        return self::get('show_revisions');
     }
 
     public static function certificateLinkText()
     {
-        return self::get('certificate_link_text', "View this content's Timestamp certificate");
+        return self::get('certificate_link_text');
     }
 
     public static function hideCertificateLink()
     {
-        return self::get('hide_certificate_link', false);
+        return self::get('hide_certificate_link');
     }
 
     public static function selectedPostTypes()
     {
-        return self::get('selected_post_types', []);
+        return self::get('selected_post_types');
     }
 
     public static function postTypeIsInSelectedPostTypes($postType)
