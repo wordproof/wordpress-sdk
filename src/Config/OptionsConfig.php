@@ -21,22 +21,19 @@ class OptionsConfig extends Config
                 'default' => null,
             ],
             'settings'     => [
-                
                 'cast' => 'object',
                 'options' => [
-                    
                     'certificate_link_text' => [
                         'escape'  => 'text_field',
                         'default' => __('View this content\'s Timestamp certificate', 'wordproof_timestamp')
                     ],
-
                     'hide_certificate_link' => [
                         'escape'  => 'boolean',
                         'default' => false,
                     ],
                     'selected_post_types'   => [
                         'escape'  => 'text_field',
-                        'default' => false,
+                        'default' => [],
                     ],
                     'show_revisions'        => [
                         'escape'  => 'boolean',

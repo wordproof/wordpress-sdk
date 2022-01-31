@@ -7,11 +7,15 @@ abstract class Config
     /**
      * Try to return config values using the dot syntax.
      *
-     * @param string $key The key of the config using the dot syntax.
+     * @param string|null $key The key of the config using the dot syntax.
      * @return array|mixed Returns the entire config array if not found, otherwise the value itself.
      */
-    public static function get($key)
+    public static function get($key = null)
     {
+        if (!isset($key)) {
+            return static::values();
+        }
+        
         $keys = explode('.', $key);
         $value = static::values();
     
