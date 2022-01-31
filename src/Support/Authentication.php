@@ -3,7 +3,7 @@
 namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\AdminHelper;
-use WordProof\SDK\Helpers\ConfigHelper;
+use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\RedirectHelper;
 use WordProof\SDK\Helpers\SdkHelper;
@@ -27,7 +27,7 @@ class Authentication
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
 
         $data = [
-            'client_id'             => ConfigHelper::client(),
+            'client_id'             => EnvironmentHelper::client(),
             'redirect_uri'          => self::getCallbackUrl(),
             'response_type'         => 'code',
             'scope'                 => '',
@@ -58,7 +58,7 @@ class Authentication
 
         $data = [
             'grant_type'    => 'authorization_code',
-            'client_id'     => ConfigHelper::client(),
+            'client_id'     => EnvironmentHelper::client(),
             'redirect_uri'  => self::getCallbackUrl(),
             'code_verifier' => $codeVerifier,
             // phpcs:ignore WordPress.Security.NonceVerification
@@ -80,7 +80,7 @@ class Authentication
 
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
-            'url'                  => preg_replace('#^https?://#', '', get_site_url()),
+            'url'                  => get_site_url(),
             'available_post_types' => array_values(get_post_types(['public' => true])),
             'partner'              => SdkHelper::getPartner()
         ];
@@ -99,7 +99,7 @@ class Authentication
 
     public static function redirect($endpoint, $parameters)
     {
-        $location = ConfigHelper::url() . $endpoint . '?' . http_build_query($parameters);
+        $location = EnvironmentHelper::url() . $endpoint . '?' . http_build_query($parameters);
         header("Location: " . $location);
     }
 }

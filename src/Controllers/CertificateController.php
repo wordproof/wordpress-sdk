@@ -16,7 +16,7 @@ class CertificateController
      */
     public function head()
     {
-        if (CertificateHelper::show()) {
+        if (!CertificateHelper::show()) {
             return;
         }
 
@@ -45,7 +45,7 @@ class CertificateController
      */
     public function certificateTag($content)
     {
-        if (CertificateHelper::show()) {
+        if (!CertificateHelper::show()) {
             return $content;
         }
 
