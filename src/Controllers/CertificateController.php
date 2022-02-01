@@ -23,9 +23,9 @@ class CertificateController
         global $post;
 
         $schema = "\n";
-        $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit/dist/uikit/uikit.esm.js"></script>';
+        $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit@1.0.*/dist/uikit/uikit.esm.js"></script>';
         $schema .= "\n";
-        $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit/dist/uikit/uikit.js"></script>';
+        $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit@1.0.*/dist/uikit/uikit.js"></script>';
         $schema .= "\n";
         $schema .= '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
         $schema .= json_encode(PostMetaHelper::get($post->ID, '_wordproof_schema'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
