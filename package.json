@@ -1,0 +1,11 @@
+{
+  "name": "WordPress SDK",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/wordproof/wordpress-sdk.git",
+  "author": "Marijn Bent <marijn@marijnbent.nl>",
+  "license": "MIT",
+  "dependencies": {
+    "@wordpress/scripts": "^20.0.2"
+  }
+}
