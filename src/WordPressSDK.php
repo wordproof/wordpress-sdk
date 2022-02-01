@@ -177,4 +177,20 @@ class WordPressSDK
 
         return $this;
     }
+    
+    /**
+     * Optional feature to timestamp with JS in the post editor.
+     *
+     * @return $this
+     */
+    public function timestampInPostEditor()
+    {
+        $class = new PostEditorTimestampController();
+    
+        //enqueue scripts
+        //add toggle
+        //add timestamp on update
+        //add notices
+        return $this;
+    }
 }
