@@ -198,11 +198,15 @@ class WordPressSDK
     public function timestampInPostEditor()
     {
         $class = new PostEditorTimestampController();
+        
+        // Gutenberg
+        $this->loader->add_action('init', $class, 'registerPostMeta', \PHP_INT_MAX);
+        $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueScript');
+        
+        // Classic editor
+        $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
+        $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
     
-        //enqueue scripts
-        //add toggle
-        //add timestamp on update
-        //add notices
         return $this;
     }
 }
