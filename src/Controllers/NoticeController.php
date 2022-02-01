@@ -7,10 +7,13 @@ use WordProof\SDK\Helpers\TransientHelper;
 
 class NoticeController
 {
+    /**
+     * @var string[] The screens on which notices should be rendered.
+     */
     private $screens = ['post'];
     
     /**
-     * Showing notices for the classic editor.
+     * Showing notices for the classic editor and delete them so they are only shown once.
      *
      * @action admin_notices
      */
