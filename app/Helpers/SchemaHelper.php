@@ -4,6 +4,12 @@ namespace WordProof\SDK\Helpers;
 
 class SchemaHelper
 {
+    /**
+     * Builds an blockchain transaction schema object as array.
+     *
+     * @param object $response The response by WordProof.
+     * @return array The blockchain transaction in the correct schema format.
+     */
     public static function getBlockchainTransaction($response)
     {
         $postId = $response->uid;
@@ -20,7 +26,13 @@ class SchemaHelper
             ]
         ];
     }
-
+    
+    /**
+     * Retrieves the schema as array for a post.
+     *
+     * @param integer $postId The post id for which the schema should be returned.
+     * @return array The schema as array.
+     */
     public static function getSchema($postId)
     {
         $transactions = PostMetaHelper::get($postId, '_wordproof_blockchain_transaction', false);

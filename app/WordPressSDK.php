@@ -3,7 +3,8 @@
 namespace WordProof\SDK;
 
 use WordProof\SDK\Controllers\NoticeController;
-use WordProof\SDK\Controllers\PostEditorController;
+use WordProof\SDK\Controllers\PostEditorDataController;
+use WordProof\SDK\Controllers\PostEditorTimestampController;
 use WordProof\SDK\Controllers\RestApiController;
 use WordProof\SDK\Controllers\AuthenticationController;
 use WordProof\SDK\Controllers\CertificateController;
@@ -38,6 +39,7 @@ class WordPressSDK
 
     /**
      * WordPressSDK constructor.
+     *
      * @throws \Exception
      */
     public function __construct($partner = null, $env = 'production')
@@ -49,17 +51,25 @@ class WordPressSDK
         $this->loader = new Loader();
         $this->partner = $partner;
         $this->environment = $env;
-
+    
         $this->authentication();
         $this->api();
         $this->timestamp();
         $this->settings();
-        $this->postEditor();
-        $this->notice();
+        $this->postEditorData();
+        $this->notices();
 
         return $this;
     }
-
+    
+    /**
+     * Singleton implementation of WordPress SDK.
+     *
+     * @param null|string $partner The partner used for in the WordProof My.
+     * @param null|string $environment The environment used by the SDK to determine which server to use.
+     * @return WordPressSDK|null Returns the WordPress SDK instance.
+     * @throws \Exception
+     */
     public static function getInstance($partner = null, $environment = null)
     {
         if (self::$instance === null) {
@@ -68,14 +78,21 @@ class WordPressSDK
 
         return self::$instance;
     }
-
-
+    
+    /**
+     * Runs the loader and initializes the class.
+     *
+     * @return $this
+     */
     public function initialize()
     {
         $this->loader->run();
         return $this;
     }
-
+    
+    /**
+     * Initializes the authentication feature.
+     */
     private function authentication()
     {
         $class = new AuthenticationController();
@@ -86,14 +103,20 @@ class WordPressSDK
         $this->loader->add_action('admin_menu', $class, 'addSelfDestructPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
     }
-
+    
+    /**
+     * Initializes the api feature.
+     */
     private function api()
     {
         $class = new RestApiController();
 
         $this->loader->add_action('rest_api_init', $class, 'init');
     }
-
+    
+    /**
+     * Adds hooks to timestamp posts on new inserts or on a custom action.
+     */
     private function timestamp()
     {
         $class = new TimestampController();
@@ -103,7 +126,10 @@ class WordPressSDK
 
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
     }
-
+    
+    /**
+     * Adds admin pages that redirect to the WordProof My settings page.
+     */
     private function settings()
     {
         $class = new SettingsController();
@@ -113,22 +139,35 @@ class WordPressSDK
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-settings', $class, 'redirectOnLoad');
     }
-
-    private function postEditor()
+    
+    /**
+     * Registers and localizes post editor scripts.
+     */
+    private function postEditorData()
     {
-        $class = new PostEditorController();
+        $class = new PostEditorDataController();
+        
+        //register script
 
         $this->loader->add_action('admin_enqueue_scripts', $class, 'localizePostEditors', \PHP_INT_MAX);
         $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'localizeElementor', \PHP_INT_MAX);
     }
-
-    private function notice()
+    
+    /**
+     * Initializes the notices feature.
+     */
+    private function notices()
     {
         $class = new NoticeController();
 
         $this->loader->add_action('admin_notices', $class, 'show');
     }
-
+    
+    /**
+     * Optional feature to include the schema and certificate to the page.
+     *
+     * @return $this
+     */
     public function certificate()
     {
         $class = new CertificateController();
@@ -136,6 +175,22 @@ class WordPressSDK
         $this->loader->add_action('wp_head', $class, 'head');
         $this->loader->add_filter('the_content', $class, 'certificateTag');
 
+        return $this;
+    }
+    
+    /**
+     * Optional feature to timestamp with JS in the post editor.
+     *
+     * @return $this
+     */
+    public function timestampInPostEditor()
+    {
+        $class = new PostEditorTimestampController();
+    
+        //enqueue scripts
+        //add toggle
+        //add timestamp on update
+        //add notices
         return $this;
     }
 }

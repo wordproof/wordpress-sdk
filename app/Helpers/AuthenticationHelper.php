@@ -4,19 +4,19 @@ namespace WordProof\SDK\Helpers;
 
 class AuthenticationHelper
 {
-    public static function isValidWebhookRequest(\WP_REST_Request $request)
-    {
-        $hashedToken = hash('sha256', OptionsHelper::accessToken());
-        $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
-
-        return $request->get_header('signature') === $hmac;
-    }
-
+    /**
+     * Removes all the options set by WordProof.
+     */
     public static function logout()
     {
         return OptionsHelper::reset();
     }
-
+    
+    /**
+     * Returns if the user is authenticated.
+     *
+     * @return bool If the user is authenticated.
+     */
     public static function isAuthenticated()
     {
         $options = OptionsHelper::all();

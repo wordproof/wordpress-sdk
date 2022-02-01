@@ -31,11 +31,23 @@ class OptionsHelper
         }
     }
     
+    /**
+     * Deletes the site options.
+     *
+     * @param string $key The key to be deleted.
+     * @return mixed
+     */
     public static function delete($key)
     {
         return delete_site_option(self::$prefix . $key);
     }
     
+    /**
+     * Retrieves the site option while properly escaping the data.
+     *
+     * @param string $key The site option.
+     * @return array|bool|int|object|string
+     */
     public static function get($key)
     {
         $option = self::getOptionFromConfig($key);
@@ -48,6 +60,11 @@ class OptionsHelper
         }
     }
     
+    /**
+     * Returns all site options as object.
+     *
+     * @return object
+     */
     public static function all()
     {
         $optionKeys = array_keys(OptionsConfig::get());
@@ -59,6 +76,9 @@ class OptionsHelper
         return (object)$options;
     }
     
+    /**
+     * Deletes all site options.
+     */
     public static function reset()
     {
         $optionKeys = array_keys(OptionsConfig::get());
@@ -68,26 +88,54 @@ class OptionsHelper
         }
     }
     
+    /**
+     * Retrieves the access token.
+     *
+     * @return string|null
+     */
     public static function accessToken()
     {
-        return self::get('access_token') ?: null;
+        return self::get('access_token');
     }
     
+    /**
+     * Retrieves the source id.
+     *
+     * @return integer|null
+     */
     public static function sourceId()
     {
-        return self::get('source_id') ?: null;
+        return self::get('source_id');
     }
     
+    /**
+     * Sets the access token.
+     *
+     * @param string|null $value The access token to be set.
+     * @return bool
+     */
     public static function setAccessToken($value)
     {
         return self::set('access_token', $value);
     }
     
+    /**
+     * Sets the source id.
+     *
+     * @param integer|null $value The source id to be set.
+     * @return bool
+     */
     public static function setSourceId($value)
     {
         return self::set('source_id', $value);
     }
     
+    /**
+     * Retrieves the option settings from the config.
+     *
+     * @param string $key The option key.
+     * @return array|false|mixed
+     */
     private static function getOptionFromConfig($key)
     {
         $option = OptionsConfig::get($key);
@@ -99,6 +147,12 @@ class OptionsHelper
         return false;
     }
     
+    /**
+     * Returns if the given option key contains options itself.
+     *
+     * @param string $key The option key to be checked.
+     * @return bool
+     */
     private static function optionContainsOptions($key)
     {
         $option = OptionsConfig::get($key);
@@ -106,6 +160,14 @@ class OptionsHelper
         return ($option && array_key_exists('options', $option));
     }
     
+    /**
+     * Loops through an option that contains options to either sanitize or escape the result.
+     *
+     * @param $key
+     * @param $value
+     * @param string $method
+     * @return array|object
+     */
     private static function secureOptionWithOptions($key, $value, $method = 'sanitize')
     {
         $isObject = is_object($value);
