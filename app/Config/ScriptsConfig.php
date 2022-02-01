@@ -16,7 +16,7 @@ class ScriptsConfig extends Config
                 'dependencies' => [],
             ],
             'post-meta-option' => [
-                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post'],
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'lodash'],
             ],
         ];
     }

@@ -23,8 +23,6 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
 
     const timestampedAutomatically = useMemo(
             () => {
-                console.log(selectedPostTypes);
-                console.log(postType);
                 selectedPostTypes.includes(postType);
             },
             [selectedPostTypes, postType],
