@@ -1,11 +1,19 @@
 {
-  "name": "WordPress SDK",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/wordproof/wordpress-sdk.git",
-  "author": "Marijn Bent <marijn@marijnbent.nl>",
-  "license": "MIT",
-  "dependencies": {
-    "@wordpress/scripts": "^20.0.2"
-  }
+    "name": "wordpress-sdk",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/wordproof/wordpress-sdk.git",
+    "author": "Marijn Bent <marijn@marijnbent.nl>",
+    "license": "MIT",
+    "dependencies": {},
+    "scripts": {
+        "lint": "wp-scripts lint-js ./resources/js",
+        "format": "wp-scripts format ./resources/js",
+        "build": "wp-scripts build ./resources/js",
+        "start": "wp-scripts start ./resources/js",
+        "start:host": "wp-scripts start ./resources/js --hot"
+    },
+    "devDependencies": {
+        "@wordpress/scripts": "^20.0.2"
+    }
 }
