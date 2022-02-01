@@ -32,9 +32,7 @@ class RestApiController
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('webhook'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'webhook'],
-            'permission_callback' => function () {
-                return true;
-            }
+            'permission_callback' => [$this, 'isValidWebhookRequest']
         ]);
 
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('hashInput'), [
@@ -103,6 +101,20 @@ class RestApiController
     }
     
     /**
+     * Validates if the webhook is valid and signed with the correct secret.
+     *
+     * @param \WP_REST_Request $request The Rest Request.
+     * @return bool If the webhook can be accepted.
+     */
+    public static function isValidWebhookRequest(\WP_REST_Request $request)
+    {
+        $hashedToken = hash('sha256', OptionsHelper::accessToken());
+        $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
+        
+        return $request->get_header('signature') === $hmac;
+    }
+    
+    /**
      * Send a post request to WordProof to timestamp a post.
      *
      * @param \WP_REST_Request $request The Rest Request.
@@ -153,10 +165,6 @@ class RestApiController
      */
     public function webhook(\WP_REST_Request $request)
     {
-        if (!AuthenticationHelper::isValidWebhookRequest($request)) {
-            return null;
-        }
-
         $response = json_decode($request->get_body());
 
         /**
@@ -166,6 +174,9 @@ class RestApiController
             switch ($response->type) {
                 case 'source_settings':
                     return OptionsHelper::set('settings', $response->data);
+                case 'ping':
+                    $data = (object)['status' => 200, 'source_id' => OptionsHelper::sourceId()];
+                    return new \WP_REST_Response($data, $data->status);
                 case 'logout':
                     return AuthenticationHelper::logout();
                 default:
