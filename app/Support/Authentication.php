@@ -5,6 +5,7 @@ namespace WordProof\SDK\Support;
 use WordProof\SDK\Helpers\AdminHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
+use WordProof\SDK\Helpers\PostTypeHelper;
 use WordProof\SDK\Helpers\RedirectHelper;
 use WordProof\SDK\Helpers\SdkHelper;
 use WordProof\SDK\Helpers\TransientHelper;
@@ -81,7 +82,7 @@ class Authentication
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => get_site_url(),
-            'available_post_types' => array_values(get_post_types(['public' => true])),
+            'available_post_types' => PostTypeHelper::getPublicPostTypes(),
             'partner'              => SdkHelper::getPartner()
         ];
 

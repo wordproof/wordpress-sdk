@@ -45,7 +45,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "check-cs": "./vendor/bin/phpcs --standard=WP-Engine ./src",
-        "fix-cs": "./vendor/bin/php-cs-fixer fix src --allow-risky=yes"
+        "check-cs": "./vendor/bin/phpcs --standard=WP-Engine app",
+        "fix-cs": "./vendor/bin/php-cs-fixer fix app --allow-risky=yes"
     }
 }

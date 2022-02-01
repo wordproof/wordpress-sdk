@@ -10,15 +10,11 @@ use WordProof\SDK\Controllers\AuthenticationController;
 use WordProof\SDK\Controllers\CertificateController;
 use WordProof\SDK\Controllers\SettingsController;
 use WordProof\SDK\Controllers\TimestampController;
+use WordProof\SDK\Helpers\ReflectionHelper;
 use WordProof\SDK\Support\Loader;
 
 class WordPressSDK
 {
-    /**
-     * Loader responsible for the WordPress hooks
-     * @var Loader
-     */
-    private $loader;
 
     /**
      * The partner used for displaying custom auth pages
@@ -36,6 +32,12 @@ class WordPressSDK
      * @var null|WordPressSDK
      */
     private static $instance = null;
+    
+    /**
+     * Loader responsible for the WordPress hooks
+     * @var Loader
+     */
+    private $loader;
 
     /**
      * WordPressSDK constructor.
@@ -44,10 +46,14 @@ class WordPressSDK
      */
     public function __construct($partner = null, $env = 'production')
     {
+        if (defined('WORDPROOF_WORDPRESS_SDK')) {
+            return;
+        }
+
         if (!headers_sent() && !session_id()) {
             session_start();
         }
-
+        
         $this->loader = new Loader();
         $this->partner = $partner;
         $this->environment = $env;
@@ -58,6 +64,12 @@ class WordPressSDK
         $this->settings();
         $this->postEditorData();
         $this->notices();
+    
+        if ( ! defined( 'WORDPROOF_WORDPRESS_SDK_FILE' ) ) {
+            define( 'WORDPROOF_WORDPRESS_SDK_FILE', __FILE__ );
+        }
+
+        define('WORDPROOF_WORDPRESS_SDK', ReflectionHelper::name($this));
 
         return $this;
     }

@@ -44,7 +44,7 @@ class NoticeController
             case 'timestamp_failed':
                 $type = 'error';
                 /* translators: %s expands to WordProof. */
-                $description = sprintf(__('%s failed to timestamp this page. Please check if you\'re correctly authenticated with %s and try to save this page again.', 'wordpress-seo'), 'WordProof');
+                $description = sprintf(__('%1$s failed to timestamp this page. Please check if you\'re correctly authenticated with %1$s and try to save this page again.', 'wordpress-seo'), 'WordProof');
                 break;
             default:
                 break;
