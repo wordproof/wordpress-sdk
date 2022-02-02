@@ -11,7 +11,15 @@ class AssetHelper
     private static $filePath = 'app/';
     private static $buildPath = 'build/';
     
-    public static function register($name)
+    /**
+     * Localizes script by name.
+     *
+     * @param string $name Name of the script
+     * @param string $objectName The name of the object in Javascript.
+     * @param array $data The data to be included.
+     * @return bool|void
+     */
+    public static function localize($name, $objectName, $data)
     {
         $config = ScriptsConfig::get($name);
         
@@ -19,10 +27,15 @@ class AssetHelper
             return;
         }
         
-        $arguments = self::getData($name, $config['dependencies']);
-        return call_user_func_array('wp_register_script', $arguments);
+        return wp_localize_script(self::getHandle($name), $objectName, $data);
     }
     
+    /**
+     * Enqueues a script defined in the scripts config.
+     *
+     * @param $name The name of the script to enqueue.
+     * @return false|mixed|void
+     */
     public static function enqueue($name)
     {
         $config = ScriptsConfig::get($name);
@@ -31,29 +44,33 @@ class AssetHelper
             return;
         }
         
-        $arguments = self::getData($name, $config['dependencies']);
-        return call_user_func_array('wp_enqueue_script', $arguments);
-    }
-    
-    private static function getData($name, $dependencies)
-    {
-        $path = self::getPathUrl($name);
-        
-        return [
+        wp_enqueue_script(
             self::getHandle($name),
-            $path,
-            $dependencies,
+            self::getPathUrl($name),
+            $config['dependencies'],
             false,
             false
-        ];
+        );
     }
     
+    /**
+     * Returns the prefixed script handle.
+     *
+     * @param $name The name of the script.
+     * @return string Handle of the script.
+     */
     private static function getHandle($name)
     {
         return self::$prefix . $name;
     }
     
-    private static function getPathUrl($handle)
+    /**
+     * Get path url of the script.
+     *
+     * @param $name The name of the script.
+     * @return string The url of the script.
+     */
+    private static function getPathUrl($name)
     {
         if (EnvironmentHelper::development()) {
             $config = EnvironmentConfig::get(SdkHelper::getEnvironment());
@@ -66,6 +83,6 @@ class AssetHelper
         }
         
         $base = StringHelper::lastReplace(self::$filePath, self::$buildPath, $url);
-        return $base . $handle . '.js';
+        return $base . $name . '.js';
     }
 }
