@@ -109,4 +109,66 @@ class PostEditorTimestampController
         <label for="<?php echo $this->metaKey; ?>">Timestamp this post</label>
         <?php
     }
+    
+    /**
+     * Registers control for the Elementor editor.
+     *
+     * @param \Elementor\Core\DocumentTypes\PageBase $document The PageBase document instance.
+     *
+     * @action elementor/documents/register_controls
+     */
+    public function registerControl($document)
+    {
+        if (!$document instanceof \Elementor\Core\DocumentTypes\PageBase || !$document::get_property('has_elements')) {
+            return;
+        }
+        
+        // Add Metabox
+        $document->start_controls_section(
+            'wordproof_timestamp_section',
+            [
+                'label' => esc_html__('WordProof Timestamp', 'wordproof_timestamp'),
+                'tab'   => \Elementor\Controls_Manager::TAB_SETTINGS,
+            ]
+        );
+        
+        // Get meta value
+        $postId = $document->get_id();
+        $metaValue = PostMetaHelper::get($postId, $this->metaKey, true);
+        
+        // Override elementor value
+        $pageSettingsManager = \Elementor\Core\Settings\Manager::get_settings_managers('page');
+        $pageSettingsModel = $pageSettingsManager->get_model($postId);
+        $pageSettingsModel->set_settings($this->metaKey, boolval($metaValue) ? 'yes' : '');
+        
+        // Add Switcher
+        $document->add_control(
+            $this->metaKey,
+            [
+                'label'   => esc_html__('Timestamp this post', 'wordproof_timestamp'),
+                'type'    => \Elementor\Controls_Manager::SWITCHER,
+                'default' => 'no',
+            ]
+        );
+        
+        $document->end_controls_section();
+    }
+    
+    /**
+     * @param integer $postId
+     * @action elementor/document/save/data
+     */
+    public function elementorSave($postId)
+    {
+        if (get_post_type($postId) !== 'page') {
+            return;
+        }
+    
+        $pageSettingsManager = \Elementor\Core\Settings\Manager::get_settings_managers('page');
+        $pageSettingsModel = $pageSettingsManager->get_model($postId);
+        $value = $pageSettingsModel->get_settings($this->metaKey);
+
+        // Update meta key with Elementor value.
+        PostMetaHelper::update($postId, $this->metaKey, $value === 'yes');
+    }
 }

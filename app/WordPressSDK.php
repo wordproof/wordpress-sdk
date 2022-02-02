@@ -15,19 +15,19 @@ use WordProof\SDK\Support\Loader;
 
 class WordPressSDK
 {
-
+    
     /**
      * The partner used for displaying custom auth pages
      * @var mixed|null
      */
     public $partner = null;
-
+    
     /**
      * The environment being used. development|staging|production
      * @var mixed|string
      */
     public $environment = 'production';
-
+    
     /**
      * @var null|WordPressSDK
      */
@@ -38,7 +38,7 @@ class WordPressSDK
      * @var Loader
      */
     private $loader;
-
+    
     /**
      * WordPressSDK constructor.
      *
@@ -49,7 +49,7 @@ class WordPressSDK
         if (defined('WORDPROOF_WORDPRESS_SDK')) {
             return;
         }
-
+        
         if (!headers_sent() && !session_id()) {
             session_start();
         }
@@ -57,20 +57,20 @@ class WordPressSDK
         $this->loader = new Loader();
         $this->partner = $partner;
         $this->environment = $env;
-    
+        
         $this->authentication();
         $this->api();
         $this->timestamp();
         $this->settings();
         $this->postEditorData();
         $this->notices();
-    
-        if ( ! defined( 'WORDPROOF_WORDPRESS_SDK_FILE' ) ) {
-            define( 'WORDPROOF_WORDPRESS_SDK_FILE', __FILE__ );
+        
+        if (!defined('WORDPROOF_WORDPRESS_SDK_FILE')) {
+            define('WORDPROOF_WORDPRESS_SDK_FILE', __FILE__);
         }
-
+        
         define('WORDPROOF_WORDPRESS_SDK', ReflectionHelper::name($this));
-
+        
         return $this;
     }
     
@@ -87,7 +87,7 @@ class WordPressSDK
         if (self::$instance === null) {
             self::$instance = new WordPressSDK($partner, $environment);
         }
-
+        
         return self::$instance;
     }
     
@@ -108,9 +108,9 @@ class WordPressSDK
     private function authentication()
     {
         $class = new AuthenticationController();
-
+        
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
-
+        
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('admin_menu', $class, 'addSelfDestructPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
@@ -122,7 +122,7 @@ class WordPressSDK
     private function api()
     {
         $class = new RestApiController();
-
+        
         $this->loader->add_action('rest_api_init', $class, 'init');
     }
     
@@ -132,10 +132,10 @@ class WordPressSDK
     private function timestamp()
     {
         $class = new TimestampController();
-
+        
         $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
         $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
-
+        
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
     }
     
@@ -145,9 +145,9 @@ class WordPressSDK
     private function settings()
     {
         $class = new SettingsController();
-
+        
         $this->loader->add_action('wordproof_settings', $class, 'redirect');
-
+        
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-settings', $class, 'redirectOnLoad');
     }
@@ -160,7 +160,7 @@ class WordPressSDK
         $class = new PostEditorDataController();
         
         //register script
-
+        
         $this->loader->add_action('admin_enqueue_scripts', $class, 'localizePostEditors', \PHP_INT_MAX);
         $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'localizeElementor', \PHP_INT_MAX);
     }
@@ -171,7 +171,7 @@ class WordPressSDK
     private function notices()
     {
         $class = new NoticeController();
-
+        
         $this->loader->add_action('admin_notices', $class, 'show');
     }
     
@@ -183,10 +183,10 @@ class WordPressSDK
     public function certificate()
     {
         $class = new CertificateController();
-
+        
         $this->loader->add_action('wp_head', $class, 'head');
         $this->loader->add_filter('the_content', $class, 'certificateTag');
-
+        
         return $this;
     }
     
@@ -206,7 +206,11 @@ class WordPressSDK
         // Classic editor
         $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
         $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
-    
+        
+        // Elementor
+        $this->loader->add_action('elementor/documents/register_controls', $class, 'registerControl');
+        $this->loader->add_action('elementor/editor/after_save', $class, 'elementorSave');
+        
         return $this;
     }
 }
