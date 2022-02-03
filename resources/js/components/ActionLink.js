@@ -1,5 +1,4 @@
 const {__, sprintf} = wp.i18n;
-const {ToggleControl, PanelRow} = wp.components;
 const {useState, useCallback} = wp.element;
 import PropTypes from 'prop-types';
 
@@ -56,14 +55,10 @@ const Action_Link = (props) => {
     const listenToMessages = async (event) => {
         const {data, source, origin} = event;
 
-        // console.log(origin);
+        if (origin !== getData('origin') || popup !== source) {
         // console.log(source);
-        // console.warn(data);
-
-        //Get url from EnvironmentConfig.
-        // if (origin !== "https://oauth.semrush.com" || popup !== source) {
-        //     return;
-        // }
+            return;
+        }
 
         if (data.type === "wordproof:oauth:success") {
             popup.close();
