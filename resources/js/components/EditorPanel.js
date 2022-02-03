@@ -1,12 +1,13 @@
-import {getData, getWordProofSdkData} from "../helpers/dataHelper";
+import {getData} from "../helpers/dataHelper";
+import Action_Link from "./ActionLink";
 
 const {__, sprintf} = wp.i18n;
 const {PluginDocumentSettingPanel} = wp.editPost;
-const {ToggleControl, PanelRow} = wp.components;
+const {ToggleControl, PanelRow, prop} = wp.components;
 const {compose} = wp.compose;
 const {withSelect, withDispatch} = wp.data;
 const {useState, useMemo, useEffect} = wp.element;
-
+import PropTypes from 'prop-types';
 
 const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
 
@@ -42,9 +43,17 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
                             onChange={(value) => setPostMeta({_wordproof_timestamp: value})}
                             checked={postMeta._wordproof_timestamp || timestampedAutomatically}
                             disabled={timestampedAutomatically}
-                    /> </PanelRow>
+                    />
+                    <Action_Link isAuthenticated={isAuthenticated} />
+                </PanelRow>
             </PluginDocumentSettingPanel>
     );
+}
+
+Editor_Panel.proptypes = {
+    postType: PropTypes.string.isRequired,
+    postMeta: PropTypes.object.isRequired,
+    setPostMeta: PropTypes.func.isRequired
 }
 
 export default compose([
