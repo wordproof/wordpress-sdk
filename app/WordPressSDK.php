@@ -159,10 +159,8 @@ class WordPressSDK
     {
         $class = new PostEditorDataController();
         
-        //register script
-        
-        $this->loader->add_action('admin_enqueue_scripts', $class, 'localizePostEditors', \PHP_INT_MAX);
-        $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'localizeElementor', \PHP_INT_MAX);
+        $this->loader->add_action('admin_enqueue_scripts', $class, 'addScript');
+        $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'addScriptForElementor');
     }
     
     /**

@@ -11,7 +11,7 @@ class PostEditorTimestampController
     
     private $metaKey = '_wordproof_timestamp';
     private $classicEditorNonceKey = 'wordproof_timestamp_classic_nonce';
-    
+
     /**
      * Registers post meta for all public post types.
      *

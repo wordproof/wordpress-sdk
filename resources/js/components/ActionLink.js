@@ -56,7 +56,6 @@ const Action_Link = (props) => {
         const {data, source, origin} = event;
 
         if (origin !== getData('origin') || popup !== source) {
-        // console.log(source);
             return;
         }
 
