@@ -21,12 +21,10 @@ class RestApiController
      */
     public function init()
     {
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('callback'), [
-            'methods'             => 'GET',
-            'callback'            => [$this, 'oauthCallback'],
-            'permission_callback' => function () {
-                return true;
-            }
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authenticate'), [
+            'methods'             => 'POST',
+            'callback'            => [$this, 'authenticate'],
+            'permission_callback' => [$this, 'canPublishPermission']
         ]);
 
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('webhook'), [
@@ -91,30 +89,6 @@ class RestApiController
     }
     
     /**
-     * Checks if the user has permission to publish a post.
-     *
-     * @return bool Returns if a user has permission to publish.
-     */
-    public function canPublishPermission()
-    {
-        return current_user_can('publish_posts') && current_user_can('publish_pages');
-    }
-    
-    /**
-     * Validates if the webhook is valid and signed with the correct secret.
-     *
-     * @param \WP_REST_Request $request The Rest Request.
-     * @return bool If the webhook can be accepted.
-     */
-    public static function isValidWebhookRequest(\WP_REST_Request $request)
-    {
-        $hashedToken = hash('sha256', OptionsHelper::accessToken());
-        $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
-        
-        return $request->get_header('signature') === $hmac;
-    }
-    
-    /**
      * Send a post request to WordProof to timestamp a post.
      *
      * @param \WP_REST_Request $request The Rest Request.
@@ -148,13 +122,16 @@ class RestApiController
     }
     
     /**
-     * Retrieves the access token on callback by WordProof.
+     * Retrieves the access token when the code and state are retrieved in the frontend.
      *
      * @throws \Exception
      */
-    public function oauthCallback()
+    public function authenticate(\WP_REST_Request $request)
     {
-        Authentication::token();
+        $state = sanitize_text_field($request->get_param('state'));
+        $code = sanitize_text_field($request->get_param('code'));
+
+        return Authentication::token($state, $code);
     }
     
     /**
@@ -196,5 +173,29 @@ class RestApiController
             $schema = SchemaHelper::getSchema($postId);
             PostMetaHelper::update($postId, '_wordproof_schema', $schema);
         }
+    }
+    
+    /**
+     * Checks if the user has permission to publish a post.
+     *
+     * @return bool Returns if a user has permission to publish.
+     */
+    public function canPublishPermission()
+    {
+        return current_user_can('publish_posts') && current_user_can('publish_pages');
+    }
+    
+    /**
+     * Validates if the webhook is valid and signed with the correct secret.
+     *
+     * @param \WP_REST_Request $request The Rest Request.
+     * @return bool If the webhook can be accepted.
+     */
+    public static function isValidWebhookRequest(\WP_REST_Request $request)
+    {
+        $hashedToken = hash('sha256', OptionsHelper::accessToken());
+        $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
+        
+        return $request->get_header('signature') === $hmac;
     }
 }

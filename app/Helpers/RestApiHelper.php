@@ -20,8 +20,8 @@ class RestApiHelper
             'hashInput'      => [
                 'endpoint' => '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})'
             ],
-            'callback'       => [
-                'endpoint' => '/oauth/callback'
+            'authenticate'       => [
+                'endpoint' => '/oauth/authenticate'
             ],
             'timestamp'        => [
                 'endpoint' => '/posts/(?P<id>\d+)/timestamp'
