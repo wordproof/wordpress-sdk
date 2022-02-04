@@ -1,9 +1,14 @@
+import {authenticationRequest, handleAPIResponse, performAuthenticationRequest} from "../helpers/api";
+
 const {__, sprintf} = wp.i18n;
-const {useState, useCallback} = wp.element;
+const {useState, useCallback, useEffect} = wp.element;
 import PropTypes from 'prop-types';
 
 import {getData} from "../helpers/dataHelper";
 import popupWindow from "../helpers/popupHelper";
+import WebhookSuccessModal from "./modals/WebhookSuccessModal";
+import WebhookFailedModal from "./modals/WebhookFailedModal";
+import OAuthDeniedModal from "./modals/OAuthDeniedModal";
 
 const Action_Link = (props) => {
     const {
@@ -11,7 +16,8 @@ const Action_Link = (props) => {
         setIsAuthenticated
     } = props;
 
-    let {popup} = useState(null);
+    let popup = null;
+    const [showModal, setShowModal] = useState(null);
 
     const authenticationLink = getData('popup_redirect_authentication_url');
     const settingsLink = getData('popup_redirect_settings_url');
@@ -42,7 +48,7 @@ const Action_Link = (props) => {
             popup.focus();
         }
 
-        window.addEventListener("message", listenToMessages, false);
+        window.addEventListener("message", onPostMessage, false);
     });
 
     /**
@@ -52,56 +58,84 @@ const Action_Link = (props) => {
      *
      * @returns {void}
      */
-    const listenToMessages = async (event) => {
+    const onPostMessage = async (event) => {
         const {data, source, origin} = event;
 
         if (origin !== getData('origin') || popup !== source) {
             return;
         }
 
-        if (data.type === "wordproof:oauth:success") {
-            popup.close();
-            window.removeEventListener("message", listenToMessages, false);
-            // await this.performAuthenticationRequest(data);
-            console.log(data)
-            //TODO
-        }
+        switch (data.type) {
+            case "wordproof:oauth:success":
+                await performAuthenticationRequest(data);
+                break;
+            case "wordproof:oauth:denied":
+                window.removeEventListener("message", onPostMessage, false);
+                popup.close();
+                setIsAuthenticated(false);
+                setShowModal('oauth:denied');
+                break;
+            case "wordproof:webhook:success":
+                window.removeEventListener("message", onPostMessage, false);
+                popup.close();
+                setIsAuthenticated(true);
+                setShowModal('webhook:success');
+                break;
+            case "wordproof:webhook:failed":
+                window.removeEventListener("message", onPostMessage, false);
+                popup.close();
+                setShowModal('webhook:failed');
+                console.log(data); // TODO Open Modal
+                break;
+            case "wordproof:settings:updated":
+                console.log('here');
+                console.log(popup);
+                popup.close();
 
-        if (data.type === "wordproof:oauth:denied") {
-            popup.close();
-            window.removeEventListener("message", listenToMessages, false);
-            setIsAuthenticated(false);
-            console.log(data)
-            //TODO
-        }
-
-        if (data.type === "wordproof:webhook:rejected") {
-            popup.close();
-            window.removeEventListener("message", listenToMessages, false);
-            console.log(data)
-            //TODO
-        }
-
-        if (data.type === "wordproof:settings:updated") {
-            popup.close();
-            window.removeEventListener("message", listenToMessages, false);
-            console.log(data)
-            //TODO
+                window.removeEventListener("message", onPostMessage, false);
+                // TODO Retrieve settings
+                break;
         }
     }
 
+    const performAuthenticationRequest = async (data) => {
+        await handleAPIResponse(
+                () => authenticationRequest(data),
+                async (response) => {
+                    const message = {
+                        type: 'wordproof:sdk:access-token',
+                        source_id: response.source_id
+                    }
+                    popup.postMessage(message, getData('origin'));
+                },
+                async (response) => {
+                    console.warn(response);
+                });
+    }
 
-    if (isAuthenticated) {
-        return (
+    return (
+            <>
+                {isAuthenticated &&
                 <a href={settingsLink} onClick={openSettings}>Open Settings</a>
-        )
-    }
+                }
 
-    if (!isAuthenticated) {
-        return (
+                {!isAuthenticated &&
                 <a href={authenticationLink} onClick={openAuthentication}>Open Authentication</a>
-        )
-    }
+                }
+
+                {showModal === 'webhook:success' &&
+                <WebhookSuccessModal/>
+                }
+
+                {showModal === 'webhook:failed' &&
+                <WebhookFailedModal/>
+                }
+
+                {showModal === 'oauth:denied' &&
+                <OAuthDeniedModal retry={openAuthentication}/>
+                }
+            </>
+    );
 }
 
 Action_Link.proptypes = {

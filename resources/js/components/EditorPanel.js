@@ -44,7 +44,7 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
                             checked={postMeta._wordproof_timestamp || timestampedAutomatically}
                             disabled={timestampedAutomatically}
                     />
-                    <Action_Link isAuthenticated={isAuthenticated} />
+                    <Action_Link isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
                 </PanelRow>
             </PluginDocumentSettingPanel>
     );
