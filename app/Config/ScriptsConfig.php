@@ -12,14 +12,21 @@ class ScriptsConfig extends Config
     protected static function values()
     {
         return [
-            'index' => [
+            'index'            => [
                 'dependencies' => [],
+                'type'         => 'js'
             ],
-            'data' => [
+            'data'             => [
                 'dependencies' => [],
+                'type'         => 'js'
             ],
             'post-meta-option' => [
-                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'lodash'],
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash'],
+                'type'         => 'js'
+            ],
+            'tailwind'         => [
+                'dependencies' => [],
+                'type'         => 'css'
             ],
         ];
     }

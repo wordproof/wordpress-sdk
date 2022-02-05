@@ -17,6 +17,12 @@ class WordPressSDK
 {
     
     /**
+     * The version of this SDK
+     * @var string
+     */
+    public $version = '1.0.23';
+    
+    /**
      * The partner used for displaying custom auth pages
      * @var mixed|null
      */
@@ -46,10 +52,11 @@ class WordPressSDK
      */
     public function __construct($partner = null, $env = 'production')
     {
-        if (defined('WORDPROOF_WORDPRESS_SDK')) {
+        if (defined('WORDPROOF_TIMESTAMP_SDK')) {
             return;
         }
-        
+        define('WORDPROOF_TIMESTAMP_SDK', ReflectionHelper::name($this));
+    
         if (!headers_sent() && !session_id()) {
             session_start();
         }
@@ -65,11 +72,14 @@ class WordPressSDK
         $this->postEditorData();
         $this->notices();
         
-        if (!defined('WORDPROOF_WORDPRESS_SDK_FILE')) {
-            define('WORDPROOF_WORDPRESS_SDK_FILE', __FILE__);
+        if (!defined('WORDPROOF_TIMESTAMP_SDK_FILE')) {
+            define('WORDPROOF_TIMESTAMP_SDK_FILE', __FILE__);
         }
         
-        define('WORDPROOF_WORDPRESS_SDK', ReflectionHelper::name($this));
+        if (!defined('WORDPROOF_TIMESTAMP_SDK_VERSION')) {
+            define('WORDPROOF_TIMESTAMP_SDK_VERSION', $this->version);
+        }
+        
         
         return $this;
     }

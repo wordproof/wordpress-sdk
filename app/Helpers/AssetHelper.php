@@ -44,11 +44,13 @@ class AssetHelper
             return;
         }
         
+        $path = self::getPathUrl($name, $config['type']);
+        
         wp_enqueue_script(
             self::getHandle($name),
-            self::getPathUrl($name),
+            $path,
             $config['dependencies'],
-            false,
+            self::getVersion(),
             false
         );
     }
@@ -70,7 +72,7 @@ class AssetHelper
      * @param $name The name of the script.
      * @return string The url of the script.
      */
-    private static function getPathUrl($name)
+    private static function getPathUrl($name, $extension)
     {
         if (EnvironmentHelper::development()) {
             $config = EnvironmentConfig::get(SdkHelper::getEnvironment());
@@ -79,10 +81,19 @@ class AssetHelper
                 $url = $config['file_overwrite'];
             }
         } else {
-            $url = plugin_dir_url(WORDPROOF_WORDPRESS_SDK_FILE);
+            $url = plugin_dir_url(WORDPROOF_TIMESTAMP_SDK_FILE);
         }
         
         $base = StringHelper::lastReplace(self::$filePath, self::$buildPath, $url);
-        return $base . $name . '.js';
+        return $base . $name . '.' . $extension;
+    }
+    
+    /**
+     * Returns version for file.
+     *
+     * @return false|string
+     */
+    private static function getVersion() {
+        return EnvironmentHelper::development() ? false : WORDPROOF_TIMESTAMP_SDK_VERSION;
     }
 }
