@@ -58,6 +58,12 @@ class RestApiController
             'callback'            => [$this, 'authentication'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
+
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication.destroy'), [
+            'methods'             => 'POST',
+            'callback'            => [$this, 'destroyAuthentication'],
+            'permission_callback' => [$this, 'canPublishPermission'],
+        ]);
     }
     
     /**
@@ -86,6 +92,18 @@ class RestApiController
         ];
 
         return new \WP_REST_Response($data, $data->status);
+    }
+    
+    /**
+     * Logout the user and return if the user is authenticated.
+     *
+     * @return \WP_REST_Response Returns if the user is authenticated.
+     */
+    public function destroyAuthentication()
+    {
+        AuthenticationHelper::logout();
+        
+        return $this->authentication();
     }
     
     /**

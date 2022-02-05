@@ -1,4 +1,9 @@
-import {authenticationRequest, handleAPIResponse, performAuthenticationRequest} from "../helpers/api";
+import {
+    authenticationRequest,
+    destroyAuthenticationRequest,
+    handleAPIResponse,
+    performAuthenticationRequest
+} from "../helpers/api";
 
 const {__, sprintf} = wp.i18n;
 const {useState, useCallback, useEffect} = wp.element;
@@ -90,10 +95,12 @@ const ActionLink = (props) => {
             case "wordproof:settings:updated":
                 console.log('here');
                 console.log(popup);
-                popup.close();
-
-                window.removeEventListener("message", onPostMessage, false);
                 // TODO Retrieve settings
+                popup.close();
+            case "wordproof:oauth:destroy":
+                window.removeEventListener("message", onPostMessage, false);
+                popup.close();
+                destroyAuthenticationRequest();
                 break;
         }
     }

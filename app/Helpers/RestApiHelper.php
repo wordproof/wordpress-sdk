@@ -8,73 +8,84 @@ class RestApiHelper
     {
         return 'wordproof/v1' . $endpoint;
     }
-
+    
     public static function getNamespace()
     {
         return self::buildPath('');
     }
-
+    
     private static function routes()
     {
         return [
-            'hashInput'      => [
-                'endpoint' => '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})'
+            'hashInput'              => [
+                'endpoint' => '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})',
+                'method'   => 'get'
             ],
-            'authenticate'       => [
-                'endpoint' => '/oauth/authenticate'
+            'authenticate'           => [
+                'endpoint' => '/oauth/authenticate',
+                'method'   => 'post'
             ],
-            'timestamp'        => [
-                'endpoint' => '/posts/(?P<id>\d+)/timestamp'
+            'timestamp'              => [
+                'endpoint' => '/posts/(?P<id>\d+)/timestamp',
+                'method'   => 'post'
             ],
-            'webhook'        => [
-                'endpoint' => '/webhook'
+            'webhook'                => [
+                'endpoint' => '/webhook',
+                'method'   => 'get'
+            
             ],
-            'settings'       => [
-                'endpoint' => '/settings'
+            'settings'               => [
+                'endpoint' => '/settings',
+                'method'   => 'get'
             ],
-            'authentication' => [
-                'endpoint' => '/authentication'
+            'authentication'         => [
+                'endpoint' => '/authentication',
+                'method'   => 'post'
+            ],
+            'authentication.destroy' => [
+                'endpoint' => '/oauth/destroy',
+                'method'   => 'post'
             ],
         ];
     }
-
+    
     public static function route($slug)
     {
         $routes = self::routes();
         if (isset($routes[$slug])) {
             return $routes[$slug];
         }
-
+        
         throw new \Exception('Route slug does not exist.');
     }
-
+    
     public static function endpoint($slug)
     {
         $route = self::route($slug);
         if (isset($route['endpoint'])) {
             return $route['endpoint'];
         }
-
+        
         throw new \Exception('Endpoint for route does not exist.');
     }
-
+    
     public static function getRestRoute($slug, $params = [])
     {
         $url = get_rest_url(null, self::buildPath(self::endpoint($slug)));
         preg_match_all("/\(.+?\)/", $url, $matches);
-
+        
         if (!isset($matches) || !isset($matches[0])) {
             return $url;
         }
-
+        
         if (!is_array($params) || count($params) !== count($matches[0])) {
             return $url;
         }
-
+        
         foreach ($matches[0] as $index => $match) {
             $url = str_replace($match, $params[$index], $url);
         }
-
+        
         return $url;
     }
 }

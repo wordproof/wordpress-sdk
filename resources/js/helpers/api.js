@@ -78,6 +78,18 @@ export const authenticationRequest = async ({state, code}) => {
 }
 
 /**
+ * Destroy oauth token
+ *
+ * @returns {Promise<Object|boolean>} The response object or false if request fails.
+ */
+export const destroyAuthenticationRequest = async ({}) => {
+    return await callEndpoint({
+        path: `${WORDPROOF_REST_API_NAMESPACE}/oauth/destroy`,
+        method: "POST",
+    });
+}
+
+/**
  * Retrieves WordProof settings.
  *
  * @returns {Promise<Object|boolean>} The response object or false if request fails.
