@@ -10,7 +10,7 @@ import WebhookSuccessModal from "./modals/WebhookSuccessModal";
 import WebhookFailedModal from "./modals/WebhookFailedModal";
 import OAuthDeniedModal from "./modals/OAuthDeniedModal";
 
-const Action_Link = (props) => {
+const ActionLink = (props) => {
     const {
         isAuthenticated,
         setIsAuthenticated
@@ -138,9 +138,9 @@ const Action_Link = (props) => {
     );
 }
 
-Action_Link.proptypes = {
+ActionLink.proptypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     setIsAuthenticated: PropTypes.func.isRequired,
 }
 
-export default Action_Link;
+export default ActionLink;
