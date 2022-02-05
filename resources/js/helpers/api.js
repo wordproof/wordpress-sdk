@@ -1,5 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import {get, debounce, noop, last} from "lodash";
+import {getData} from "./dataHelper";
 
 const WORDPROOF_REST_API_NAMESPACE = "wordproof/v1";
 
@@ -107,4 +108,19 @@ export const fetchIsAuthenticated = async () => {
             ({is_authenticated}) => is_authenticated,
             () => false
     );
+};
+
+/**
+ * Return the site settings data
+ *
+ * @returns {Promise<Object>} The promise wrapping the response object.
+ */
+export const requestTimestamp = async () => {
+    const timestampUrl = getData("timestamp_url");
+    const timestampEndpoint = last(timestampUrl.split(WORDPROOF_REST_API_NAMESPACE));
+
+    return callEndpoint({
+        path: WORDPROOF_REST_API_NAMESPACE + timestampEndpoint,
+        method: "POST",
+    });
 };

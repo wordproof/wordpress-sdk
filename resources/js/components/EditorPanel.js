@@ -1,5 +1,6 @@
 import {getData} from "../helpers/dataHelper";
-import Action_Link from "./ActionLink";
+import ActionLink from "./ActionLink";
+import Timestamper from "./Timestamper";
 
 const {__, sprintf} = wp.i18n;
 const {PluginDocumentSettingPanel} = wp.editPost;
@@ -13,7 +14,7 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
 
     const initialData = getData();
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(initialData?.is_authenticated ?? false);
     const [selectedPostTypes] = useState(initialData?.settings?.selected_post_types ?? []);
 
     useEffect( () => {
@@ -44,7 +45,8 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
                             checked={postMeta._wordproof_timestamp || timestampedAutomatically}
                             disabled={timestampedAutomatically}
                     />
-                    <Action_Link isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+                    <ActionLink isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+                    <Timestamper/>
                 </PanelRow>
             </PluginDocumentSettingPanel>
     );
