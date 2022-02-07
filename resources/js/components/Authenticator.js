@@ -6,6 +6,7 @@ import {
 
 const {__, sprintf} = wp.i18n;
 const {useState, useCallback, useEffect} = wp.element;
+const {compose} = wp.compose;
 import PropTypes from 'prop-types';
 
 import {getData} from "../helpers/data";
@@ -21,11 +22,12 @@ const Authenticator = (props) => {
         oauthSuccessModal,
         oauthDeniedModal,
         oauthFailedModal,
+        isAuthenticated,
+        setIsAuthenticated
     } = props;
 
 
     const [showModal, setShowModal] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     let popup = null;
     const authenticationLink = getData('popup_redirect_authentication_url');
@@ -156,6 +158,8 @@ Authenticator.proptypes = {
     oauthSuccessModal: PropTypes.elementType,
     oauthDeniedModal: PropTypes.elementType,
     oauthFailedModal: PropTypes.elementType,
+    isAuthenticated: PropTypes.bool.isRequired,
+    setIsAuthenticated: PropTypes.func.isRequired,
 }
 
 
@@ -165,4 +169,17 @@ Authenticator.defaultProps = {
     oauthFailedModal: WebhookFailedModal,
 }
 
-export default Authenticator;
+export default compose([
+    withSelect((select) => {
+        return {
+            isAuthenticated: select('wordproof').getIsAuthenticated(),
+        };
+    }),
+    withDispatch((dispatch) => {
+        return {
+            setIsAuthenticated(isAuthenticated) {
+                dispatch('wordproof').setIsAuthenticated({isAuthenticated});
+            }
+        };
+    })
+])(Authenticator);
