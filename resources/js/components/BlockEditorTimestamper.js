@@ -1,9 +1,6 @@
-import Authenticator from "./Authenticator";
-
 const {useState} = wp.element;
 import PropTypes from 'prop-types';
 
-import WebhookFailedModal from "./modals/WebhookFailedModal";
 import {getNoticeActions, onSave} from "../helpers/editors/blockEditor";
 import {handleNoticesAfterTimestamp, isBlockEditor} from "../helpers/editors/editor";
 
@@ -22,7 +19,6 @@ const BlockEditorTimestamper = (props) => {
 
     const {} = props;
 
-    const [showModal, setShowModal] = useState(null);
     const [timestampResponse, setTimestampResponse] = useState(null);
 
     const {createSuccessNoticeCallback, createErrorNoticeCallback} = getNoticeActions();
@@ -31,16 +27,11 @@ const BlockEditorTimestamper = (props) => {
         timestampResponse,
         createSuccessNoticeCallback,
         createErrorNoticeCallback,
-        setShowModal
     });
 
     onSave({setTimestampResponse});
 
-    return (
-            <>
-                <Authenticator/>
-            </>
-    );
+    return (<></>);
 }
 
 BlockEditorTimestamper.proptypes = {}
