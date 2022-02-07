@@ -12,12 +12,8 @@ class ScriptsConfig extends Config
     protected static function values()
     {
         return [
-            'index'            => [
-                'dependencies' => [],
-                'type'         => 'js'
-            ],
             'data'             => [
-                'dependencies' => [],
+                'dependencies' => ['wp-data', 'lodash'],
                 'type'         => 'js'
             ],
             'post-meta-option' => [

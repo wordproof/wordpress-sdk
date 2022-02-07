@@ -25,7 +25,6 @@ export const getNoticeActions = () => {
 }
 
 const onSave = (props) => {
-    console.log('Init onSave');
     const isBlockEditorSavePost = useSelect((select) => select("core/editor").isSavingPost(), []);
     const isBlockEditorAutoSavePost = useSelect((select) => select("core/editor").isAutosavingPost(), []);
     const didBlockEditorPostSaveRequestSucceed = useSelect((select) => select("core/editor").didPostSaveRequestSucceed(), []);

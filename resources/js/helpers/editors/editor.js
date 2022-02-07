@@ -21,7 +21,7 @@ export const isClassicEditor = () => {
 
 const handleNoticesAfterTimestamp = (props) => {
 
-    const {timestampResponse, createSuccessNoticeCallback, createErrorNoticeCallback, setShowModal} = props;
+    const {timestampResponse, createSuccessNoticeCallback, createErrorNoticeCallback} = props;
 
     useEffect(() => {
         console.log('timestampResponse');
@@ -50,12 +50,11 @@ const handleNoticesAfterTimestamp = (props) => {
 handleNoticesAfterTimestamp.proptypes = {
     timestampResponse: PropTypes.any.isRequired,
     createSuccessNoticeCallback: PropTypes.func.isRequired,
-    createErrorNoticeCallback: PropTypes.func.isRequired,
-    setShowModal: PropTypes.func.isRequired
+    createErrorNoticeCallback: PropTypes.func.isRequired
 }
 export {handleNoticesAfterTimestamp};
 
-const handleTimestampRequest = async (props) => {i
+const handleTimestampRequest = async (props) => {
     const {setTimestampResponse} = props;
     const success = await requestTimestamp();
     setTimestampResponse(success);
