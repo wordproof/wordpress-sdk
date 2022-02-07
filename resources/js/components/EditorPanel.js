@@ -1,10 +1,10 @@
-import {getData} from "../helpers/dataHelper";
+import {getData} from "../helpers/data";
 import ActionLink from "./ActionLink";
-import Timestamper from "./Timestamper";
+import BlockEditorTimestamper from "./BlockEditorTimestamper";
 
 const {__, sprintf} = wp.i18n;
 const {PluginDocumentSettingPanel} = wp.editPost;
-const {ToggleControl, PanelRow, prop} = wp.components;
+const {ToggleControl, PanelRow} = wp.components;
 const {compose} = wp.compose;
 const {withSelect, withDispatch} = wp.data;
 const {useState, useMemo, useEffect} = wp.element;
@@ -46,7 +46,7 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
                             disabled={timestampedAutomatically}
                     />
                     <ActionLink isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
-                    <Timestamper/>
+                    <BlockEditorTimestamper/>
                 </PanelRow>
             </PluginDocumentSettingPanel>
     );

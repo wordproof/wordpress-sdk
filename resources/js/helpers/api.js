@@ -1,6 +1,6 @@
 import apiFetch from "@wordpress/api-fetch";
 import {get, debounce, noop, last} from "lodash";
-import {getData} from "./dataHelper";
+import {getData} from "./data";
 
 const WORDPROOF_REST_API_NAMESPACE = "wordproof/v1";
 

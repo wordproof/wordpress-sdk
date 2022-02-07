@@ -1,5 +1,5 @@
 import {noBalanceNotice, timestampErrorNotice, timestampSuccessNotice} from "../../notices/notices";
-import {getData} from "../dataHelper";
+import {getData} from "../data";
 import {requestTimestamp} from "../api";
 
 const {useEffect, useCallback} = wp.element;
@@ -56,7 +56,6 @@ handleNoticesAfterTimestamp.proptypes = {
 export {handleNoticesAfterTimestamp};
 
 const handleTimestampRequest = async (props) => {i
-    console.warn('handleTimestampRequest');
     const {setTimestampResponse} = props;
     const success = await requestTimestamp();
     setTimestampResponse(success);
