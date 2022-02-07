@@ -3,12 +3,16 @@ import WordProofModal from "./Modal";
 const {__} = wp.i18n;
 const {compose} = wp.compose;
 const {Button} = wp.components;
+const {useCallback} = wp.element;
 import PropTypes from 'prop-types';
 
-const OAuthDeniedModal = (props) => {
-    const {
-        retry
-    } = props;
+const OAuthDeniedModal = () => {
+
+    const retry = useCallback(event => {
+        event.preventDefault();
+        const wordproofEvent = new CustomEvent('wordproof:sdk:authenticate');
+        window.dispatchEvent(wordproofEvent);
+    });
 
     return (
             <WordProofModal
@@ -23,7 +27,6 @@ const OAuthDeniedModal = (props) => {
 }
 
 OAuthDeniedModal.proptypes = {
-    retry: PropTypes.func.isRequired
 }
 
 export default compose([])(OAuthDeniedModal);

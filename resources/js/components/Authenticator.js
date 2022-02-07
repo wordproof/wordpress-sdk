@@ -2,7 +2,6 @@ import {
     authenticationRequest,
     destroyAuthenticationRequest,
     handleAPIResponse,
-    performAuthenticationRequest
 } from "../helpers/api";
 
 const {__, sprintf} = wp.i18n;
@@ -14,18 +13,27 @@ import popupWindow from "../helpers/popup";
 import WebhookSuccessModal from "./modals/WebhookSuccessModal";
 import WebhookFailedModal from "./modals/WebhookFailedModal";
 import OAuthDeniedModal from "./modals/OAuthDeniedModal";
+import {dispatch} from "../helpers/event";
 
-const ActionLink = (props) => {
+const Authenticator = (props) => {
+
     const {
-        isAuthenticated,
-        setIsAuthenticated
+        oauthSuccessModal,
+        oauthDeniedModal,
+        oauthFailedModal,
     } = props;
 
-    let popup = null;
-    const [showModal, setShowModal] = useState(null);
 
+    const [showModal, setShowModal] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+    let popup = null;
     const authenticationLink = getData('popup_redirect_authentication_url');
     const settingsLink = getData('popup_redirect_settings_url');
+
+    // Open the authentication and settings popup from other parts in the application.
+    window.addEventListener('wordproof:open_authentication', openAuthentication, false);
+    window.addEventListener('wordproof:open_settings', openSettings, false);
 
     /**
      * Open the settings popup.
@@ -71,36 +79,51 @@ const ActionLink = (props) => {
         }
 
         switch (data.type) {
-            case "wordproof:oauth:success":
+            case "wordproof:oauth:granted":
                 await performAuthenticationRequest(data);
                 break;
             case "wordproof:oauth:denied":
                 window.removeEventListener("message", onPostMessage, false);
-                popup.close();
-                setIsAuthenticated(false);
+
+                dispatch('wordproof:oauth:denied');
                 setShowModal('oauth:denied');
+                setIsAuthenticated(false);
+
+                popup.close();
                 break;
             case "wordproof:webhook:success":
                 window.removeEventListener("message", onPostMessage, false);
-                popup.close();
+
+                dispatch('wordproof:oauth:success');
+                setShowModal('oauth:success');
                 setIsAuthenticated(true);
-                setShowModal('webhook:success');
+
+                popup.close();
                 break;
             case "wordproof:webhook:failed":
                 window.removeEventListener("message", onPostMessage, false);
+
+                dispatch('wordproof:webhook:failed');
+                destroyAuthenticationRequest();
+                setShowModal('oauth:failed');
+                setIsAuthenticated(false);
+
                 popup.close();
-                setShowModal('webhook:failed');
-                console.log(data); // TODO Open Modal
                 break;
             case "wordproof:settings:updated":
-                console.log('here');
-                console.log(popup);
+                window.removeEventListener("message", onPostMessage, false);
+
+                dispatch('wordproof:settings:updated');
                 // TODO Retrieve settings
                 popup.close();
             case "wordproof:oauth:destroy":
                 window.removeEventListener("message", onPostMessage, false);
-                popup.close();
+
+                dispatch('wordproof:oauth:destroy');
                 destroyAuthenticationRequest();
+                setIsAuthenticated(false);
+
+                popup.close();
                 break;
         }
     }
@@ -122,32 +145,24 @@ const ActionLink = (props) => {
 
     return (
             <>
-                {isAuthenticated &&
-                <a href={settingsLink} onClick={openSettings}>Open Settings</a>
-                }
-
-                {!isAuthenticated &&
-                <a href={authenticationLink} onClick={openAuthentication}>Open Authentication</a>
-                }
-
-                {showModal === 'webhook:success' &&
-                <WebhookSuccessModal/>
-                }
-
-                {showModal === 'webhook:failed' &&
-                <WebhookFailedModal/>
-                }
-
-                {showModal === 'oauth:denied' &&
-                <OAuthDeniedModal retry={openAuthentication}/>
-                }
+                {showModal === 'oauth:success' && oauthSuccessModal}
+                {showModal === 'oauth:failed' && oauthFailedModal}
+                {showModal === 'oauth:denied' && oauthDeniedModal}
             </>
     );
 }
 
-ActionLink.proptypes = {
-    isAuthenticated: PropTypes.bool.isRequired,
-    setIsAuthenticated: PropTypes.func.isRequired,
+Authenticator.proptypes = {
+    oauthSuccessModal: PropTypes.elementType,
+    oauthDeniedModal: PropTypes.elementType,
+    oauthFailedModal: PropTypes.elementType,
 }
 
-export default ActionLink;
+
+Authenticator.defaultProps = {
+    oauthSuccessModal: WebhookSuccessModal,
+    oauthDeniedModal: OAuthDeniedModal,
+    oauthFailedModal: WebhookFailedModal,
+}
+
+export default Authenticator;
