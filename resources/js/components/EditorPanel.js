@@ -9,6 +9,7 @@ const {compose} = wp.compose;
 const {withSelect, withDispatch} = wp.data;
 const {useState, useMemo, useEffect} = wp.element;
 import PropTypes from 'prop-types';
+import Authenticator from "./Authenticator";
 
 const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
 
@@ -45,8 +46,9 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
                             checked={postMeta._wordproof_timestamp || timestampedAutomatically}
                             disabled={timestampedAutomatically}
                     />
-                    <ActionLink isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+                    <ActionLink/>
                     <BlockEditorTimestamper/>
+                    <Authenticator/>
                 </PanelRow>
             </PluginDocumentSettingPanel>
     );

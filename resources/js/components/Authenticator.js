@@ -7,6 +7,8 @@ import {
 const {__, sprintf} = wp.i18n;
 const {useState, useCallback, useEffect} = wp.element;
 const {compose} = wp.compose;
+const {withSelect, withDispatch} = wp.data;
+
 import PropTypes from 'prop-types';
 
 import {getData} from "../helpers/data";
@@ -32,10 +34,6 @@ const Authenticator = (props) => {
     let popup = null;
     const authenticationLink = getData('popup_redirect_authentication_url');
     const settingsLink = getData('popup_redirect_settings_url');
-
-    // Open the authentication and settings popup from other parts in the application.
-    window.addEventListener('wordproof:open_authentication', openAuthentication, false);
-    window.addEventListener('wordproof:open_settings', openSettings, false);
 
     /**
      * Open the settings popup.
@@ -80,6 +78,8 @@ const Authenticator = (props) => {
             return;
         }
 
+        console.warn('Post message: ' + data.type);
+
         switch (data.type) {
             case "wordproof:oauth:granted":
                 await performAuthenticationRequest(data);
@@ -118,6 +118,7 @@ const Authenticator = (props) => {
                 dispatch('wordproof:settings:updated');
                 // TODO Retrieve settings
                 popup.close();
+                break;
             case "wordproof:oauth:destroy":
                 window.removeEventListener("message", onPostMessage, false);
 
@@ -144,6 +145,10 @@ const Authenticator = (props) => {
                     console.warn(response);
                 });
     }
+
+    // Open the authentication and settings popup from other parts in the application.
+    window.addEventListener('wordproof:open_authentication', openAuthentication, false);
+    window.addEventListener('wordproof:open_settings', openSettings, false);
 
     return (
             <>

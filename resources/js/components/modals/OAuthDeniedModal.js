@@ -1,4 +1,5 @@
 import WordProofModal from "./Modal";
+import {dispatch} from "../../helpers/event";
 
 const {__} = wp.i18n;
 const {compose} = wp.compose;
@@ -10,8 +11,7 @@ const OAuthDeniedModal = () => {
 
     const retry = useCallback(event => {
         event.preventDefault();
-        const wordproofEvent = new CustomEvent('wordproof:sdk:authenticate');
-        window.dispatchEvent(wordproofEvent);
+        dispatch('wordproof:open_authentication')
     });
 
     return (
