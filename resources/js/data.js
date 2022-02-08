@@ -1,8 +1,10 @@
+import {getData} from "./helpers/data";
+
 const {createReduxStore, registerStore, register} = wp.data;
 
 const storeName = 'wordproof';
 const initialState = {
-    isAuthenticated: true,
+    isAuthenticated: getData('is_authenticated'),
 };
 
 const actions = {
