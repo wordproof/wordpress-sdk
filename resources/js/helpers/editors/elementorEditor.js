@@ -1,16 +1,16 @@
-import {registerElementorDataHookAfter} from "../elementorHook";
+import { registerElementorDataHookAfter } from '../elementorHook';
 
 /**
  * Creates an elementor notice.
  *
  * @param {string} content The message content.
  *
- * @returns {void}
+ * @return {void}
  */
 export function createNotice( content ) {
-    window.elementor.notifications.showToast( {
-        message: content,
-    } );
+	window.elementor.notifications.showToast( {
+		message: content,
+	} );
 }
 
 /**
@@ -18,8 +18,12 @@ export function createNotice( content ) {
  *
  * @param {Function} callback The callback.
  *
- * @returns {void}
+ * @return {void}
  */
 export function callbackOnSave( callback ) {
-    registerElementorDataHookAfter( "document/save/save", "wordproof/timestamper", callback );
+	registerElementorDataHookAfter(
+		'document/save/save',
+		'wordproof/timestamper',
+		callback
+	);
 }

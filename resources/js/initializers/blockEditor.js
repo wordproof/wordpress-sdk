@@ -1,22 +1,24 @@
-import { dispatch } from "@wordpress/data";
+import { dispatch } from '@wordpress/data';
 
-import initializeWordProofTimestamper from "./timestamper";
-import initializeAuthentication from "./authenticationInitializer";
-import {callbackOnSave} from "../helpers/editors/blockEditor";
+import initializeWordProofTimestamper from './timestamper';
+import initializeAuthentication from './authenticationInitializer';
+import { callbackOnSave } from '../helpers/editors/blockEditor';
 
 /**
  * Initializes the WordProof integration.
  *
- * @returns {void}
+ * @return {void}
  */
 export default function initializeWordProofIntegration() {
-    const { createSuccessNotice, createErrorNotice } = dispatch( "core/notices" );
+	const { createSuccessNotice, createErrorNotice } = dispatch(
+		'core/notices'
+	);
 
-    initializeAuthentication();
+	initializeAuthentication();
 
-    initializeWordProofTimestamper(
-            callbackOnSave,
-            createSuccessNotice,
-            createErrorNotice
-    );
+	initializeWordProofTimestamper(
+		callbackOnSave,
+		createSuccessNotice,
+		createErrorNotice
+	);
 }

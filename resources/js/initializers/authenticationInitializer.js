@@ -22,14 +22,18 @@ const initializeAuthentication = ( props ) => {
 
 	/**
 	 * Open the settings popup.
+	 *
+	 * @param  event
 	 */
 	const openSettings = ( event ) => {
 		event.preventDefault();
 		openPopup( settingsLink, 'WordProof_Settings' );
-	}
+	};
 
 	/**
 	 * Open the authentication popup.
+	 *
+	 * @param  event
 	 */
 	const openAuthentication = ( event ) => {
 		event.preventDefault();
@@ -75,7 +79,7 @@ const initializeAuthentication = ( props ) => {
 			case 'wordproof:oauth:denied':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-                dispatchEvent( 'wordproof:oauth:denied' );
+				dispatchEvent( 'wordproof:oauth:denied' );
 				setIsAuthenticated( false );
 
 				popup.close();
@@ -83,7 +87,7 @@ const initializeAuthentication = ( props ) => {
 			case 'wordproof:webhook:success':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-                dispatchEvent( 'wordproof:oauth:success' );
+				dispatchEvent( 'wordproof:oauth:success' );
 				setIsAuthenticated( true );
 
 				popup.close();
@@ -91,7 +95,7 @@ const initializeAuthentication = ( props ) => {
 			case 'wordproof:webhook:failed':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-                dispatchEvent( 'wordproof:webhook:failed' );
+				dispatchEvent( 'wordproof:webhook:failed' );
 				destroyAuthenticationRequest();
 				setIsAuthenticated( false );
 
@@ -100,14 +104,14 @@ const initializeAuthentication = ( props ) => {
 			case 'wordproof:settings:updated':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-                dispatchEvent( 'wordproof:settings:updated' );
+				dispatchEvent( 'wordproof:settings:updated' );
 				// TODO Retrieve settings
 				popup.close();
 				break;
 			case 'wordproof:oauth:destroy':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-                dispatchEvent( 'wordproof:oauth:destroy' );
+				dispatchEvent( 'wordproof:oauth:destroy' );
 				destroyAuthenticationRequest();
 				setIsAuthenticated( false );
 
