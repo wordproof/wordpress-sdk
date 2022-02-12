@@ -1,11 +1,11 @@
 import authenticationInitializer from "./authenticationInitializer";
 import timestampElementorEditorInitializer from "./timestampElementorEditorInitializer";
 
-const elementorEditor = () => {
+const initializeElementorEditor = () => {
 
     authenticationInitializer();
     timestampElementorEditorInitializer();
 
 }
 
-export default elementorEditor;
+export default initializeElementorEditor;

@@ -1,6 +1,6 @@
 import {getData} from "../helpers/data";
 import ActionLink from "./ActionLink";
-import AuthenticationResultModals from "./AuthenticationResultModals";
+import AuthenticationModals from "./AuthenticationModals";
 
 const {__, sprintf} = wp.i18n;
 const {PluginDocumentSettingPanel} = wp.editPost;
@@ -45,7 +45,7 @@ const Editor_Panel = ({postType, postMeta, isAuthenticated, setPostMeta}) => {
                     />
                     <ActionLink/>
 
-                    <AuthenticationResultModals/>
+                    <AuthenticationModals/>
 
                 </PanelRow>
             </PluginDocumentSettingPanel>

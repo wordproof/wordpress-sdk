@@ -4,7 +4,7 @@ import OAuthDeniedModal from "./modals/OAuthDeniedModal";
 import WebhookSuccessModal from "./modals/WebhookSuccessModal";
 import WebhookFailedModal from "./modals/WebhookFailedModal";
 
-const AuthenticationResultModals = () => {
+const AuthenticationModals = () => {
 
     const {modal, setModal} = useState(null);
 
@@ -45,4 +45,4 @@ const AuthenticationResultModals = () => {
     );
 }
 
-export default AuthenticationResultModals;
+export default AuthenticationModals;

@@ -1,11 +1,11 @@
 import timestampBlockEditorInitializer from "./timestampBlockEditorInitializer";
 import authenticationInitializer from "./authenticationInitializer";
 
-const blockEditor = () => {
+const initializeBlockEditor = () => {
 
     authenticationInitializer();
     timestampBlockEditorInitializer();
 
 }
 
-export default blockEditor;
+export default initializeBlockEditor;
