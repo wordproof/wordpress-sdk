@@ -41,14 +41,14 @@ const handleNoticesAfterTimestamp = ( props ) => {
 			createSuccessNotice( timestampSuccessNotice, successNoticeOptions );
 		}
 	} else {
-		createSuccessNotice( timestampErrorNotice, errorNoticeOptions );
+		createErrorNotice( timestampErrorNotice, errorNoticeOptions );
 	}
 };
 
 handleNoticesAfterTimestamp.proptypes = {
 	timestampResponse: PropTypes.any.isRequired,
-	createSuccessNoticeCallback: PropTypes.func.isRequired,
-	createErrorNoticeCallback: PropTypes.func.isRequired,
+	createSuccessNotice: PropTypes.func.isRequired,
+	createErrorNotice: PropTypes.func.isRequired,
 };
 
 export { handleNoticesAfterTimestamp };

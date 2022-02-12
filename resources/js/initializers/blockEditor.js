@@ -1,6 +1,6 @@
 import { dispatch } from '@wordpress/data';
 
-import initializeWordProofTimestamper from './timestamper';
+import initializeTimestamper from './timestamper';
 import initializeAuthentication from './authentication';
 import { callbackOnSave } from '../helpers/editors/blockEditor';
 
@@ -9,14 +9,14 @@ import { callbackOnSave } from '../helpers/editors/blockEditor';
  *
  * @return {void}
  */
-export default function initializeWordProofIntegration() {
+export default function initializeBlockEditor() {
 	const { createSuccessNotice, createErrorNotice } = dispatch(
 		'core/notices'
 	);
 
 	initializeAuthentication();
 
-	initializeWordProofTimestamper(
+	initializeTimestamper(
 		callbackOnSave,
 		createSuccessNotice,
 		createErrorNotice

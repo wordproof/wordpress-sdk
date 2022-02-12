@@ -1,7 +1,7 @@
-import { select } from '@wordpress/data';
 import { debounce } from 'lodash';
 import { requestTimestamp } from '../helpers/api';
 import { handleNoticesAfterTimestamp } from '../helpers/editors/editor';
+
 const { applyFilters } = wp.hooks;
 
 /**
@@ -21,11 +21,12 @@ export default function initializeTimestamper(
 	const sendTimestampRequest = debounce( async () => {
 		if ( applyFilters( 'wordproof.timestamp', true ) ) {
 			const response = await requestTimestamp();
-			handleNoticesAfterTimestamp(
+
+			handleNoticesAfterTimestamp( {
 				response,
 				createSuccessNotice,
-				createErrorNotice
-			);
+				createErrorNotice,
+			} );
 		}
 	}, 500 );
 

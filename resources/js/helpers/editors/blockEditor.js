@@ -1,3 +1,5 @@
+const { subscribe, select } = wp.data;
+
 /**
  * Executes callback on post editor save.
  *

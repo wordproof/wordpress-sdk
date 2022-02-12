@@ -10,7 +10,7 @@ import {
  *
  * @return {void}
  */
-export default function initializeWordProofIntegration() {
+export default function initializeElementorEditor() {
 	initializeAuthentication();
 
 	initializeTimestamper( callbackOnSave, createNotice, createNotice );
