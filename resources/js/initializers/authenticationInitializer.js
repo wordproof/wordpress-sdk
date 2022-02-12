@@ -4,8 +4,7 @@ import {
     handleAPIResponse,
 } from "../helpers/api";
 
-const {__, sprintf} = wp.i18n;
-const {useState, useCallback, useEffect} = wp.element;
+const {useCallback} = wp.element;
 const {compose} = wp.compose;
 const {withSelect, withDispatch} = wp.data;
 
@@ -13,23 +12,15 @@ import PropTypes from 'prop-types';
 
 import {getData} from "../helpers/data";
 import popupWindow from "../helpers/popup";
-import WebhookSuccessModal from "./modals/WebhookSuccessModal";
-import WebhookFailedModal from "./modals/WebhookFailedModal";
-import OAuthDeniedModal from "./modals/OAuthDeniedModal";
 import {dispatch} from "../helpers/event";
 
-const Authenticator = (props) => {
+const authenticationInitializer = (props) => {
 
     const {
-        oauthSuccessModal,
-        oauthDeniedModal,
-        oauthFailedModal,
         isAuthenticated,
         setIsAuthenticated
     } = props;
 
-
-    const [showModal, setShowModal] = useState(null);
 
     let popup = null;
     const authenticationLink = getData('popup_redirect_authentication_url');
@@ -88,7 +79,6 @@ const Authenticator = (props) => {
                 window.removeEventListener("message", onPostMessage, false);
 
                 dispatch('wordproof:oauth:denied');
-                setShowModal('oauth:denied');
                 setIsAuthenticated(false);
 
                 popup.close();
@@ -97,7 +87,6 @@ const Authenticator = (props) => {
                 window.removeEventListener("message", onPostMessage, false);
 
                 dispatch('wordproof:oauth:success');
-                setShowModal('oauth:success');
                 setIsAuthenticated(true);
 
                 popup.close();
@@ -107,7 +96,6 @@ const Authenticator = (props) => {
 
                 dispatch('wordproof:webhook:failed');
                 destroyAuthenticationRequest();
-                setShowModal('oauth:failed');
                 setIsAuthenticated(false);
 
                 popup.close();
@@ -149,29 +137,11 @@ const Authenticator = (props) => {
     // Open the authentication and settings popup from other parts in the application.
     window.addEventListener('wordproof:open_authentication', openAuthentication, false);
     window.addEventListener('wordproof:open_settings', openSettings, false);
-
-    return (
-            <>
-                {showModal === 'oauth:success' && oauthSuccessModal}
-                {showModal === 'oauth:failed' && oauthFailedModal}
-                {showModal === 'oauth:denied' && oauthDeniedModal}
-            </>
-    );
 }
 
-Authenticator.proptypes = {
-    oauthSuccessModal: PropTypes.elementType,
-    oauthDeniedModal: PropTypes.elementType,
-    oauthFailedModal: PropTypes.elementType,
+authenticationInitializer.proptypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     setIsAuthenticated: PropTypes.func.isRequired,
-}
-
-
-Authenticator.defaultProps = {
-    oauthSuccessModal: WebhookSuccessModal,
-    oauthDeniedModal: OAuthDeniedModal,
-    oauthFailedModal: WebhookFailedModal,
 }
 
 export default compose([
@@ -187,4 +157,4 @@ export default compose([
             }
         };
     })
-])(Authenticator);
+])(authenticationInitializer);

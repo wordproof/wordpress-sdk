@@ -5,13 +5,11 @@ import {getNoticeActions, onSave} from "../helpers/editors/blockEditor";
 import {handleNoticesAfterTimestamp, isBlockEditor} from "../helpers/editors/editor";
 
 /**
- * Timestamps updated posts for the Elementor editor.
+ * Handles timestamping new posts in the Block editor.
  *
  * @param props
- * @returns {JSX.Element}
- * @constructor
  */
-const BlockEditorTimestamper = (props) => {
+const timestampBlockEditorInitializer = (props) => {
 
     if (!isBlockEditor()) {
         return;
@@ -30,10 +28,6 @@ const BlockEditorTimestamper = (props) => {
     });
 
     onSave({setTimestampResponse});
-
-    return (<></>);
 }
 
-BlockEditorTimestamper.proptypes = {}
-
-export default BlockEditorTimestamper;
+export default timestampBlockEditorInitializer;
