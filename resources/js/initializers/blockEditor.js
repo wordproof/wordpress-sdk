@@ -1,9 +1,22 @@
-import timestampBlockEditorInitializer from './timestampBlockEditorInitializer';
-import authenticationInitializer from './authenticationInitializer';
+import { dispatch } from "@wordpress/data";
 
-const initializeBlockEditor = () => {
-	authenticationInitializer();
-	timestampBlockEditorInitializer();
-};
+import initializeWordProofTimestamper from "./timestamper";
+import initializeAuthentication from "./authenticationInitializer";
+import {callbackOnSave} from "../helpers/editors/blockEditor";
 
-export default initializeBlockEditor;
+/**
+ * Initializes the WordProof integration.
+ *
+ * @returns {void}
+ */
+export default function initializeWordProofIntegration() {
+    const { createSuccessNotice, createErrorNotice } = dispatch( "core/notices" );
+
+    initializeAuthentication();
+
+    initializeWordProofTimestamper(
+            callbackOnSave,
+            createSuccessNotice,
+            createErrorNotice
+    );
+}

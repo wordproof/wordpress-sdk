@@ -1,9 +1,20 @@
-import authenticationInitializer from './authenticationInitializer';
-import timestampElementorEditorInitializer from './timestampElementorEditorInitializer';
+import { dispatch, select, subscribe } from "@wordpress/data";
 
-const initializeElementorEditor = () => {
-	authenticationInitializer();
-	timestampElementorEditorInitializer();
-};
+import initializeTimestamper from "./timestamper";
+import initializeAuthentication from "./authenticationInitializer";
+import {callbackOnSave, createNotice} from "../helpers/editors/elementorEditor";
 
-export default initializeElementorEditor;
+/**
+ * Initializes the WordProof integration.
+ *
+ * @returns {void}
+ */
+export default function initializeWordProofIntegration() {
+    initializeAuthentication();
+
+    initializeTimestamper(
+            callbackOnSave,
+            createNotice,
+            createNotice
+    );
+}

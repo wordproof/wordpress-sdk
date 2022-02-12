@@ -4,7 +4,6 @@ import {
 	handleAPIResponse,
 } from '../helpers/api';
 
-const { useCallback } = wp.element;
 const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
 
@@ -12,9 +11,9 @@ import PropTypes from 'prop-types';
 
 import { getData } from '../helpers/data';
 import popupWindow from '../helpers/popup';
-import { dispatch } from '../helpers/event';
+import { dispatch as dispatchEvent } from '../helpers/event';
 
-const authenticationInitializer = ( props ) => {
+const initializeAuthentication = ( props ) => {
 	const { isAuthenticated, setIsAuthenticated } = props;
 
 	let popup = null;
@@ -24,18 +23,18 @@ const authenticationInitializer = ( props ) => {
 	/**
 	 * Open the settings popup.
 	 */
-	const openSettings = useCallback( ( event ) => {
+	const openSettings = ( event ) => {
 		event.preventDefault();
 		openPopup( settingsLink, 'WordProof_Settings' );
-	} );
+	}
 
 	/**
 	 * Open the authentication popup.
 	 */
-	const openAuthentication = useCallback( ( event ) => {
+	const openAuthentication = ( event ) => {
 		event.preventDefault();
 		openPopup( authenticationLink, 'WordProof_Authentication' );
-	} );
+	};
 
 	/**
 	 * Opens popup and set in state.
@@ -76,7 +75,7 @@ const authenticationInitializer = ( props ) => {
 			case 'wordproof:oauth:denied':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-				dispatch( 'wordproof:oauth:denied' );
+                dispatchEvent( 'wordproof:oauth:denied' );
 				setIsAuthenticated( false );
 
 				popup.close();
@@ -84,7 +83,7 @@ const authenticationInitializer = ( props ) => {
 			case 'wordproof:webhook:success':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-				dispatch( 'wordproof:oauth:success' );
+                dispatchEvent( 'wordproof:oauth:success' );
 				setIsAuthenticated( true );
 
 				popup.close();
@@ -92,7 +91,7 @@ const authenticationInitializer = ( props ) => {
 			case 'wordproof:webhook:failed':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-				dispatch( 'wordproof:webhook:failed' );
+                dispatchEvent( 'wordproof:webhook:failed' );
 				destroyAuthenticationRequest();
 				setIsAuthenticated( false );
 
@@ -101,14 +100,14 @@ const authenticationInitializer = ( props ) => {
 			case 'wordproof:settings:updated':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-				dispatch( 'wordproof:settings:updated' );
+                dispatchEvent( 'wordproof:settings:updated' );
 				// TODO Retrieve settings
 				popup.close();
 				break;
 			case 'wordproof:oauth:destroy':
 				window.removeEventListener( 'message', onPostMessage, false );
 
-				dispatch( 'wordproof:oauth:destroy' );
+                dispatchEvent( 'wordproof:oauth:destroy' );
 				destroyAuthenticationRequest();
 				setIsAuthenticated( false );
 
@@ -142,7 +141,7 @@ const authenticationInitializer = ( props ) => {
 	window.addEventListener( 'wordproof:open_settings', openSettings, false );
 };
 
-authenticationInitializer.proptypes = {
+initializeAuthentication.proptypes = {
 	isAuthenticated: PropTypes.bool.isRequired,
 	setIsAuthenticated: PropTypes.func.isRequired,
 };
@@ -162,4 +161,4 @@ export default compose( [
 			},
 		};
 	} ),
-] )( authenticationInitializer );
+] )( initializeAuthentication );
