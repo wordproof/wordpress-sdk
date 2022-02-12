@@ -10,7 +10,7 @@ const { withSelect, withDispatch } = wp.data;
 const { useState, useMemo, useEffect } = wp.element;
 import PropTypes from 'prop-types';
 
-const Editor_Panel = ( {
+const EditorPanel = ( {
 	postType,
 	postMeta,
 	isAuthenticated,
@@ -60,7 +60,7 @@ const Editor_Panel = ( {
 	);
 };
 
-Editor_Panel.proptypes = {
+EditorPanel.proptypes = {
 	postType: PropTypes.string.isRequired,
 	postMeta: PropTypes.object.isRequired,
 	isAuthenticated: PropTypes.bool.isRequired,
@@ -82,4 +82,4 @@ export default compose( [
 			},
 		};
 	} ),
-] )( Editor_Panel );
+] )( EditorPanel );

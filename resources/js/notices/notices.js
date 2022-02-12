@@ -1,7 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-const elementor = window.elementor;
-
 const timestampSuccessNotice = sprintf(
 	/** Translators: %s expands to WordProof */
 	__( '%s has successfully timestamped this page.', 'wordpress-timestamp' ),
