@@ -17,7 +17,7 @@ class ScriptsConfig extends Config
                 'type'         => 'js'
             ],
             'post-meta-option' => [
-                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash'],
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
                 'type'         => 'js'
             ],
             'tailwind'         => [
