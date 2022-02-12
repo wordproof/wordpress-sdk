@@ -1,5 +1,5 @@
 import initializeTimestamper from './timestamper';
-import initializeAuthentication from './authenticationInitializer';
+import initializeAuthentication from './authentication';
 import {
 	callbackOnSave,
 	createNotice,

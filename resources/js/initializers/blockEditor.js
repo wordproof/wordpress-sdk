@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 
 import initializeWordProofTimestamper from './timestamper';
-import initializeAuthentication from './authenticationInitializer';
+import initializeAuthentication from './authentication';
 import { callbackOnSave } from '../helpers/editors/blockEditor';
 
 /**
