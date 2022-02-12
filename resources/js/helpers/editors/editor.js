@@ -2,10 +2,8 @@ import {noBalanceNotice, timestampErrorNotice, timestampSuccessNotice} from "../
 import {getData} from "../data";
 import {requestTimestamp} from "../api";
 
-const {useEffect, useCallback} = wp.element;
+const {useEffect} = wp.element;
 import PropTypes from 'prop-types';
-
-const {debounce} = lodash;
 
 export const isElementorEditor = () => {
     return getData('post_editor') === 'elementor';
@@ -24,8 +22,6 @@ const handleNoticesAfterTimestamp = (props) => {
     const {timestampResponse, createSuccessNoticeCallback, createErrorNoticeCallback} = props;
 
     useEffect(() => {
-        console.log('timestampResponse');
-        console.log(timestampResponse);
         if (timestampResponse === null) {
             return;
         }
@@ -36,8 +32,8 @@ const handleNoticesAfterTimestamp = (props) => {
         if (timestampResponse) {
             if (timestampResponse.balance === 0) {
                 createErrorNoticeCallback(noBalanceNotice, errorNoticeOptions);
-                //TODO check for webhook in 10 seconds.
-                //GET posts/id/timestamp/hash
+                // TODO check for webhook in 10 seconds.
+                // GET posts/id/timestamp/hash
             } else {
                 createSuccessNoticeCallback(timestampSuccessNotice, successNoticeOptions);
             }
@@ -47,19 +43,23 @@ const handleNoticesAfterTimestamp = (props) => {
 
     }, [timestampResponse]);
 }
+
 handleNoticesAfterTimestamp.proptypes = {
     timestampResponse: PropTypes.any.isRequired,
     createSuccessNoticeCallback: PropTypes.func.isRequired,
     createErrorNoticeCallback: PropTypes.func.isRequired
 }
-export {handleNoticesAfterTimestamp};
 
 const handleTimestampRequest = async (props) => {
     const {setTimestampResponse} = props;
-    const success = await requestTimestamp();
-    setTimestampResponse(success);
+
+    const result = await requestTimestamp();
+
+    setTimestampResponse(result);
 }
+
 handleTimestampRequest.proptypes = {
     setTimestampResponse: PropTypes.func.isRequired,
 }
-export {handleTimestampRequest};
+
+export {handleTimestampRequest, handleNoticesAfterTimestamp};

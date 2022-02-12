@@ -24,7 +24,6 @@ export const getNoticeActions = () => {
 }
 
 const onSave = (props) => {
-    console.log('onSave elementor')
     const { setTimestampResponse } = props;
 
     registerElementorDataHookAfter("document/save/save", "wordproof-timestamp", () => {

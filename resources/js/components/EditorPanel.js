@@ -1,6 +1,6 @@
 import {getData} from "../helpers/data";
 import ActionLink from "./ActionLink";
-import BlockEditorTimestamper from "./BlockEditorTimestamper";
+import AuthenticationResultModals from "./AuthenticationResultModals";
 
 const {__, sprintf} = wp.i18n;
 const {PluginDocumentSettingPanel} = wp.editPost;
@@ -9,19 +9,16 @@ const {compose} = wp.compose;
 const {withSelect, withDispatch} = wp.data;
 const {useState, useMemo, useEffect} = wp.element;
 import PropTypes from 'prop-types';
-import Authenticator from "./Authenticator";
 
-const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
+const Editor_Panel = ({postType, postMeta, isAuthenticated, setPostMeta}) => {
 
     const initialData = getData();
 
-    const [isAuthenticated, setIsAuthenticated] = useState(initialData?.is_authenticated ?? false);
     const [selectedPostTypes] = useState(initialData?.settings?.selected_post_types ?? []);
 
     useEffect( () => {
-        //on update selected post types
-
-        //on update isAuthenticated
+        // TODO on update selected post types
+        // TODO on update isAuthenticated
     }, [ isAuthenticated, selectedPostTypes] );
 
     const timestampedAutomatically = useMemo(
@@ -47,8 +44,9 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
                             disabled={timestampedAutomatically}
                     />
                     <ActionLink/>
-                    <BlockEditorTimestamper/>
-                    <Authenticator/>
+
+                    <AuthenticationResultModals/>
+
                 </PanelRow>
             </PluginDocumentSettingPanel>
     );
@@ -57,6 +55,7 @@ const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
 Editor_Panel.proptypes = {
     postType: PropTypes.string.isRequired,
     postMeta: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     setPostMeta: PropTypes.func.isRequired
 }
 
@@ -65,6 +64,7 @@ export default compose([
         return {
             postMeta: select('core/editor').getEditedPostAttribute('meta'),
             postType: select('core/editor').getCurrentPostType(),
+            isAuthenticated: select('wordproof').getIsAuthenticated(),
         };
     }),
     withDispatch((dispatch) => {

@@ -35,7 +35,9 @@ const onSave = (props) => {
         }
     }, [isBlockEditorSavePost, isBlockEditorAutoSavePost, didBlockEditorPostSaveRequestSucceed]);
 }
+
 onSave.proptypes = {
     setTimestampResponse: PropTypes.func.isRequired
 }
+
 export {onSave};
