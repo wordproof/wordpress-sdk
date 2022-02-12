@@ -1,36 +1,41 @@
-import apiFetch from "@wordpress/api-fetch";
-import {get, debounce, noop, last} from "lodash";
-import {getData} from "./data";
+import apiFetch from '@wordpress/api-fetch';
+import { get, debounce, noop, last } from 'lodash';
+import { getData } from './data';
 
-const WORDPROOF_REST_API_NAMESPACE = "wordproof/v1";
+const WORDPROOF_REST_API_NAMESPACE = 'wordproof/v1';
 
 /**
  * Wraps the API requests and handles the API responses.
  *
- * @param {Function} apiRequest        The API request function call to handle.
- * @param {Function} onSuccessCallback The callback to run on a successful response.
- * @param {Function} onFailureCallback The callback to run on a failed response.
- * @param {number} expectedStatusCode  The expected status code to run the success callback on.
+ * @param {Function} apiRequest         The API request function call to handle.
+ * @param {Function} onSuccessCallback  The callback to run on a successful response.
+ * @param {Function} onFailureCallback  The callback to run on a failed response.
+ * @param {number}   expectedStatusCode The expected status code to run the success callback on.
  *
- * @returns {Promise} The handled response promise.
+ * @return {Promise} The handled response promise.
  */
-export async function handleAPIResponse(apiRequest, onSuccessCallback, onFailureCallback, expectedStatusCode = 200) {
-    try {
-        const response = await apiRequest();
+export async function handleAPIResponse(
+	apiRequest,
+	onSuccessCallback,
+	onFailureCallback,
+	expectedStatusCode = 200
+) {
+	try {
+		const response = await apiRequest();
 
-        // No response if the request was aborted.
-        if (response) {
-            if (response.status === expectedStatusCode) {
-                return onSuccessCallback(response);
-            }
+		// No response if the request was aborted.
+		if ( response ) {
+			if ( response.status === expectedStatusCode ) {
+				return onSuccessCallback( response );
+			}
 
-            return onFailureCallback(response);
-        }
+			return onFailureCallback( response );
+		}
 
-        return false;
-    } catch (e) {
-        console.error(e.message);
-    }
+		return false;
+	} catch ( e ) {
+		console.error( e.message );
+	}
 }
 
 /**
@@ -38,101 +43,107 @@ export async function handleAPIResponse(apiRequest, onSuccessCallback, onFailure
  *
  * @param {Object} endpoint The endpoint object.
  *
- * @returns {Promise} The API response promise.
+ * @return {Promise} The API response promise.
  */
-export async function callEndpoint(endpoint) {
-    try {
-        return await apiFetch(endpoint);
-    } catch (e) {
-        // If the error object looks like what we expect, return it.
-        if (e.error && e.status) {
-            return e;
-        }
+export async function callEndpoint( endpoint ) {
+	try {
+		return await apiFetch( endpoint );
+	} catch ( e ) {
+		// If the error object looks like what we expect, return it.
+		if ( e.error && e.status ) {
+			return e;
+		}
 
-        // Sometimes we get a Response instance back instead of the data itself.
-        if (e instanceof Response) {
-            return await e.json();
-        }
+		// Sometimes we get a Response instance back instead of the data itself.
+		if ( e instanceof Response ) {
+			return await e.json();
+		}
 
-        // Likely AbortError, otherwise a connection error.
-        // We need to somehow upgrade @wordpress/api-fetch to differentiate between these.
-        return false;
-    }
+		// Likely AbortError, otherwise a connection error.
+		// We need to somehow upgrade @wordpress/api-fetch to differentiate between these.
+		return false;
+	}
 }
-
 
 /**
  * Request Access token
  *
- * @returns {Promise<Object|boolean>} The response object or false if request fails.
+ * @param  root0
+ * @param  root0.state
+ * @param  root0.code
+ * @return {Promise<Object|boolean>} The response object or false if request fails.
  */
-export const authenticationRequest = async ({state, code}) => {
-    return await callEndpoint({
-        path: `${WORDPROOF_REST_API_NAMESPACE}/oauth/authenticate`,
-        method: "POST",
-        data: {
-            state: state,
-            code: code
-        }
-    });
-}
+export const authenticationRequest = async ( { state, code } ) => {
+	return await callEndpoint( {
+		path: `${ WORDPROOF_REST_API_NAMESPACE }/oauth/authenticate`,
+		method: 'POST',
+		data: {
+			state,
+			code,
+		},
+	} );
+};
 
 /**
  * Destroy oauth token
  *
- * @returns {Promise<Object|boolean>} The response object or false if request fails.
+ * @return {Promise<Object|boolean>} The response object or false if request fails.
  */
 export const destroyAuthenticationRequest = async () => {
-    return await callEndpoint({
-        path: `${WORDPROOF_REST_API_NAMESPACE}/oauth/destroy`,
-        method: "POST",
-    });
-}
+	return await callEndpoint( {
+		path: `${ WORDPROOF_REST_API_NAMESPACE }/oauth/destroy`,
+		method: 'POST',
+	} );
+};
 
 /**
  * Retrieves WordProof settings.
  *
- * @returns {Promise<Object|boolean>} The response object or false if request fails.
+ * @return {Promise<Object|boolean>} The response object or false if request fails.
  */
 export const fetchSettings = async () => {
-    return await handleAPIResponse(
-            async () => callEndpoint({
-                path: `${WORDPROOF_REST_API_NAMESPACE}/settings`,
-                method: "GET",
-            }),
-            (response) => response,
-            () => false
-    );
+	return await handleAPIResponse(
+		async () =>
+			callEndpoint( {
+				path: `${ WORDPROOF_REST_API_NAMESPACE }/settings`,
+				method: 'GET',
+			} ),
+		( response ) => response,
+		() => false
+	);
 };
 
 /**
  * Retrieves WordProof authentication status.
  *
- * @returns {Promise<boolean>} The authentication status.
+ * @return {Promise<boolean>} The authentication status.
  */
 export const fetchIsAuthenticated = async () => {
-    return await handleAPIResponse(
-            async () => callEndpoint({
-                path: `${WORDPROOF_REST_API_NAMESPACE}/authentication`,
-                method: "GET",
-            }),
-            // eslint-disable-next-line camelcase
-            ({is_authenticated}) => is_authenticated,
-            () => false
-    );
+	return await handleAPIResponse(
+		async () =>
+			callEndpoint( {
+				path: `${ WORDPROOF_REST_API_NAMESPACE }/authentication`,
+				method: 'GET',
+			} ),
+		// eslint-disable-next-line camelcase
+		( { is_authenticated } ) => is_authenticated,
+		() => false
+	);
 };
 
 /**
  * Return the site settings data
  *
- * @returns {Promise<Object>} The promise wrapping the response object.
+ * @return {Promise<Object>} The promise wrapping the response object.
  */
 export const requestTimestamp = async () => {
-    const timestampUrl = getData("timestamp_url");
-    const timestampEndpoint = last(timestampUrl.split(WORDPROOF_REST_API_NAMESPACE));
+	const timestampUrl = getData( 'timestamp_url' );
+	const timestampEndpoint = last(
+		timestampUrl.split( WORDPROOF_REST_API_NAMESPACE )
+	);
 
-    return callEndpoint({
-        path: WORDPROOF_REST_API_NAMESPACE + timestampEndpoint,
-        method: "POST",
-    });
+	return callEndpoint( {
+		path: WORDPROOF_REST_API_NAMESPACE + timestampEndpoint,
+		method: 'POST',
+	} );
 };

@@ -1,32 +1,37 @@
-const {useState} = wp.element;
+const { useState } = wp.element;
 
-import {getNoticeActions, onSave} from "../helpers/editors/elementorEditor";
-import {handleNoticesAfterTimestamp, isElementorEditor} from "../helpers/editors/editor";
+import { getNoticeActions, onSave } from '../helpers/editors/elementorEditor';
+import {
+	handleNoticesAfterTimestamp,
+	isElementorEditor,
+} from '../helpers/editors/editor';
 
 /**
  * Handles timestamping new posts in the Elementor editor.
  *
- * @param props
+ * @param  props
  */
-const timestampElementorEditorInitializer = (props) => {
+const timestampElementorEditorInitializer = ( props ) => {
+	if ( ! isElementorEditor() ) {
+		return;
+	}
 
-    if (!isElementorEditor()) {
-        return;
-    }
+	const {} = props;
 
-    const {} = props;
+	const [ timestampResponse, setTimestampResponse ] = useState( null );
 
-    const [timestampResponse, setTimestampResponse] = useState(null);
+	const {
+		createSuccessNoticeCallback,
+		createErrorNoticeCallback,
+	} = getNoticeActions();
 
-    const {createSuccessNoticeCallback, createErrorNoticeCallback} = getNoticeActions();
+	handleNoticesAfterTimestamp( {
+		timestampResponse,
+		createSuccessNoticeCallback,
+		createErrorNoticeCallback,
+	} );
 
-    handleNoticesAfterTimestamp({
-        timestampResponse,
-        createSuccessNoticeCallback,
-        createErrorNoticeCallback
-    });
-
-    onSave({setTimestampResponse});
-}
+	onSave( { setTimestampResponse } );
+};
 
 export default timestampElementorEditorInitializer;

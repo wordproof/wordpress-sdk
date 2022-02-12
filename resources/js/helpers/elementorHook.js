@@ -9,47 +9,47 @@
  * @author Yoast SEO team
  */
 class ElementorUIHook extends $e.modules.hookUI.Base {
-    /**
-     * Constructs this class.
-     *
-     * @param {string}   hook     The hook to register to.
-     * @param {string}   id       The id to register our callback behind.
-     * @param {function} callback The function to call when the hook is fired.
-     */
-    constructor( hook, id, callback ) {
-        super();
-        this.hook = hook;
-        this.id = id;
-        this.callback = callback;
-    }
+	/**
+	 * Constructs this class.
+	 *
+	 * @param {string}   hook     The hook to register to.
+	 * @param {string}   id       The id to register our callback behind.
+	 * @param {Function} callback The function to call when the hook is fired.
+	 */
+	constructor( hook, id, callback ) {
+		super();
+		this.hook = hook;
+		this.id = id;
+		this.callback = callback;
+	}
 
-    /**
-     * A getter for the Elementor hook we want to register to.
-     *
-     * @returns {string} The hook to register to.
-     */
-    getCommand() {
-        return this.hook;
-    }
+	/**
+	 * A getter for the Elementor hook we want to register to.
+	 *
+	 * @return {string} The hook to register to.
+	 */
+	getCommand() {
+		return this.hook;
+	}
 
-    /**
-     * A getter for the id we register our callback behind.
-     *
-     * @returns {string} The id to register behind.
-     */
-    getId() {
-        return this.id;
-    }
+	/**
+	 * A getter for the id we register our callback behind.
+	 *
+	 * @return {string} The id to register behind.
+	 */
+	getId() {
+		return this.id;
+	}
 
-    /**
-     * This function is called when the hook is fired.
-     *
-     * @returns {*} The callback result.
-     */
-    apply() {
-        // Give some milliseconds to ensure the UI has been updated.
-        return this.callback();
-    }
+	/**
+	 * This function is called when the hook is fired.
+	 *
+	 * @return {*} The callback result.
+	 */
+	apply() {
+		// Give some milliseconds to ensure the UI has been updated.
+		return this.callback();
+	}
 }
 
 /**
@@ -59,47 +59,47 @@ class ElementorUIHook extends $e.modules.hookUI.Base {
  * Specifically, this is a Data After hook.
  */
 class ElementorDataHook extends $e.modules.hookData.Base {
-    /**
-     * Constructs this class.
-     *
-     * @param {string}   hook     The hook to register to.
-     * @param {string}   id       The id to register our callback behind.
-     * @param {function} callback The function to call when the hook is fired.
-     */
-    constructor( hook, id, callback ) {
-        super();
-        this.hook = hook;
-        this.id = id;
-        this.callback = callback;
-    }
+	/**
+	 * Constructs this class.
+	 *
+	 * @param {string}   hook     The hook to register to.
+	 * @param {string}   id       The id to register our callback behind.
+	 * @param {Function} callback The function to call when the hook is fired.
+	 */
+	constructor( hook, id, callback ) {
+		super();
+		this.hook = hook;
+		this.id = id;
+		this.callback = callback;
+	}
 
-    /**
-     * A getter for the Elementor hook we want to register to.
-     *
-     * @returns {string} The hook to register to.
-     */
-    getCommand() {
-        return this.hook;
-    }
+	/**
+	 * A getter for the Elementor hook we want to register to.
+	 *
+	 * @return {string} The hook to register to.
+	 */
+	getCommand() {
+		return this.hook;
+	}
 
-    /**
-     * A getter for the id we register our callback behind.
-     *
-     * @returns {string} The id to register behind.
-     */
-    getId() {
-        return this.id;
-    }
+	/**
+	 * A getter for the id we register our callback behind.
+	 *
+	 * @return {string} The id to register behind.
+	 */
+	getId() {
+		return this.id;
+	}
 
-    /**
-     * This function is called when the hook is fired.
-     *
-     * @returns {*} The callback result.
-     */
-    apply() {
-        // Give some milliseconds to ensure the UI has been updated.
-        return this.callback();
-    }
+	/**
+	 * This function is called when the hook is fired.
+	 *
+	 * @return {*} The callback result.
+	 */
+	apply() {
+		// Give some milliseconds to ensure the UI has been updated.
+		return this.callback();
+	}
 }
 
 /**
@@ -107,12 +107,12 @@ class ElementorDataHook extends $e.modules.hookData.Base {
  *
  * @param {string}   hook     The hook to register to.
  * @param {string}   id       The id to register our callback behind.
- * @param {function} callback The function to call when the hook is fired.
+ * @param {Function} callback The function to call when the hook is fired.
  *
- * @returns {void}
+ * @return {void}
  */
 export function registerElementorUIHookAfter( hook, id, callback ) {
-    $e.hooks.registerUIAfter( new ElementorUIHook( hook, id, callback ) );
+	$e.hooks.registerUIAfter( new ElementorUIHook( hook, id, callback ) );
 }
 
 /**
@@ -120,12 +120,14 @@ export function registerElementorUIHookAfter( hook, id, callback ) {
  *
  * @param {string}   hook     The hook to register to.
  * @param {string}   id       The id to register our callback behind.
- * @param {function} callback The function to call when the hook is fired.
+ * @param {Function} callback The function to call when the hook is fired.
  *
- * @returns {void}
+ * @return {void}
  */
 export function registerElementorDataHookAfter( hook, id, callback ) {
-    if ($e) {
-        $e.hooks.registerDataAfter(new ElementorDataHook(hook, id, callback));
-    }
+	if ( $e ) {
+		$e.hooks.registerDataAfter(
+			new ElementorDataHook( hook, id, callback )
+		);
+	}
 }

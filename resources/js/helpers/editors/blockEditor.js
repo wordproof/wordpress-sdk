@@ -1,43 +1,56 @@
-import {handleTimestampRequest} from "./editor";
+import { handleTimestampRequest } from './editor';
 
-const {useEffect, useCallback} = wp.element;
-const {useSelect, useDispatch} = wp.data;
+const { useEffect, useCallback } = wp.element;
+const { useSelect, useDispatch } = wp.data;
 import PropTypes from 'prop-types';
 
 export const getNoticeActions = () => {
+	const blockEditorNoticeActions = useDispatch( 'core/notices' );
 
-    const blockEditorNoticeActions = useDispatch("core/notices");
+	const { createSuccessNotice, createErrorNotice } = blockEditorNoticeActions;
 
-    const {
-        createSuccessNotice,
-        createErrorNotice
-    } = blockEditorNoticeActions;
+	const createSuccessNoticeCallback = useCallback( ( props ) => {
+		createSuccessNotice( props );
+	}, [] );
 
-    const createSuccessNoticeCallback = useCallback((props) => {
-        createSuccessNotice(props)
-    }, []);
+	const createErrorNoticeCallback = useCallback( ( props ) => {
+		createErrorNotice( props );
+	}, [] );
 
-    const createErrorNoticeCallback = useCallback((props) => {
-        createErrorNotice(props)
-    }, []);
+	return { createSuccessNoticeCallback, createErrorNoticeCallback };
+};
 
-    return {createSuccessNoticeCallback, createErrorNoticeCallback}
-}
+const onSave = ( props ) => {
+	const isBlockEditorSavePost = useSelect(
+		( select ) => select( 'core/editor' ).isSavingPost(),
+		[]
+	);
+	const isBlockEditorAutoSavePost = useSelect(
+		( select ) => select( 'core/editor' ).isAutosavingPost(),
+		[]
+	);
+	const didBlockEditorPostSaveRequestSucceed = useSelect(
+		( select ) => select( 'core/editor' ).didPostSaveRequestSucceed(),
+		[]
+	);
 
-const onSave = (props) => {
-    const isBlockEditorSavePost = useSelect((select) => select("core/editor").isSavingPost(), []);
-    const isBlockEditorAutoSavePost = useSelect((select) => select("core/editor").isAutosavingPost(), []);
-    const didBlockEditorPostSaveRequestSucceed = useSelect((select) => select("core/editor").didPostSaveRequestSucceed(), []);
-
-    useEffect(() => {
-        if (isBlockEditorSavePost && didBlockEditorPostSaveRequestSucceed && !isBlockEditorAutoSavePost) {
-            handleTimestampRequest(props)
-        }
-    }, [isBlockEditorSavePost, isBlockEditorAutoSavePost, didBlockEditorPostSaveRequestSucceed]);
-}
+	useEffect( () => {
+		if (
+			isBlockEditorSavePost &&
+			didBlockEditorPostSaveRequestSucceed &&
+			! isBlockEditorAutoSavePost
+		) {
+			handleTimestampRequest( props );
+		}
+	}, [
+		isBlockEditorSavePost,
+		isBlockEditorAutoSavePost,
+		didBlockEditorPostSaveRequestSucceed,
+	] );
+};
 
 onSave.proptypes = {
-    setTimestampResponse: PropTypes.func.isRequired
-}
+	setTimestampResponse: PropTypes.func.isRequired,
+};
 
-export {onSave};
+export { onSave };
