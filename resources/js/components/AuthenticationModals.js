@@ -5,8 +5,8 @@ import WebhookSuccessModal from './modals/WebhookSuccessModal';
 import WebhookFailedModal from './modals/WebhookFailedModal';
 
 const AuthenticationModals = () => {
-	const { modal, setModal } = useState( null );
-
+    const [ modal, setModal ] = useState( null );
+    
 	window.addEventListener(
 		'wordproof:oauth:success',
 		() => {
