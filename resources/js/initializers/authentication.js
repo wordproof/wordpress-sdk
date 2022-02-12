@@ -4,21 +4,18 @@ import {
 	handleAPIResponse,
 } from '../helpers/api';
 
-const { compose } = wp.compose;
-const { withSelect, withDispatch } = wp.data;
-
-import PropTypes from 'prop-types';
+const { select, dispatch } = wp.data;
 
 import { getData } from '../helpers/data';
 import popupWindow from '../helpers/popup';
 import { dispatch as dispatchEvent } from '../helpers/event';
 
-const initializeAuthentication = ( props ) => {
-	const { isAuthenticated, setIsAuthenticated } = props;
-
-	let popup = null;
+export default function initializeAuthentication() {
+	const { setIsAuthenticated } = dispatch( 'wordproof' );
 	const authenticationLink = getData( 'popup_redirect_authentication_url' );
 	const settingsLink = getData( 'popup_redirect_settings_url' );
+
+	let popup = null;
 
 	/**
 	 * Open the settings popup.
@@ -142,27 +139,6 @@ const initializeAuthentication = ( props ) => {
 		openAuthentication,
 		false
 	);
+
 	window.addEventListener( 'wordproof:open_settings', openSettings, false );
-};
-
-initializeAuthentication.proptypes = {
-	isAuthenticated: PropTypes.bool.isRequired,
-	setIsAuthenticated: PropTypes.func.isRequired,
-};
-
-export default compose( [
-	withSelect( ( select ) => {
-		return {
-			isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
-		};
-	} ),
-	withDispatch( ( dispatch ) => {
-		return {
-			setIsAuthenticated( isAuthenticated ) {
-				dispatch( 'wordproof' ).setIsAuthenticated( {
-					isAuthenticated,
-				} );
-			},
-		};
-	} ),
-] )( initializeAuthentication );
+}
