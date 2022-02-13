@@ -2,6 +2,8 @@
 
 namespace WordProof\SDK\Helpers;
 
+use WordProof\SDK\Config\RoutesConfig;
+
 class RestApiHelper
 {
     private static function buildPath($endpoint)
@@ -14,44 +16,9 @@ class RestApiHelper
         return self::buildPath('');
     }
     
-    private static function routes()
-    {
-        return [
-            'hashInput'              => [
-                'endpoint' => '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})',
-                'method'   => 'get'
-            ],
-            'authenticate'           => [
-                'endpoint' => '/oauth/authenticate',
-                'method'   => 'post'
-            ],
-            'timestamp'              => [
-                'endpoint' => '/posts/(?P<id>\d+)/timestamp',
-                'method'   => 'post'
-            ],
-            'webhook'                => [
-                'endpoint' => '/webhook',
-                'method'   => 'get'
-            
-            ],
-            'settings'               => [
-                'endpoint' => '/settings',
-                'method'   => 'get'
-            ],
-            'authentication'         => [
-                'endpoint' => '/authentication',
-                'method'   => 'post'
-            ],
-            'authentication.destroy' => [
-                'endpoint' => '/oauth/destroy',
-                'method'   => 'post'
-            ],
-        ];
-    }
-    
     public static function route($slug)
     {
-        $routes = self::routes();
+        $routes = RoutesConfig::get();
         if (isset($routes[$slug])) {
             return $routes[$slug];
         }

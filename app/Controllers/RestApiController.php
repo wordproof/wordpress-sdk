@@ -47,6 +47,12 @@ class RestApiController
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
 
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp.transaction.latest'), [
+            'methods'             => 'POST',
+            'callback'            => [$this, 'showLatestTimestampTransaction'],
+            'permission_callback' => [$this, 'canPublishPermission'],
+        ]);
+
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
@@ -115,10 +121,16 @@ class RestApiController
     public function timestamp(\WP_REST_Request $request)
     {
         $data = $request->get_params();
-
         $postId = intval($data['id']);
 
         return TimestampController::timestamp($postId);
+    }
+    
+    public function showLatestTimestampTransaction(\WP_REST_Request $request) {
+        $data = $request->get_params();
+        $postId = intval($data['id']);
+    
+        return new \WP_REST_Response((object)['hash' => 'test']);
     }
     
     /**
