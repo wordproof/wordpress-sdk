@@ -40,15 +40,27 @@ const AuthenticationModals = () => {
 		false
 	);
 
+	const closeModal = () => {
+		setModal( null );
+	};
+
 	return (
 		<>
-			{ modal === 'oauth:success' && <OauthSuccessModal /> }
+			{ modal === 'oauth:success' && (
+				<OauthSuccessModal close={ closeModal } />
+			) }
 
-			{ modal === 'oauth:denied' && <OauthDeniedModal /> }
+			{ modal === 'oauth:denied' && (
+				<OauthDeniedModal close={ closeModal } />
+			) }
 
-			{ modal === 'oauth:failed' && <OauthFailedModal /> }
+			{ modal === 'oauth:failed' && (
+				<OauthFailedModal close={ closeModal } />
+			) }
 
-			{ modal === 'webhook:failed' && <WebhookFailedModal /> }
+			{ modal === 'webhook:failed' && (
+				<WebhookFailedModal close={ closeModal } />
+			) }
 		</>
 	);
 };
