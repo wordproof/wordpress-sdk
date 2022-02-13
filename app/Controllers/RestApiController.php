@@ -48,7 +48,7 @@ class RestApiController
         ]);
 
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp.transaction.latest'), [
-            'methods'             => 'POST',
+            'methods'             => 'GET',
             'callback'            => [$this, 'showLatestTimestampTransaction'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
@@ -130,7 +130,10 @@ class RestApiController
         $data = $request->get_params();
         $postId = intval($data['id']);
     
-        return new \WP_REST_Response((object)['hash' => 'test']);
+        $transactions = PostMetaHelper::get($postId, '_wordproof_blockchain_transaction', false);
+        $transaction = array_pop($transactions);
+        
+        return new \WP_REST_Response((object)$transaction);
     }
     
     /**
