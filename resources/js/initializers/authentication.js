@@ -1,7 +1,7 @@
 import {
-	authenticationRequest,
-	destroyAuthenticationRequest,
-	handleAPIResponse,
+    authenticationRequest,
+    destroyAuthenticationRequest, fetchSettings,
+    handleAPIResponse,
 } from '../helpers/api';
 
 const { select, dispatch } = wp.data;
@@ -71,53 +71,48 @@ export default function initializeAuthentication() {
 
 		switch ( data.type ) {
 			case 'wordproof:oauth:granted':
-				await performAuthenticationRequest( data );
+				if ( await performAuthenticationRequest( data ) === false ) {
+				    await postMessageResult('wordproof:oauth:failed', false);
+                }
 				break;
 			case 'wordproof:oauth:denied':
-				window.removeEventListener( 'message', onPostMessage, false );
-
-				dispatchEvent( 'wordproof:oauth:denied' );
-				setIsAuthenticated( false );
-
-				popup.close();
+                await postMessageResult('wordproof:oauth:denied', false);
 				break;
 			case 'wordproof:webhook:success':
-				window.removeEventListener( 'message', onPostMessage, false );
-
-				dispatchEvent( 'wordproof:oauth:success' );
-				setIsAuthenticated( true );
-
-				popup.close();
+                await postMessageResult('wordproof:oauth:success', true);
 				break;
 			case 'wordproof:webhook:failed':
-				window.removeEventListener( 'message', onPostMessage, false );
-
-				dispatchEvent( 'wordproof:webhook:failed' );
-				destroyAuthenticationRequest();
-				setIsAuthenticated( false );
-
-				popup.close();
+                await postMessageResult('wordproof:webhook:failed', false);
 				break;
-			case 'wordproof:settings:updated':
-				window.removeEventListener( 'message', onPostMessage, false );
-
-				dispatchEvent( 'wordproof:settings:updated' );
-				// TODO Retrieve settings
-				popup.close();
+            case 'wordproof:settings:updated':
+                await postMessageResult('wordproof:settings:updated');
+				await fetchSettings();
+				// TODO Save settings. Unnecessary for Yoast integration.
 				break;
 			case 'wordproof:oauth:destroy':
-				window.removeEventListener( 'message', onPostMessage, false );
-
-				dispatchEvent( 'wordproof:oauth:destroy' );
-				destroyAuthenticationRequest();
-				setIsAuthenticated( false );
-
-				popup.close();
+                await postMessageResult('wordproof:oauth:destroy', false);
 				break;
 		}
 	};
 
-	const performAuthenticationRequest = async ( data ) => {
+    const postMessageResult = async ( event, isAuthenticated = null ) => {
+        window.removeEventListener( 'message', onPostMessage, false );
+
+        dispatchEvent( event );
+
+        if (isAuthenticated === false) {
+            await destroyAuthenticationRequest();
+            setIsAuthenticated(false)
+        }
+
+        if (isAuthenticated === true) {
+            setIsAuthenticated(true)
+        }
+
+        popup.close();
+    }
+
+    const performAuthenticationRequest = async ( data ) => {
 		await handleAPIResponse(
 			() => authenticationRequest( data ),
 			async ( response ) => {
@@ -126,9 +121,11 @@ export default function initializeAuthentication() {
 					source_id: response.source_id,
 				};
 				popup.postMessage( message, getData( 'origin' ) );
+
+				return true;
 			},
 			async ( response ) => {
-				console.warn( response );
+				return false;
 			}
 		);
 	};
