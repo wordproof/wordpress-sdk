@@ -72,10 +72,10 @@ class PostEditorHelper
                 'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
                 'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
                 'settings'                          => SettingsHelper::get(),
-                'timestamp_current_post_type'       => SettingsHelper::postTypeIsInSelectedPostTypes($currentPostType),
-                'current_post_type'                 => $currentPostType,
                 'timestamp_url'                     => RestApiHelper::getRestRoute('timestamp', [$post->ID]),
-                'post_editor'                       => self::getPostEditor()
+                'current_post_id'                   => $post->ID,
+                'post_editor'                       => self::getPostEditor(),
+
             ],
         ];
     }

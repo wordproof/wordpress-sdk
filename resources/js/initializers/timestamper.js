@@ -1,5 +1,6 @@
 import { postTimestampRequest } from '../helpers/endpoints';
 import { handleNoticesAfterTimestamp } from '../helpers/editors/editor';
+import { getData } from '../helpers/data';
 
 const { debounce } = lodash;
 const { applyFilters } = wp.hooks;
@@ -11,7 +12,7 @@ const { select } = wp.data;
  * @param {Function} callbackOnSave      Function to register the timestamp callback
  * @param {Function} createSuccessNotice Function to display a success notice.
  * @param {Function} createErrorNotice   Function to display an error notice.
- *
+ * @param {number}   postId
  * @return {void}
  */
 export default function initializeTimestamper(
@@ -21,7 +22,7 @@ export default function initializeTimestamper(
 ) {
 	const sendTimestampRequest = debounce( async () => {
 		if ( applyFilters( 'wordproof.timestamp', true ) ) {
-			const postId = select( 'core/editor' ).getCurrentPostId();
+			const postId = getData( 'current_post_id' );
 
 			const response = await postTimestampRequest( postId );
 
@@ -29,6 +30,7 @@ export default function initializeTimestamper(
 				response,
 				createSuccessNotice,
 				createErrorNotice,
+				postId,
 			} );
 		}
 	}, 500 );

@@ -79,7 +79,7 @@ export const postTimestampRequest = async ( post_id ) => {
  */
 export const getLatestTimestampTransactionRequest = async ( post_id ) => {
 	return callEndpoint( {
-		path: `${ WORDPROOF_REST_API_NAMESPACE }/posts/${ post_id }/timestamp`,
-		method: 'POST',
+		path: `${ WORDPROOF_REST_API_NAMESPACE }/posts/${ post_id }/timestamp/transaction/latest`,
+		method: 'GET',
 	} );
 };
