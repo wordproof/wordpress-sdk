@@ -5,13 +5,16 @@ const { compose } = wp.compose;
 const { withSelect } = wp.data;
 import PropTypes from 'prop-types';
 
-const OauthSuccessModal = ({ postType } ) => {
+const OauthSuccessModal = ( { postType } ) => {
 	return (
 		<WordProofModal
 			title={ __( 'WordProof Authentication', 'wordproof_timestamp' ) }
 		>
-            <h3>Authenticated!</h3>
-            <p>You have successfully connected your WordProof account with this site.</p>
+			<h3>Authenticated!</h3>
+			<p>
+				You have successfully connected your WordProof account with this
+				site.
+			</p>
 		</WordProofModal>
 	);
 };

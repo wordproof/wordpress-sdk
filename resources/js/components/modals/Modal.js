@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 const WordProofModal = ( props ) => {
 	const [ isOpen, setOpen ] = useState( true );
-	const openModal = () => setOpen( true );
 	const closeModal = () => setOpen( false );
 
 	const { title, children } = props;

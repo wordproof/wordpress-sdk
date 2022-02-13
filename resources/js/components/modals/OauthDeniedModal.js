@@ -17,7 +17,12 @@ const OauthDeniedModal = () => {
 		>
 			<>
 				<h3>Authorize denied!</h3>
-                <p>{__('You need to allow WordProof to access your site to finish the WordProof installation.', 'wordproof_sdk')}</p>
+				<p>
+					{ __(
+						'You need to allow WordProof to access your site to finish the WordProof installation.',
+						'wordproof_sdk'
+					) }
+				</p>
 				<Button variant={ 'primary' } onClick={ retry }>
 					{ __( 'Retry authentication', 'wordproof_timestamp' ) }
 				</Button>
