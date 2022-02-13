@@ -1,12 +1,13 @@
 const { useState } = wp.element;
 
-import OAuthDeniedModal from './modals/OAuthDeniedModal';
-import WebhookSuccessModal from './modals/WebhookSuccessModal';
+import OauthDeniedModal from './modals/OauthDeniedModal';
+import OauthFailedModal from './modals/OauthFailedModal';
+import OauthSuccessModal from './modals/OauthSuccessModal';
 import WebhookFailedModal from './modals/WebhookFailedModal';
 
 const AuthenticationModals = () => {
     const [ modal, setModal ] = useState( null );
-    
+
 	window.addEventListener(
 		'wordproof:oauth:success',
 		() => {
@@ -41,11 +42,11 @@ const AuthenticationModals = () => {
 
 	return (
 		<>
-			{ modal === 'oauth:success' && <WebhookSuccessModal /> }
+			{ modal === 'oauth:success' && <OauthSuccessModal /> }
 
-			{ modal === 'oauth:denied' && <OAuthDeniedModal /> }
+			{ modal === 'oauth:denied' && <OauthDeniedModal /> }
 
-			{ modal === 'oauth:failed' && <OAuthDeniedModal /> }
+			{ modal === 'oauth:failed' && <OauthFailedModal /> }
 
 			{ modal === 'webhook:failed' && <WebhookFailedModal /> }
 		</>

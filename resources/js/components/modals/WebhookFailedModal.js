@@ -1,19 +1,16 @@
 import WordProofModal from './Modal';
 
 const { __ } = wp.i18n;
-const { compose } = wp.compose;
-import PropTypes from 'prop-types';
 
 const WebhookFailedModal = () => {
 	return (
 		<WordProofModal
-			title={ __( 'WordProof Authentication', 'wordproof_timestamp' ) }
+			title={ __( 'WordProof', 'wordproof_timestamp' ) }
 		>
-			<p>Webhook Failed!</p>
+            <h3>Webhook failed</h3>
+            <p>The timestamp send by WordProof was not received on your website. Please contact support to help solve this problem.</p>
 		</WordProofModal>
 	);
 };
 
-WebhookFailedModal.proptypes = {};
-
-export default compose( [] )( WebhookFailedModal );
+export default WebhookFailedModal;

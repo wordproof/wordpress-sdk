@@ -1,13 +1,11 @@
 import WordProofModal from './Modal';
 import { dispatch } from '../../helpers/event';
 
-const { __ } = wp.i18n;
-const { compose } = wp.compose;
 const { Button } = wp.components;
 const { useCallback } = wp.element;
-import PropTypes from 'prop-types';
+const { __ } = wp.i18n;
 
-const OAuthDeniedModal = () => {
+const OauthDeniedModal = () => {
 	const retry = useCallback( ( event ) => {
 		event.preventDefault();
 		dispatch( 'wordproof:open_authentication' );
@@ -19,15 +17,15 @@ const OAuthDeniedModal = () => {
 		>
 			<>
 				<h3>Authorize denied!</h3>
-				<p>Denied!</p>
+                <p>{__('You need to allow WordProof to access your site to finish the WordProof installation.', 'wordproof_sdk')}</p>
 				<Button variant={ 'primary' } onClick={ retry }>
-					{ __( 'Retry', 'wordproof_timestamp' ) }
+					{ __( 'Retry authentication', 'wordproof_timestamp' ) }
 				</Button>
 			</>
 		</WordProofModal>
 	);
 };
 
-OAuthDeniedModal.proptypes = {};
+OauthDeniedModal.proptypes = {};
 
-export default compose( [] )( OAuthDeniedModal );
+export default OauthDeniedModal;

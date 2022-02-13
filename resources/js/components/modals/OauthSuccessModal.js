@@ -5,12 +5,13 @@ const { compose } = wp.compose;
 const { withSelect } = wp.data;
 import PropTypes from 'prop-types';
 
-const WebhookSuccessModal = ( { postType } ) => {
+const OauthSuccessModal = ({ postType } ) => {
 	return (
 		<WordProofModal
 			title={ __( 'WordProof Authentication', 'wordproof_timestamp' ) }
 		>
-			<p>Success!</p>
+            <h3>Authenticated!</h3>
+            <p>You have successfully connected your WordProof account with this site.</p>
 		</WordProofModal>
 	);
 };
@@ -21,4 +22,4 @@ export default compose( [
 			postType: select( 'core/editor' ).getCurrentPostType(),
 		};
 	} ),
-] )( WebhookSuccessModal );
+] )( OauthSuccessModal );
