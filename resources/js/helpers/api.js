@@ -1,8 +1,9 @@
 import apiFetch from '@wordpress/api-fetch';
-import { get, debounce, noop, last } from 'lodash';
-import { getData } from './data';
-
-const WORDPROOF_REST_API_NAMESPACE = 'wordproof/v1';
+import {
+	destroyAuthenticationRequest,
+	getIsAuthenticatedRequest,
+	getSettingsRequest,
+} from './endpoints';
 
 /**
  * Wraps the API requests and handles the API responses.
@@ -66,34 +67,16 @@ export async function callEndpoint( endpoint ) {
 }
 
 /**
- * Request Access token
- *
- * @param  root0
- * @param  root0.state
- * @param  root0.code
- * @return {Promise<Object|boolean>} The response object or false if request fails.
- */
-export const authenticationRequest = async ( { state, code } ) => {
-	return await callEndpoint( {
-		path: `${ WORDPROOF_REST_API_NAMESPACE }/oauth/authenticate`,
-		method: 'POST',
-		data: {
-			state,
-			code,
-		},
-	} );
-};
-
-/**
  * Destroy oauth token
  *
  * @return {Promise<Object|boolean>} The response object or false if request fails.
  */
-export const destroyAuthenticationRequest = async () => {
-	return await callEndpoint( {
-		path: `${ WORDPROOF_REST_API_NAMESPACE }/oauth/destroy`,
-		method: 'POST',
-	} );
+export const destroyAuthentication = async () => {
+	return await handleAPIResponse(
+		async () => await destroyAuthenticationRequest(),
+		( response ) => response,
+		() => false
+	);
 };
 
 /**
@@ -103,11 +86,7 @@ export const destroyAuthenticationRequest = async () => {
  */
 export const fetchSettings = async () => {
 	return await handleAPIResponse(
-		async () =>
-			callEndpoint( {
-				path: `${ WORDPROOF_REST_API_NAMESPACE }/settings`,
-				method: 'GET',
-			} ),
+		async () => await getSettingsRequest(),
 		( response ) => response,
 		() => false
 	);
@@ -120,30 +99,9 @@ export const fetchSettings = async () => {
  */
 export const fetchIsAuthenticated = async () => {
 	return await handleAPIResponse(
-		async () =>
-			callEndpoint( {
-				path: `${ WORDPROOF_REST_API_NAMESPACE }/authentication`,
-				method: 'GET',
-			} ),
+		async () => await getIsAuthenticatedRequest(),
 		// eslint-disable-next-line camelcase
 		( { is_authenticated } ) => is_authenticated,
 		() => false
 	);
-};
-
-/**
- * Return the site settings data
- *
- * @return {Promise<Object>} The promise wrapping the response object.
- */
-export const requestTimestamp = async () => {
-	const timestampUrl = getData( 'timestamp_url' );
-	const timestampEndpoint = last(
-		timestampUrl.split( WORDPROOF_REST_API_NAMESPACE )
-	);
-
-	return callEndpoint( {
-		path: WORDPROOF_REST_API_NAMESPACE + timestampEndpoint,
-		method: 'POST',
-	} );
 };

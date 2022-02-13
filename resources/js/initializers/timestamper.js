@@ -1,8 +1,9 @@
-import { debounce } from 'lodash';
-import { requestTimestamp } from '../helpers/api';
+import { postTimestampRequest } from '../helpers/endpoints';
 import { handleNoticesAfterTimestamp } from '../helpers/editors/editor';
 
+const { debounce } = lodash;
 const { applyFilters } = wp.hooks;
+const { select } = wp.data;
 
 /**
  * Initializes the timestamper.
@@ -20,7 +21,9 @@ export default function initializeTimestamper(
 ) {
 	const sendTimestampRequest = debounce( async () => {
 		if ( applyFilters( 'wordproof.timestamp', true ) ) {
-			const response = await requestTimestamp();
+			const postId = select( 'core/editor' ).getCurrentPostId();
+
+			const response = await postTimestampRequest( postId );
 
 			handleNoticesAfterTimestamp( {
 				response,
