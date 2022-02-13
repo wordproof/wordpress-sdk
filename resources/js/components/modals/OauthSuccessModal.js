@@ -5,8 +5,8 @@ const { compose } = wp.compose;
 const { withSelect } = wp.data;
 import PropTypes from 'prop-types';
 
-const OauthSuccessModal = ( { postType } ) => {
-	const { close } = props;
+const OauthSuccessModal = ( props ) => {
+	const { close, postType } = props;
 
 	return (
 		<WordProofModal
