@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\NoticeHelper;
+use WordProof\SDK\Helpers\ClassicNoticeHelper;
 use WordProof\SDK\Helpers\TransientHelper;
 
 class NoticeController
@@ -24,7 +24,7 @@ class NoticeController
             return;
         }
 
-        $notice = TransientHelper::getOnce(NoticeHelper::$transientKey);
+        $notice = TransientHelper::getOnce(ClassicNoticeHelper::$transientKey);
 
         if (!isset($notice) || !$notice) {
             return;

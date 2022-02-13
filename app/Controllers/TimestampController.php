@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Helpers\ClassicNoticeHelper;
 use WordProof\SDK\Helpers\TimestampHelper;
 
 class TimestampController
@@ -32,7 +33,11 @@ class TimestampController
             return;
         }
 
-        return TimestampHelper::debounce($post, true);
+        $response = TimestampHelper::debounce($post);
+    
+        ClassicNoticeHelper::addTimestampNotice($response);
+        
+        return $response;
     }
     
     /**

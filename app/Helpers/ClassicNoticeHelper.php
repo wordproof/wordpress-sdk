@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Helpers;
 
-class NoticeHelper
+class ClassicNoticeHelper
 {
     /**
      * @var string The key used for the transient to save the single notice.
