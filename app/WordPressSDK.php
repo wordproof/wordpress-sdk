@@ -12,39 +12,47 @@ use WordProof\SDK\Controllers\SettingsController;
 use WordProof\SDK\Controllers\TimestampController;
 use WordProof\SDK\Helpers\ReflectionHelper;
 use WordProof\SDK\Support\Loader;
+use WordProof\SDK\Translations\TranslationsInterface;
+use WordProof\SDK\Translations\WordProofTranslations;
 
 class WordPressSDK
 {
-    
+
     /**
      * The version of this SDK
      * @var string
      */
     public $version = '1.0.23';
-    
+
     /**
      * The partner used for displaying custom auth pages
      * @var mixed|null
      */
     public $partner = null;
-    
+
     /**
      * The environment being used. development|staging|production
      * @var mixed|string
      */
     public $environment = 'production';
-    
+
     /**
      * @var null|WordPressSDK
      */
     private static $instance = null;
-    
+
     /**
      * Loader responsible for the WordPress hooks
      * @var Loader
      */
     private $loader;
-    
+
+    /**
+     * Translations object
+     * @var TranslationsInterface
+     */
+    private $translations;
+
     /**
      * WordPressSDK constructor.
      *
@@ -56,34 +64,39 @@ class WordPressSDK
             return;
         }
         define('WORDPROOF_TIMESTAMP_SDK', ReflectionHelper::name($this));
-    
+
         if (!headers_sent() && !session_id()) {
             session_start();
         }
-        
+
         $this->loader = new Loader();
+        $this->translations = new WordProofTranslations();
         $this->partner = $partner;
         $this->environment = $env;
-        
+
         $this->authentication();
         $this->api();
         $this->timestamp();
         $this->settings();
         $this->postEditorData();
         $this->notices();
-        
+
         if (!defined('WORDPROOF_TIMESTAMP_SDK_FILE')) {
             define('WORDPROOF_TIMESTAMP_SDK_FILE', __FILE__);
         }
-        
+
         if (!defined('WORDPROOF_TIMESTAMP_SDK_VERSION')) {
             define('WORDPROOF_TIMESTAMP_SDK_VERSION', $this->version);
         }
-        
-        
+
+
         return $this;
     }
-    
+
+    public function setTranslations( TranslationsInterface $translations ) {
+        $this->translations = $translations;
+    }
+
     /**
      * Singleton implementation of WordPress SDK.
      *
@@ -97,10 +110,10 @@ class WordPressSDK
         if (self::$instance === null) {
             self::$instance = new WordPressSDK($partner, $environment);
         }
-        
+
         return self::$instance;
     }
-    
+
     /**
      * Runs the loader and initializes the class.
      *
@@ -111,78 +124,78 @@ class WordPressSDK
         $this->loader->run();
         return $this;
     }
-    
+
     /**
      * Initializes the authentication feature.
      */
     private function authentication()
     {
         $class = new AuthenticationController();
-        
+
         $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
-        
+
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('admin_menu', $class, 'addSelfDestructPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
     }
-    
+
     /**
      * Initializes the api feature.
      */
     private function api()
     {
         $class = new RestApiController();
-        
+
         $this->loader->add_action('rest_api_init', $class, 'init');
     }
-    
+
     /**
      * Adds hooks to timestamp posts on new inserts or on a custom action.
      */
     private function timestamp()
     {
         $class = new TimestampController();
-        
+
         $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
         $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
-        
+
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
     }
-    
+
     /**
      * Adds admin pages that redirect to the WordProof My settings page.
      */
     private function settings()
     {
         $class = new SettingsController();
-        
+
         $this->loader->add_action('wordproof_settings', $class, 'redirect');
-        
+
         $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
         $this->loader->add_action('load-admin_page_wordproof-redirect-settings', $class, 'redirectOnLoad');
     }
-    
+
     /**
      * Registers and localizes post editor scripts.
      */
     private function postEditorData()
     {
         $class = new PostEditorDataController();
-        
+
         $this->loader->add_action('admin_enqueue_scripts', $class, 'addScript');
         $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'addScriptForElementor');
     }
-    
+
     /**
      * Initializes the notices feature.
      */
     private function notices()
     {
-        $class = new NoticeController();
-        
+        $class = new NoticeController( $this->translations );
+
         $this->loader->add_action('admin_notices', $class, 'show');
     }
-    
+
     /**
      * Optional feature to include the schema and certificate to the page.
      *
@@ -191,13 +204,13 @@ class WordPressSDK
     public function certificate()
     {
         $class = new CertificateController();
-        
+
         $this->loader->add_action('wp_head', $class, 'head');
         $this->loader->add_filter('the_content', $class, 'certificateTag');
-        
+
         return $this;
     }
-    
+
     /**
      * Optional feature to timestamp with JS in the post editor.
      *
@@ -206,19 +219,19 @@ class WordPressSDK
     public function timestampInPostEditor()
     {
         $class = new PostEditorTimestampController();
-        
+
         // Gutenberg
         $this->loader->add_action('init', $class, 'registerPostMeta', \PHP_INT_MAX);
         $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueScript');
-        
+
         // Classic editor
         $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
         $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
-        
+
         // Elementor
         $this->loader->add_action('elementor/documents/register_controls', $class, 'registerControl');
         $this->loader->add_action('elementor/editor/after_save', $class, 'elementorSave');
-        
+
         return $this;
     }
 }
