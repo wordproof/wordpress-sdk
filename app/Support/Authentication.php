@@ -3,8 +3,10 @@
 namespace WordProof\SDK\Support;
 
 use WordProof\SDK\Helpers\AdminHelper;
+use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
+use WordProof\SDK\Helpers\PostTypeHelper;
 use WordProof\SDK\Helpers\RedirectHelper;
 use WordProof\SDK\Helpers\SdkHelper;
 use WordProof\SDK\Helpers\TransientHelper;
@@ -12,20 +14,20 @@ use WordProof\SDK\Helpers\TransientHelper;
 class Authentication
 {
     private static $callbackEndpoint = 'wordproof/v1/oauth/callback';
-
+    
     public static function authorize($redirectUrl = null)
     {
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
         $originalUrl = AdminHelper::currentUrl();
-
+        
         set_site_transient('wordproof_authorize_state', $state);
         set_site_transient('wordproof_authorize_code_verifier', $codeVerifier);
         set_site_transient('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
-
+        
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
-
+        
         $data = [
             'client_id'             => EnvironmentHelper::client(),
             'redirect_uri'          => self::getCallbackUrl(),
@@ -36,67 +38,80 @@ class Authentication
             'code_challenge_method' => 'S256',
             'partner'               => SdkHelper::getPartner(),
         ];
-
+        
         self::redirect('/wordpress-sdk/authorize', $data);
     }
-
-    public static function token()
+    
+    /**
+     * Retrieve the access token with the state and code.
+     *
+     * @param string $state The state from remote
+     * @param string $code The code from remote
+     * @return \WP_REST_Response
+     * @throws \Exception
+     */
+    public static function token($state, $code)
     {
-        $state = TransientHelper::getOnce('wordproof_authorize_state');
+        $localState = TransientHelper::getOnce('wordproof_authorize_state');
         $codeVerifier = TransientHelper::getOnce('wordproof_authorize_code_verifier');
-        $originalUrl = TransientHelper::getOnce('wordproof_authorize_current_url');
-
-        // phpcs:ignore WordPress.Security.NonceVerification
-        if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'access_denied') {
-            RedirectHelper::safe($originalUrl);
+        
+        if (strlen($localState) <= 0 || $localState !== $state) {
+            throw new \Exception('WordProof: No state found.');
         }
-
-        // phpcs:ignore WordPress.Security.NonceVerification
-        if (strlen($state) <= 0 || !isset($_REQUEST['state']) || !$state === $_REQUEST['state'] || !isset($_REQUEST['code'])) {
-            throw new \Exception('WordProof: No state or code found');
-        }
-
+        
         $data = [
             'grant_type'    => 'authorization_code',
             'client_id'     => EnvironmentHelper::client(),
             'redirect_uri'  => self::getCallbackUrl(),
             'code_verifier' => $codeVerifier,
-            // phpcs:ignore WordPress.Security.NonceVerification
-            'code'          => sanitize_text_field(wp_unslash($_REQUEST['code'])),
+            'code'          => $code,
         ];
-
+        
         $response = Api::post('/api/wordpress-sdk/token', $data);
-
+        
         if (isset($response->error) && $response->error === 'invalid_grant') {
-            //TODO
+            $data = (object)[
+                'status'  => 401,
+                'message' => 'invalid_grant'
+            ];
+            return new \WP_REST_Response($data, $data->status);
         }
-
+        
         if (!isset($response->access_token)) {
-            throw new \Exception('No access token found');
+            $data = (object)[
+                'status'  => 401,
+                'message' => 'no_access_token'
+            ];
+            return new \WP_REST_Response($data, $data->status);
         }
-
-        $accessToken = sanitize_text_field($response->access_token);
-        OptionsHelper::setAccessToken($accessToken);
-
+        
+        OptionsHelper::setAccessToken($response->access_token);
+        
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => get_site_url(),
-            'available_post_types' => array_values(get_post_types(['public' => true])),
+            'available_post_types' => PostTypeHelper::getPublicPostTypes(),
             'partner'              => SdkHelper::getPartner()
         ];
-
+        
         $response = Api::post('/api/wordpress-sdk/source', $data);
-
-        OptionsHelper::setSourceId(intval($response->source_id));
-
-        RedirectHelper::safe($originalUrl);
+        
+        OptionsHelper::setSourceId($response->source_id);
+        
+        $data = (object)[
+            'status'           => 200,
+            'message'          => 'authentication_success',
+            'source_id'        => OptionsHelper::get('source_id'),
+            'is_authenticated' => AuthenticationHelper::isAuthenticated()
+        ];
+        return new \WP_REST_Response($data, $data->status);
     }
-
+    
     private static function getCallbackUrl()
     {
         return get_rest_url(null, self::$callbackEndpoint);
     }
-
+    
     public static function redirect($endpoint, $parameters)
     {
         $location = EnvironmentHelper::url() . $endpoint . '?' . http_build_query($parameters);

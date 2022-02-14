@@ -1,0 +1,68 @@
+import {
+	noBalanceNotice,
+	timestampErrorNotice,
+	timestampSuccessNotice,
+} from '../../notices/notices';
+import { getData } from '../data';
+import PropTypes from 'prop-types';
+import { getLatestTimestampTransactionRequest } from '../endpoints';
+import { dispatch } from '../event';
+
+export const isElementorEditor = () => {
+	return getData( 'post_editor' ) === 'elementor';
+};
+
+export const isBlockEditor = () => {
+	return getData( 'post_editor' ) === 'block';
+};
+
+export const isClassicEditor = () => {
+	return getData( 'post_editor' ) === 'classic';
+};
+
+const handleNoticesAfterTimestamp = ( props ) => {
+	const { response, createSuccessNotice, createErrorNotice, postId } = props;
+
+	if ( response === null || response.status === 200 ) {
+		return;
+	}
+
+	const successNoticeOptions = {
+		type: 'snackbar',
+		id: 'wordproof-timestamp-notice',
+	};
+
+	const errorNoticeOptions = { id: 'wordproof-timestamp-notice' };
+
+	if ( response && response.status === 201 ) {
+		if ( response.balance === 0 ) {
+			createErrorNotice( noBalanceNotice, errorNoticeOptions );
+		} else {
+			createSuccessNotice( timestampSuccessNotice, successNoticeOptions );
+			checkForWebhook( postId, response.hash );
+		}
+	} else {
+		createErrorNotice( timestampErrorNotice, errorNoticeOptions );
+	}
+};
+
+const checkForWebhook = async ( postId, hash ) => {
+	setTimeout( async () => {
+		const transaction = await getLatestTimestampTransactionRequest(
+			postId
+		);
+
+		if ( transaction.hash !== hash ) {
+			dispatch( 'wordproof:webhook:failed' );
+		}
+	}, 10000 );
+};
+
+handleNoticesAfterTimestamp.proptypes = {
+	timestampResponse: PropTypes.any.isRequired,
+	createSuccessNotice: PropTypes.func.isRequired,
+	createErrorNotice: PropTypes.func.isRequired,
+	postId: PropTypes.number.isRequired,
+};
+
+export { handleNoticesAfterTimestamp };

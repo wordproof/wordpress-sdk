@@ -5,7 +5,6 @@ namespace WordProof\SDK\Controllers;
 use WordProof\SDK\Helpers\CertificateHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
 use WordProof\SDK\Helpers\SettingsHelper;
-use WordProofSDK\includes\Controller\SchemaController;
 
 class CertificateController
 {

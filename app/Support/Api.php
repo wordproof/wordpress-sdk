@@ -10,7 +10,7 @@ class Api
     /**
      * @param string $endpoint
      * @param array $body
-     * @return void
+     * @return mixed
      */
     public static function post($endpoint, $body = [])
     {
@@ -41,7 +41,7 @@ class Api
         $status = wp_remote_retrieve_response_code($request);
 
         if ($status < 200 || $status >= 300) {
-            return;
+            return false;
         }
 
         return json_decode(wp_remote_retrieve_body($request));

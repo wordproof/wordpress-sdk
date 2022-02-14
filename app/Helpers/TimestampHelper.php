@@ -7,34 +7,46 @@ use WordProof\SDK\Support\Timestamp;
 
 class TimestampHelper
 {
-    public static function debounce(\WP_Post $post, $withClassicEditorNotice = false)
+    public static function debounce(\WP_Post $post)
     {
         $key = 'wordproof_timestamped_debounce_' . $post->id;
-
         $data = TimestampData::fromPost($post);
-
-        if (!self::shouldBeTimestamped($post, $data)) {
-            return;
-        }
-
+    
         $transient = TransientHelper::get($key);
-
+    
         if ($transient) {
             return $transient;
         }
 
-        $response = Timestamp::sendPostRequest($data);
-        TransientHelper::set($key, $response, 5);
-
-        if ($withClassicEditorNotice) {
-            NoticeHelper::addTimestampNotice($response);
+        if (!self::shouldBeTimestamped($post, $data)) {
+            $response = (object)['status' => 200, 'message' => 'Post should not be timestamped'];
+            return new \WP_REST_Response($response, $response->status);
         }
 
-        return $response;
+        $response = Timestamp::sendPostRequest($data);
+        
+        if ($response === false) {
+            $response = (object)['status' => 400, 'message' => 'Something went wrong.'];
+            return new \WP_REST_Response($response, $response->status);
+        }
+        
+        $response->status = 201;
+        
+        TransientHelper::set($key, $response, 5);
+    
+        return new \WP_REST_Response($response, $response->status);
     }
 
     public static function shouldBeTimestamped(\WP_Post $post, $data)
     {
+        if (!AuthenticationHelper::isAuthenticated()) {
+            return false;
+        }
+        
+        if ($post->post_content === '') {
+            return false;
+        }
+        
         if (!in_array($post->post_status, ['publish', 'inherit'], true)) {
             return false;
         }
@@ -52,7 +64,7 @@ class TimestampHelper
 
     private static function hasPostMetaOverrideSetToTrue(\WP_Post $post)
     {
-        $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['wordproof_timestamp']);
+        $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['_wordproof_timestamp']);
 
         //Do not use PostMeta helper
         $meta = get_post_meta($post->ID);

@@ -10,9 +10,9 @@ class PostMetaHelper
      * @param mixed $value The value for the post meta.
      * @return integer|boolean Returns the post meta id or false on failure.
      */
-    public static function add($postId, $key, $value)
+    public static function add($postId, $key, $value, $single = false)
     {
-        return add_post_meta($postId, $key, $value, false);
+        return add_post_meta($postId, $key, $value, $single);
     }
     
     /**
