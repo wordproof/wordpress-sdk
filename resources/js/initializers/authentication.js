@@ -78,6 +78,9 @@ export default function initializeAuthentication() {
 					await postMessageResult( 'wordproof:oauth:failed', false );
 				}
 				break;
+			case 'wordproof:oauth:failed':
+				await postMessageResult( 'wordproof:oauth:failed', false );
+				break;
 			case 'wordproof:oauth:denied':
 				await postMessageResult( 'wordproof:oauth:denied', false );
 				break;
