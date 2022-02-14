@@ -24,9 +24,15 @@ class TimestampHelper
         }
 
         $response = Timestamp::sendPostRequest($data);
-        TransientHelper::set($key, $response, 5);
-    
+        
+        if ($response === false) {
+            $response = (object)['status' => 400, 'message' => 'Something went wrong.'];
+            return new \WP_REST_Response($response, $response->status);
+        }
+        
         $response->status = 201;
+        
+        TransientHelper::set($key, $response, 5);
     
         return new \WP_REST_Response($response, $response->status);
     }
