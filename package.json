@@ -10,8 +10,8 @@
         "lint": "wp-scripts lint-js ./resources/js",
         "format": "wp-scripts format ./resources/js",
         "build": "wp-scripts build ./resources/js/data.js ./resources/js/post-meta-option.js",
-        "start": "wp-scripts start ./resources/js/data.js ./resources/js/post-meta-option.js",
-        "start:hot": "wp-scripts start ./resources/js/data.js ./resources/js/post-meta-option.js --hot"
+        "watch": "wp-scripts start ./resources/js/data.js ./resources/js/post-meta-option.js",
+        "watch:hot": "wp-scripts start ./resources/js/data.js ./resources/js/post-meta-option.js --hot"
     },
     "devDependencies": {
         "@wordpress/scripts": "^20.0.2"
