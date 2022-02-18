@@ -33,7 +33,7 @@ class AssetHelper
     /**
      * Enqueues a script defined in the scripts config.
      *
-     * @param $name The name of the script to enqueue.
+     * @param string $name The name of the script to enqueue.
      * @return false|mixed|void
      */
     public static function enqueue($name)
@@ -69,7 +69,7 @@ class AssetHelper
     /**
      * Get path url of the script.
      *
-     * @param $name The name of the script.
+     * @param string $name The name of the script.
      * @return string The url of the script.
      */
     private static function getPathUrl($name, $extension)

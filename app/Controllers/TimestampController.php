@@ -50,4 +50,12 @@ class TimestampController
     {
         return TimestampHelper::debounce($post);
     }
+    
+    /**
+     * Removes action to timestamp post on insert if Elementor is used.
+     */
+    public function beforeElementorSave() {
+        remove_action('rest_after_insert_post', [$this, 'timestampAfterRestApiRequest']);
+        remove_action('wp_insert_post', [$this, 'timestampAfterPostRequest'], \PHP_INT_MAX);
+    }
 }
