@@ -10,7 +10,6 @@ const WordProofModal = ( props ) => {
 			<Modal title={ title } onRequestClose={ close }>
 				{ children }
 			</Modal>
-			) }
 		</>
 	);
 };

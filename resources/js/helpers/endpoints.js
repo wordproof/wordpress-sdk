@@ -1,15 +1,15 @@
-import { getData } from './data';
 import { callEndpoint } from './api';
 
 const WORDPROOF_REST_API_NAMESPACE = 'wordproof/v1';
 
 /**
- * Request Access token
+ * Request Access token from WordProof
  *
- * @param  root0
- * @param  root0.state
- * @param  root0.code
- * @return {Promise<Object|boolean>} The response object or false if request fails.
+ * @param  state.state
+ * @param  state The state returned by WordProof
+ * @param  code The code returned by WordProof
+ * @param  state.code
+ * @return {Promise<*>}
  */
 export const postAuthenticationRequest = async ( { state, code } ) => {
 	return await callEndpoint( {
@@ -61,12 +61,12 @@ export const getIsAuthenticatedRequest = async () => {
 /**
  * The post timestamp request
  *
- * @param  post_id
+ * @param  postId The post id
  * @return {Promise<Object>} The promise wrapping the response object.
  */
-export const postTimestampRequest = async ( post_id ) => {
+export const postTimestampRequest = async ( postId ) => {
 	return callEndpoint( {
-		path: `${ WORDPROOF_REST_API_NAMESPACE }/posts/${ post_id }/timestamp`,
+		path: `${ WORDPROOF_REST_API_NAMESPACE }/posts/${ postId }/timestamp`,
 		method: 'POST',
 	} );
 };
@@ -74,12 +74,12 @@ export const postTimestampRequest = async ( post_id ) => {
 /**
  * Retrieves the latest timestamp transaction for a post.
  *
- * @param  post_id
+ * @param  postId The post id
  * @return {Promise<Object>} The promise wrapping the response object.
  */
-export const getLatestTimestampTransactionRequest = async ( post_id ) => {
+export const getLatestTimestampTransactionRequest = async ( postId ) => {
 	return callEndpoint( {
-		path: `${ WORDPROOF_REST_API_NAMESPACE }/posts/${ post_id }/timestamp/transaction/latest`,
+		path: `${ WORDPROOF_REST_API_NAMESPACE }/posts/${ postId }/timestamp/transaction/latest`,
 		method: 'GET',
 	} );
 };
