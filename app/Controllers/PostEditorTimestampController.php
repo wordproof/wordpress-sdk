@@ -42,14 +42,24 @@ class PostEditorTimestampController
     }
     
     /**
-     * Enqueues the post-meta-option script.
+     * Enqueues the wordproof-block-editor script.
      *
      * @action enqueue_block_editor_assets
-     * @script post-meta-option
+     * @script wordproof-block-editor
      */
-    public function enqueueScript()
+    public function enqueueBlockEditorScript()
     {
-        AssetHelper::enqueue('post-meta-option');
+        AssetHelper::enqueue('wordproof-block-editor');
+    }
+    /**
+     * Enqueues the wordproof-elementor-editor script.
+     *
+     * @action enqueue_block_editor_assets
+     * @script wordproof-elementor-editor
+     */
+    public function enqueueElementorEditorScript()
+    {
+        AssetHelper::enqueue('wordproof-elementor-editor');
     }
     
     /**
@@ -152,6 +162,11 @@ class PostEditorTimestampController
         );
         
         $document->end_controls_section();
+    }
+    
+    public function beforeElementorSave() {
+        ray('before save')->red();
+        
     }
     
     /**
