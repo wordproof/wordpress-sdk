@@ -13,7 +13,7 @@ class TimestampHelper
         $data = TimestampData::fromPost($post);
     
         $transient = TransientHelper::get($key);
-    
+        
         if ($transient) {
             return $transient;
         }

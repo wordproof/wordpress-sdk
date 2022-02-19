@@ -80,7 +80,6 @@ class WordPressSDK
             define('WORDPROOF_TIMESTAMP_SDK_VERSION', $this->version);
         }
         
-        
         return $this;
     }
     
@@ -143,10 +142,15 @@ class WordPressSDK
     {
         $class = new TimestampController();
         
+        $this->loader->add_action('added_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        $this->loader->add_action('updated_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        
         $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
         $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
         
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
+        
+        $this->loader->add_action('elementor/document/before_save', $class, 'beforeElementorSave');
     }
     
     /**
@@ -209,13 +213,14 @@ class WordPressSDK
         
         // Gutenberg
         $this->loader->add_action('init', $class, 'registerPostMeta', \PHP_INT_MAX);
-        $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueScript');
+        $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueBlockEditorScript');
         
         // Classic editor
         $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
         $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
         
         // Elementor
+        $this->loader->add_action('elementor/editor/after_enqueue_scripts', $class, 'enqueueElementorEditorScript');
         $this->loader->add_action('elementor/documents/register_controls', $class, 'registerControl');
         $this->loader->add_action('elementor/editor/after_save', $class, 'elementorSave');
         

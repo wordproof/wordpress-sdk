@@ -24,6 +24,12 @@ export function callbackOnSave( callback ) {
 	registerElementorDataHookAfter(
 		'document/save/save',
 		'wordproof/timestamper',
-		callback
+		() => {
+            /**
+             * The post meta is not consistently saved on this hook.
+             * Wait 1 second to send the timestamp request.
+             */
+			window.setTimeout( callback, 1000 );
+		}
 	);
 }

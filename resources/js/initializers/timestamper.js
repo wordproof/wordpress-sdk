@@ -4,7 +4,6 @@ import { getData } from '../helpers/data';
 
 const { debounce } = lodash;
 const { applyFilters } = wp.hooks;
-const { select } = wp.data;
 
 /**
  * Initializes the timestamper.
