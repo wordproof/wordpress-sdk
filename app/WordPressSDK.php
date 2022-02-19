@@ -142,6 +142,9 @@ class WordPressSDK
     {
         $class = new TimestampController();
         
+        $this->loader->add_action('added_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        $this->loader->add_action('updated_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        
         $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
         $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
         
