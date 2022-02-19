@@ -16,7 +16,7 @@ class TransientHelper
      */
     public static function set($key, $value, $expiration = 0)
     {
-        return set_site_transient($key, $value, $expiration);
+        return set_transient($key, $value, $expiration);
     }
     
     /**
@@ -27,8 +27,8 @@ class TransientHelper
      */
     public static function getOnce($key)
     {
-        $value = get_site_transient($key);
-        delete_site_transient($key);
+        $value = get_transient($key);
+        delete_transient($key);
 
         return $value;
     }
@@ -41,7 +41,7 @@ class TransientHelper
      */
     public static function get($key)
     {
-        return get_site_transient($key);
+        return get_transient($key);
     }
     
     /**
