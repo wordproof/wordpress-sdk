@@ -7,9 +7,8 @@ use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\PostTypeHelper;
-use WordProof\SDK\Helpers\RedirectHelper;
-use WordProof\SDK\Helpers\SdkHelper;
 use WordProof\SDK\Helpers\TransientHelper;
+use WordProof\SDK\Helpers\SdkHelper;
 
 class Authentication
 {
@@ -21,9 +20,9 @@ class Authentication
         $codeVerifier = wp_generate_password(128, false);
         $originalUrl = AdminHelper::currentUrl();
         
-        set_site_transient('wordproof_authorize_state', $state);
-        set_site_transient('wordproof_authorize_code_verifier', $codeVerifier);
-        set_site_transient('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
+        TransientHelper::set('wordproof_authorize_state', $state, 1200);
+        TransientHelper::set('wordproof_authorize_code_verifier', $codeVerifier, 1200);
+        TransientHelper::set('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
         
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
