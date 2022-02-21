@@ -137,7 +137,7 @@ class PostEditorTimestampController
         $document->start_controls_section(
             'wordproof_timestamp_section',
             [
-                'label' => esc_html__('WordProof Timestamp', 'wordproof_timestamp'),
+                'label' => esc_html__('WordProof Timestamp', 'wordproof'),
                 'tab'   => \Elementor\Controls_Manager::TAB_SETTINGS,
             ]
         );
@@ -155,7 +155,7 @@ class PostEditorTimestampController
         $document->add_control(
             $this->metaKey,
             [
-                'label'   => esc_html__('Timestamp this post', 'wordproof_timestamp'),
+                'label'   => esc_html__('Timestamp this post', 'wordproof'),
                 'type'    => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'no',
             ]

@@ -25,7 +25,7 @@ class OptionsConfig extends Config
                 'options' => [
                     'certificate_link_text' => [
                         'escape'  => 'text_field',
-                        'default' => __('View this content\'s Timestamp certificate', 'wordproof_timestamp')
+                        'default' => __('View this content\'s Timestamp certificate', 'wordproof')
                     ],
                     'hide_certificate_link' => [
                         'escape'  => 'boolean',

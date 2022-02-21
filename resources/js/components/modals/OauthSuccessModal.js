@@ -11,7 +11,7 @@ const OauthSuccessModal = ( props ) => {
 	return (
 		<WordProofModal
 			close={ close }
-			title={ __( 'Authenticated', 'wordproof_timestamp' ) }
+			title={ __( 'Authenticated', 'wordproof' ) }
 		>
 			<p>
 				You have successfully connected your WordProof account with this

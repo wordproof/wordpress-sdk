@@ -33,14 +33,14 @@ const EditorPanel = ( {
 
 	return (
 		<PluginDocumentSettingPanel
-			title={ __( 'WordProof Timestamp', 'wordproof_timestamp' ) }
+			title={ __( 'WordProof Timestamp', 'wordproof' ) }
 			initialOpen="true"
 		>
 			<PanelRow>
 				<ToggleControl
 					label={ sprintf(
 						/* translators: %s expands to the post type */
-						__( 'Timestamp this %s', 'wordproof-timestamp' ),
+						__( 'Timestamp this %s', 'wordproof' ),
 						postType
 					) }
 					onChange={ ( value ) =>
