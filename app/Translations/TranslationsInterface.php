@@ -4,9 +4,9 @@ namespace WordProof\SDK\Translations;
 
 interface TranslationsInterface
 {
-    public function get_no_balance_notice();
+    public function getNoBalanceNotice();
 
-    public function get_timestamp_success_notice();
+    public function getTimestampSuccessNotice();
 
-    public function get_timestamp_failed_notice();
+    public function getTimestampFailedNotice();
 }

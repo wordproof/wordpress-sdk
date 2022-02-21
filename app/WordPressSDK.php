@@ -109,7 +109,7 @@ class WordPressSDK
      * @return WordPressSDK|null Returns the WordPress SDK instance.
      * @throws \Exception
      */
-    public static function getInstance(AppConfigInterface $appConfig, TranslationsInterface $translations)
+    public static function getInstance(AppConfigInterface $appConfig = null, TranslationsInterface $translations = null)
     {
         if (self::$instance === null) {
             self::$instance = new WordPressSDK($appConfig, $translations);

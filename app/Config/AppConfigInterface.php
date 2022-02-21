@@ -4,8 +4,8 @@ namespace WordProof\SDK\Config;
 
 interface AppConfigInterface
 {
-    public function get_partner();
+    public function getPartner();
 
-    public function get_environment();
+    public function getEnvironment();
 
 }
