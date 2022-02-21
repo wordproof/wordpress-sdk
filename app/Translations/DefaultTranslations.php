@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Translations;
 
-class Translations implements TranslationsInterface
+class DefaultTranslations implements TranslationsInterface
 {
     public function get_no_balance_notice()
     {

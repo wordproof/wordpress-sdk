@@ -2,6 +2,8 @@
 
 namespace WordProof\SDK;
 
+use WordProof\SDK\Config\DefaultAppConfig;
+use WordProof\SDK\Config\AppConfigInterface;
 use WordProof\SDK\Controllers\NoticeController;
 use WordProof\SDK\Controllers\PostEditorDataController;
 use WordProof\SDK\Controllers\PostEditorTimestampController;
@@ -12,8 +14,8 @@ use WordProof\SDK\Controllers\SettingsController;
 use WordProof\SDK\Controllers\TimestampController;
 use WordProof\SDK\Helpers\ReflectionHelper;
 use WordProof\SDK\Support\Loader;
+use WordProof\SDK\Translations\DefaultTranslations;
 use WordProof\SDK\Translations\TranslationsInterface;
-use WordProof\SDK\Translations\WordProofTranslations;
 
 class WordPressSDK
 {
@@ -47,6 +49,12 @@ class WordPressSDK
     private $loader;
 
     /**
+     * Appconfig object
+     * @var AppConfigInterface
+     */
+    private $appConfig;
+
+    /**
      * Translations object
      * @var TranslationsInterface
      */
@@ -57,7 +65,7 @@ class WordPressSDK
      *
      * @throws \Exception
      */
-    public function __construct($partner = null, $env = 'production')
+    public function __construct(AppConfigInterface $appConfig = null, TranslationsInterface $translations = null)
     {
         if (defined('WORDPROOF_TIMESTAMP_SDK')) {
             return;
@@ -69,9 +77,11 @@ class WordPressSDK
         }
 
         $this->loader = new Loader();
-        $this->translations = new WordProofTranslations();
-        $this->partner = $partner;
-        $this->environment = $env;
+        $this->appConfig = $appConfig ?: new DefaultAppConfig();
+        $this->translations = $translations ?: new DefaultTranslations();
+        
+        $this->partner = $this->appConfig->get_partner();
+        $this->environment = $this->appConfig->get_environment();
 
         $this->authentication();
         $this->api();
@@ -91,11 +101,6 @@ class WordPressSDK
         return $this;
     }
 
-    public function setTranslations(TranslationsInterface $translations)
-    {
-        $this->translations = $translations;
-    }
-
     /**
      * Singleton implementation of WordPress SDK.
      *
@@ -104,10 +109,10 @@ class WordPressSDK
      * @return WordPressSDK|null Returns the WordPress SDK instance.
      * @throws \Exception
      */
-    public static function getInstance($partner = null, $environment = null)
+    public static function getInstance(AppConfigInterface $appConfig, TranslationsInterface $translations)
     {
         if (self::$instance === null) {
-            self::$instance = new WordPressSDK($partner, $environment);
+            self::$instance = new WordPressSDK($appConfig, $translations);
         }
 
         return self::$instance;
