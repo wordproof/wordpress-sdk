@@ -10,7 +10,7 @@ class AssetHelper
     private static $prefix = 'wordproof-';
     private static $filePath = 'app/';
     private static $buildPath = 'build/';
-    
+
     /**
      * Localizes script by name.
      *
@@ -22,14 +22,14 @@ class AssetHelper
     public static function localize($name, $objectName, $data)
     {
         $config = ScriptsConfig::get($name);
-        
+
         if (!isset($config)) {
             return;
         }
-        
+
         return wp_localize_script(self::getHandle($name), $objectName, $data);
     }
-    
+
     /**
      * Enqueues a script defined in the scripts config.
      *
@@ -39,13 +39,13 @@ class AssetHelper
     public static function enqueue($name)
     {
         $config = ScriptsConfig::get($name);
-        
+
         if (!isset($config)) {
             return;
         }
-        
+
         $path = self::getPathUrl($name, $config['type']);
-        
+
         wp_enqueue_script(
             self::getHandle($name),
             $path,
@@ -54,7 +54,7 @@ class AssetHelper
             false
         );
     }
-    
+
     /**
      * Returns the prefixed script handle.
      *
@@ -65,7 +65,7 @@ class AssetHelper
     {
         return self::$prefix . $name;
     }
-    
+
     /**
      * Get path url of the script.
      *
@@ -76,24 +76,25 @@ class AssetHelper
     {
         if (EnvironmentHelper::development()) {
             $config = EnvironmentConfig::get(SdkHelper::getEnvironment());
-            
+
             if (isset($config['file_overwrite'])) {
                 $url = $config['file_overwrite'];
             }
         } else {
             $url = plugin_dir_url(WORDPROOF_TIMESTAMP_SDK_FILE);
         }
-        
+
         $base = StringHelper::lastReplace(self::$filePath, self::$buildPath, $url);
         return $base . $name . '.' . $extension;
     }
-    
+
     /**
      * Returns version for file.
      *
      * @return false|string
      */
-    private static function getVersion() {
+    private static function getVersion()
+    {
         return EnvironmentHelper::development() ? false : WORDPROOF_TIMESTAMP_SDK_VERSION;
     }
 }

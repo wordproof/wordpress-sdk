@@ -21,7 +21,7 @@ class SdkHelper
 
         return null;
     }
-    
+
     /**
      * Returns the environment set during initialization.
 

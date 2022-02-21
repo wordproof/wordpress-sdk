@@ -18,10 +18,10 @@ class TimestampController
     public static function timestamp($postId)
     {
         $post = get_post(intval($postId));
-        
+
         return TimestampHelper::debounce($post);
     }
-    
+
     /**
      * Timestamp new posts except those inserted by the API..
      *
@@ -34,14 +34,14 @@ class TimestampController
         if (\defined('REST_REQUEST') && \REST_REQUEST) {
             return;
         }
-        
+
         $response = TimestampHelper::debounce($post);
-        
+
         ClassicNoticeHelper::addTimestampNotice($response);
-        
+
         return $response;
     }
-    
+
     /**
      * Timestamp posts inserted by the API.
      *
@@ -52,7 +52,7 @@ class TimestampController
     {
         return TimestampHelper::debounce($post);
     }
-    
+
     /**
      * Removes action to timestamp post on insert if Elementor is used.
      */
@@ -61,7 +61,7 @@ class TimestampController
         remove_action('rest_after_insert_post', [$this, 'timestampAfterRestApiRequest']);
         remove_action('wp_insert_post', [$this, 'timestampAfterPostRequest'], \PHP_INT_MAX);
     }
-    
+
     /**
      * Syncs timestamp override post meta keys.
      *
@@ -73,14 +73,13 @@ class TimestampController
     public function syncPostMetaTimestampOverrides($metaId, $postId, $metaKey, $metaValue)
     {
         $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['_wordproof_timestamp']);
-        
-        if (in_array($metaKey, $timestampablePostMetaKeys) && count($timestampablePostMetaKeys) > 1) {
-            
-            $arrayKey = array_search($metaKey, $timestampablePostMetaKeys);
+
+        if (in_array($metaKey, $timestampablePostMetaKeys, true) && count($timestampablePostMetaKeys) > 1) {
+            $arrayKey = array_search($metaKey, $timestampablePostMetaKeys, true);
             unset($timestampablePostMetaKeys[$arrayKey]);
-            
+
             TransientHelper::set('wordproof_debounce_post_meta_sync_' . $metaKey . '_' . $postId, true, 5);
-            
+
             foreach ($timestampablePostMetaKeys as $key) {
                 TransientHelper::debounce($postId, 'post_meta_sync_' . $key, function () use ($postId, $key, $metaValue) {
                     return PostMetaHelper::update($postId, $key, $metaValue);

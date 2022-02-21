@@ -13,6 +13,4 @@ class PostTypeHelper
     {
         return array_values(get_post_types(['public' => true]));
     }
-    
-    
 }

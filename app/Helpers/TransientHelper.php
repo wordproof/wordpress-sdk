@@ -18,7 +18,7 @@ class TransientHelper
     {
         return set_transient($key, $value, $expiration);
     }
-    
+
     /**
      * Returns and deletes site transient by key.
      *
@@ -32,7 +32,7 @@ class TransientHelper
 
         return $value;
     }
-    
+
     /**
      * Returns the transient by key.
      *
@@ -43,7 +43,7 @@ class TransientHelper
     {
         return get_transient($key);
     }
-    
+
     /**
      * Debounce callback for post id.
      *
@@ -52,11 +52,12 @@ class TransientHelper
      * @param $callback
      * @return mixed
      */
-    public static function debounce($postId, $action, $callback) {
+    public static function debounce($postId, $action, $callback)
+    {
         $key = 'wordproof_debounce_' . $action . '_' . $postId;
-    
+
         $transient = TransientHelper::get($key);
-    
+
         if ($transient) {
             return $transient;
         } else {

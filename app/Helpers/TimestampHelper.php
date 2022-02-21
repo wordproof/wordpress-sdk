@@ -11,9 +11,9 @@ class TimestampHelper
     {
         $key = 'wordproof_timestamped_debounce_' . $post->id;
         $data = TimestampData::fromPost($post);
-    
+
         $transient = TransientHelper::get($key);
-        
+
         if ($transient) {
             return $transient;
         }
@@ -24,16 +24,16 @@ class TimestampHelper
         }
 
         $response = Timestamp::sendPostRequest($data);
-        
+
         if ($response === false) {
             $response = (object)['status' => 400, 'message' => 'Something went wrong.'];
             return new \WP_REST_Response($response, $response->status);
         }
-        
+
         $response->status = 201;
-        
+
         TransientHelper::set($key, $response, 5);
-    
+
         return new \WP_REST_Response($response, $response->status);
     }
 
@@ -42,11 +42,11 @@ class TimestampHelper
         if (!AuthenticationHelper::isAuthenticated()) {
             return false;
         }
-        
+
         if ($post->post_content === '') {
             return false;
         }
-        
+
         if (!in_array($post->post_status, ['publish', 'inherit'], true)) {
             return false;
         }

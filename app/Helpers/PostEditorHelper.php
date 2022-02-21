@@ -14,27 +14,27 @@ class PostEditorHelper
         if (!function_exists('get_current_screen')) {
             return null;
         }
-        
+
         $screen = get_current_screen();
-        
+
         if (!self::isPostEdit($screen->base)) {
             return null;
         }
-        
+
         // Start with Elementor, otherwise the block editor will be returned.
         $action = \filter_input(\INPUT_GET, 'action', \FILTER_SANITIZE_STRING);
         if ($action === 'elementor') {
             return 'elementor';
         }
-        
+
         if (method_exists($screen, 'is_block_editor') && $screen->is_block_editor()) {
             return 'block';
         }
-        
+
         return 'classic';
     }
-    
-    
+
+
     /**
      * Returns if the page is a post edit page.
      *
@@ -53,7 +53,7 @@ class PostEditorHelper
                 return false;
         }
     }
-    
+
     /**
      * Returns the data that should be added to the post editor.
      *
@@ -62,9 +62,9 @@ class PostEditorHelper
     public static function getPostEditorData()
     {
         global $post;
-        
+
         $currentPostType = self::getCurrentPostType();
-        
+
         return [
             'data' => [
                 'origin'                            => EnvironmentHelper::get('url'),
@@ -79,7 +79,7 @@ class PostEditorHelper
             ],
         ];
     }
-    
+
     /**
      * Returns the current post type.
      *
@@ -88,25 +88,25 @@ class PostEditorHelper
     public static function getCurrentPostType()
     {
         global $post, $typenow, $current_screen;
-        
+
         if ($post && $post->post_type) {
             return $post->post_type;
         }
-        
+
         if ($typenow) {
             return $typenow;
         }
-        
+
         if ($current_screen && $current_screen->post_type) {
             return $current_screen->post_type;
         }
-        
+
         // phpcs:disable WordPress.Security.NonceVerification
         if (isset($_REQUEST['post_type'])) {
             return sanitize_key($_REQUEST['post_type']);
         }
         // phpcs:enable WordPress.Security.NonceVerification
-        
+
         return null;
     }
 }

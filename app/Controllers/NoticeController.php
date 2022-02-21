@@ -18,7 +18,7 @@ class NoticeController
      */
     private $translations;
 
-    public function __construct( TranslationsInterface $translations )
+    public function __construct(TranslationsInterface $translations)
     {
         $this->translations = $translations;
     }

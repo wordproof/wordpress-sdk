@@ -18,7 +18,7 @@ class Timestamp
         $sourceId = OptionsHelper::sourceId();
         $endpoint = '/api/sources/' . $sourceId . '/timestamps';
         $response = Api::post($endpoint, $data);
-        
+
         if (!$response || !isset($response->hash)) {
 //            AuthenticationHelper::logout(); // TODO Only if response is unauthenticated
             return false;

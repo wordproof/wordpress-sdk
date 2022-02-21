@@ -39,7 +39,7 @@ class OptionsConfig extends Config
                         'escape'  => 'boolean',
                         'default' => true,
                     ],
-                    
+
                 ]
             ]
         ];

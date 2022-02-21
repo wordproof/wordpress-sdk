@@ -11,7 +11,7 @@ class AuthenticationHelper
     {
         OptionsHelper::reset();
     }
-    
+
     /**
      * Returns if the user is authenticated.
      *

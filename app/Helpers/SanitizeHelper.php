@@ -17,14 +17,14 @@ class SanitizeHelper
         if (is_array($value)) {
             return self::sanitizeArray($value, $sanitizeKey);
         }
-        
+
         if (is_object($value)) {
             return (object)self::sanitizeArray((array) $value, $sanitizeKey);
         }
-        
+
         return self::sanitizeSingleValue($value, $sanitizeKey);
     }
-    
+
     /**
      * Loops through the array to sanitize the values inside.
      *
@@ -35,14 +35,14 @@ class SanitizeHelper
     private static function sanitizeArray($array, $sanitizeKey)
     {
         $values = [];
-        
+
         foreach ($array as $key => $value) {
             $values[$key] = self::sanitizeSingleValue($value, $sanitizeKey);
         }
-        
+
         return $values;
     }
-    
+
     /**
      * Sanitize a single value using an escape function set in the class.
      *
