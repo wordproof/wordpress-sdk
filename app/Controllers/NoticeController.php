@@ -4,6 +4,7 @@ namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\ClassicNoticeHelper;
 use WordProof\SDK\Helpers\TransientHelper;
+use WordProof\SDK\Translations\TranslationsInterface;
 
 class NoticeController
 {
@@ -11,7 +12,17 @@ class NoticeController
      * @var string[] The screens on which notices should be rendered.
      */
     private $screens = ['post'];
-    
+
+    /**
+     * @var TranslationsInterface The translations objects,
+     */
+    private $translations;
+
+    public function __construct( TranslationsInterface $translations )
+    {
+        $this->translations = $translations;
+    }
+
     /**
      * Showing notices for the classic editor and delete them so they are only shown once.
      *
@@ -33,18 +44,15 @@ class NoticeController
         switch ($notice) {
             case 'no_balance':
                 $type = 'error';
-                /* translators: %s expands to WordProof. */
-                $description = sprintf(__('You are out of timestamps. Please upgrade your account by opening the %s settings.', 'wordpress-seo'), 'WordProof');
+                $description = $this->translations->get_no_balance_notice();
                 break;
             case 'timestamp_success':
                 $type = 'success';
-                /* translators: %s expands to WordProof. */
-                $description = sprintf(__('%s has successfully timestamped this page.', 'wordpress-seo'), 'WordProof');
+                $description = $this->translations->get_timestamp_success_notice();
                 break;
             case 'timestamp_failed':
                 $type = 'error';
-                /* translators: %s expands to WordProof. */
-                $description = sprintf(__('%1$s failed to timestamp this page. Please check if you\'re correctly authenticated with %1$s and try to save this page again.', 'wordpress-seo'), 'WordProof');
+                $description = $this->translations->get_timestamp_failed_notice();
                 break;
             default:
                 break;
