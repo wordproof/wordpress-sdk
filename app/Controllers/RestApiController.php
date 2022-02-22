@@ -12,7 +12,6 @@ use WordProof\SDK\Support\Authentication;
 
 class RestApiController
 {
-    
     /**
      * Registers the rest api endpoints.
      *
@@ -47,6 +46,12 @@ class RestApiController
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
 
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp.transaction.latest'), [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'showLatestTimestampTransaction'],
+            'permission_callback' => [$this, 'canPublishPermission'],
+        ]);
+
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
@@ -65,7 +70,7 @@ class RestApiController
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
     }
-    
+
     /**
      * Returns an object containing the settings.
      *
@@ -78,7 +83,7 @@ class RestApiController
 
         return new \WP_REST_Response($data, $data->status);
     }
-    
+
     /**
      * Returns if the user is authenticated.
      *
@@ -93,7 +98,7 @@ class RestApiController
 
         return new \WP_REST_Response($data, $data->status);
     }
-    
+
     /**
      * Logout the user and return if the user is authenticated.
      *
@@ -102,10 +107,10 @@ class RestApiController
     public function destroyAuthentication()
     {
         AuthenticationHelper::logout();
-        
+
         return $this->authentication();
     }
-    
+
     /**
      * Send a post request to WordProof to timestamp a post.
      *
@@ -115,12 +120,22 @@ class RestApiController
     public function timestamp(\WP_REST_Request $request)
     {
         $data = $request->get_params();
-
         $postId = intval($data['id']);
 
         return TimestampController::timestamp($postId);
     }
-    
+
+    public function showLatestTimestampTransaction(\WP_REST_Request $request)
+    {
+        $data = $request->get_params();
+        $postId = intval($data['id']);
+
+        $transactions = PostMetaHelper::get($postId, '_wordproof_blockchain_transaction', false);
+        $transaction = array_pop($transactions);
+
+        return new \WP_REST_Response((object)$transaction);
+    }
+
     /**
      * Returns the hash input of a post.
      *
@@ -138,7 +153,7 @@ class RestApiController
 
         return new \WP_REST_Response((object)$hashInput);
     }
-    
+
     /**
      * Retrieves the access token when the code and state are retrieved in the frontend.
      *
@@ -151,7 +166,7 @@ class RestApiController
 
         return Authentication::token($state, $code);
     }
-    
+
     /**
      * Handles webhooks sent by WordProof.
      *
@@ -192,7 +207,7 @@ class RestApiController
             PostMetaHelper::update($postId, '_wordproof_schema', $schema);
         }
     }
-    
+
     /**
      * Checks if the user has permission to publish a post.
      *
@@ -202,7 +217,7 @@ class RestApiController
     {
         return current_user_can('publish_posts') && current_user_can('publish_pages');
     }
-    
+
     /**
      * Validates if the webhook is valid and signed with the correct secret.
      *
@@ -213,7 +228,7 @@ class RestApiController
     {
         $hashedToken = hash('sha256', OptionsHelper::accessToken());
         $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
-        
+
         return $request->get_header('signature') === $hmac;
     }
 }

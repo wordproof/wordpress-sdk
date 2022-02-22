@@ -26,7 +26,7 @@ class SchemaHelper
             ]
         ];
     }
-    
+
     /**
      * Retrieves the schema as array for a post.
      *

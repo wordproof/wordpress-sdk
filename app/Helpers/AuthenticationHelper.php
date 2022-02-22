@@ -9,9 +9,9 @@ class AuthenticationHelper
      */
     public static function logout()
     {
-        return OptionsHelper::reset();
+        OptionsHelper::reset();
     }
-    
+
     /**
      * Returns if the user is authenticated.
      *

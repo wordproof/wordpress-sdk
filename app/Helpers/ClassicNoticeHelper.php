@@ -2,13 +2,13 @@
 
 namespace WordProof\SDK\Helpers;
 
-class NoticeHelper
+class ClassicNoticeHelper
 {
     /**
      * @var string The key used for the transient to save the single notice.
      */
     public static $transientKey = 'wordproof_notice';
-    
+
     /**
      * Add a new transient with a notice key.
      *
@@ -18,7 +18,7 @@ class NoticeHelper
     {
         TransientHelper::set(self::$transientKey, $noticeKey);
     }
-    
+
     /**
      * Add new notice depending on the timestamp response.
      *
@@ -28,7 +28,7 @@ class NoticeHelper
     {
         self::add(self::getNoticeKeyForTimestampResponse($response));
     }
-    
+
     /**
      * Retrieve notice key for the timestamp response.
      *

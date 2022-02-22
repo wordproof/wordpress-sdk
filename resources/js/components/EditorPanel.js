@@ -1,77 +1,85 @@
-import {getData} from "../helpers/data";
-import ActionLink from "./ActionLink";
-import BlockEditorTimestamper from "./BlockEditorTimestamper";
+import { getData } from '../helpers/data';
+import ActionLink from './ActionLink';
+import AuthenticationModals from './AuthenticationModals';
 
-const {__, sprintf} = wp.i18n;
-const {PluginDocumentSettingPanel} = wp.editPost;
-const {ToggleControl, PanelRow} = wp.components;
-const {compose} = wp.compose;
-const {withSelect, withDispatch} = wp.data;
-const {useState, useMemo, useEffect} = wp.element;
+const { __, sprintf } = wp.i18n;
+const { PluginDocumentSettingPanel } = wp.editPost;
+const { ToggleControl, PanelRow } = wp.components;
+const { compose } = wp.compose;
+const { withSelect, withDispatch } = wp.data;
+const { useState, useMemo, useEffect } = wp.element;
 import PropTypes from 'prop-types';
-import Authenticator from "./Authenticator";
 
-const Editor_Panel = ({postType, postMeta, setPostMeta}) => {
+const EditorPanel = ( {
+	postType,
+	postMeta,
+	isAuthenticated,
+	setPostMeta,
+} ) => {
+	const initialData = getData();
 
-    const initialData = getData();
+	const [ selectedPostTypes ] = useState(
+		initialData?.settings?.selected_post_types ?? []
+	);
 
-    const [isAuthenticated, setIsAuthenticated] = useState(initialData?.is_authenticated ?? false);
-    const [selectedPostTypes] = useState(initialData?.settings?.selected_post_types ?? []);
+	useEffect( () => {
+		// TODO on update selected post types
+		// TODO on update isAuthenticated
+	}, [ isAuthenticated, selectedPostTypes ] );
 
-    useEffect( () => {
-        //on update selected post types
+	const timestampedAutomatically = useMemo( () => {
+		selectedPostTypes.includes( postType );
+	}, [ selectedPostTypes, postType ] );
 
-        //on update isAuthenticated
-    }, [ isAuthenticated, selectedPostTypes] );
+	return (
+		<PluginDocumentSettingPanel
+			title={ __( 'WordProof Timestamp', 'wordproof' ) }
+			initialOpen="true"
+		>
+			<PanelRow>
+				<ToggleControl
+					label={ sprintf(
+						/* translators: %s expands to the post type */
+						__( 'Timestamp this %s', 'wordproof' ),
+						postType
+					) }
+					onChange={ ( value ) =>
+						setPostMeta( { _wordproof_timestamp: value } )
+					}
+					checked={
+						postMeta._wordproof_timestamp ||
+						timestampedAutomatically
+					}
+					disabled={ timestampedAutomatically }
+				/>
+				<ActionLink />
 
-    const timestampedAutomatically = useMemo(
-            () => {
-                selectedPostTypes.includes(postType);
-            },
-            [selectedPostTypes, postType],
-    );
+				<AuthenticationModals />
+			</PanelRow>
+		</PluginDocumentSettingPanel>
+	);
+};
 
-        return (
-            <PluginDocumentSettingPanel
-                    title={__('WordProof Timestamp', 'wordproof_timestamp')}
-                    initialOpen="true">
-                <PanelRow>
-                    <ToggleControl
-                            label={sprintf(
-                                    /* translators: %s expands to the post type */
-                                    __('Timestamp this %s', "wordproof-timestamp"),
-                                    postType
-                            )}
-                            onChange={(value) => setPostMeta({_wordproof_timestamp: value})}
-                            checked={postMeta._wordproof_timestamp || timestampedAutomatically}
-                            disabled={timestampedAutomatically}
-                    />
-                    <ActionLink/>
-                    <BlockEditorTimestamper/>
-                    <Authenticator/>
-                </PanelRow>
-            </PluginDocumentSettingPanel>
-    );
-}
+EditorPanel.proptypes = {
+	postType: PropTypes.string.isRequired,
+	postMeta: PropTypes.object.isRequired,
+	isAuthenticated: PropTypes.bool.isRequired,
+	setPostMeta: PropTypes.func.isRequired,
+};
 
-Editor_Panel.proptypes = {
-    postType: PropTypes.string.isRequired,
-    postMeta: PropTypes.object.isRequired,
-    setPostMeta: PropTypes.func.isRequired
-}
-
-export default compose([
-    withSelect((select) => {
-        return {
-            postMeta: select('core/editor').getEditedPostAttribute('meta'),
-            postType: select('core/editor').getCurrentPostType(),
-        };
-    }),
-    withDispatch((dispatch) => {
-        return {
-            setPostMeta(newMeta) {
-                dispatch('core/editor').editPost({meta: newMeta});
-            }
-        };
-    })
-])(Editor_Panel);
+export default compose( [
+	withSelect( ( select ) => {
+		return {
+			postMeta: select( 'core/editor' ).getEditedPostAttribute( 'meta' ),
+			postType: select( 'core/editor' ).getCurrentPostType(),
+			isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
+		};
+	} ),
+	withDispatch( ( dispatch ) => {
+		return {
+			setPostMeta( newMeta ) {
+				dispatch( 'core/editor' ).editPost( { meta: newMeta } );
+			},
+		};
+	} ),
+] )( EditorPanel );

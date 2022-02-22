@@ -16,7 +16,7 @@ class ReflectionHelper
             $reflector = new \ReflectionClass($instance);
             return $reflector->getName();
         }
-        
+
         return false;
     }
 }

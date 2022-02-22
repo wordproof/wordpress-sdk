@@ -15,10 +15,10 @@ abstract class Config
         if (!isset($key)) {
             return static::values();
         }
-        
+
         $keys = explode('.', $key);
         $value = static::values();
-    
+
         foreach ($keys as $key) {
             if (isset($value[$key])) {
                 $value = $value[$key];
@@ -26,14 +26,14 @@ abstract class Config
                 return false;
             }
         }
-    
+
         return $value;
     }
-    
+
     /**
      * Should return an array with the config.
      *
      * @return array An array containing the config values.
      */
-    abstract static protected function values();
+    abstract protected static function values();
 }

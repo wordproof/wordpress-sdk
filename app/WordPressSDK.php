@@ -2,6 +2,8 @@
 
 namespace WordProof\SDK;
 
+use WordProof\SDK\Config\DefaultAppConfig;
+use WordProof\SDK\Config\AppConfigInterface;
 use WordProof\SDK\Controllers\NoticeController;
 use WordProof\SDK\Controllers\PostEditorDataController;
 use WordProof\SDK\Controllers\PostEditorTimestampController;
@@ -12,29 +14,16 @@ use WordProof\SDK\Controllers\SettingsController;
 use WordProof\SDK\Controllers\TimestampController;
 use WordProof\SDK\Helpers\ReflectionHelper;
 use WordProof\SDK\Support\Loader;
+use WordProof\SDK\Translations\DefaultTranslations;
 use WordProof\SDK\Translations\TranslationsInterface;
-use WordProof\SDK\Translations\WordProofTranslations;
 
 class WordPressSDK
 {
-
     /**
      * The version of this SDK
      * @var string
      */
     public $version = '1.0.23';
-
-    /**
-     * The partner used for displaying custom auth pages
-     * @var mixed|null
-     */
-    public $partner = null;
-
-    /**
-     * The environment being used. development|staging|production
-     * @var mixed|string
-     */
-    public $environment = 'production';
 
     /**
      * @var null|WordPressSDK
@@ -48,6 +37,12 @@ class WordPressSDK
     private $loader;
 
     /**
+     * Appconfig object
+     * @var AppConfigInterface
+     */
+    public $appConfig;
+
+    /**
      * Translations object
      * @var TranslationsInterface
      */
@@ -58,7 +53,7 @@ class WordPressSDK
      *
      * @throws \Exception
      */
-    public function __construct($partner = null, $env = 'production')
+    public function __construct(AppConfigInterface $appConfig = null, TranslationsInterface $translations = null)
     {
         if (defined('WORDPROOF_TIMESTAMP_SDK')) {
             return;
@@ -70,9 +65,8 @@ class WordPressSDK
         }
 
         $this->loader = new Loader();
-        $this->translations = new WordProofTranslations();
-        $this->partner = $partner;
-        $this->environment = $env;
+        $this->appConfig = $appConfig ?: new DefaultAppConfig();
+        $this->translations = $translations ?: new DefaultTranslations();
 
         $this->authentication();
         $this->api();
@@ -89,26 +83,21 @@ class WordPressSDK
             define('WORDPROOF_TIMESTAMP_SDK_VERSION', $this->version);
         }
 
-
         return $this;
-    }
-
-    public function setTranslations( TranslationsInterface $translations ) {
-        $this->translations = $translations;
     }
 
     /**
      * Singleton implementation of WordPress SDK.
      *
-     * @param null|string $partner The partner used for in the WordProof My.
-     * @param null|string $environment The environment used by the SDK to determine which server to use.
+     * @param AppConfigInterface|null $appConfig
+     * @param TranslationsInterface|null $translations
      * @return WordPressSDK|null Returns the WordPress SDK instance.
      * @throws \Exception
      */
-    public static function getInstance($partner = null, $environment = null)
+    public static function getInstance(AppConfigInterface $appConfig = null, TranslationsInterface $translations = null)
     {
         if (self::$instance === null) {
-            self::$instance = new WordPressSDK($partner, $environment);
+            self::$instance = new WordPressSDK($appConfig, $translations);
         }
 
         return self::$instance;
@@ -156,10 +145,15 @@ class WordPressSDK
     {
         $class = new TimestampController();
 
+        $this->loader->add_action('added_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        $this->loader->add_action('updated_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+
         $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
         $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
 
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
+
+        $this->loader->add_action('elementor/document/before_save', $class, 'beforeElementorSave');
     }
 
     /**
@@ -191,7 +185,7 @@ class WordPressSDK
      */
     private function notices()
     {
-        $class = new NoticeController( $this->translations );
+        $class = new NoticeController($this->translations);
 
         $this->loader->add_action('admin_notices', $class, 'show');
     }
@@ -222,13 +216,14 @@ class WordPressSDK
 
         // Gutenberg
         $this->loader->add_action('init', $class, 'registerPostMeta', \PHP_INT_MAX);
-        $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueScript');
+        $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueBlockEditorScript');
 
         // Classic editor
         $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
         $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
 
         // Elementor
+        $this->loader->add_action('elementor/editor/after_enqueue_scripts', $class, 'enqueueElementorEditorScript');
         $this->loader->add_action('elementor/documents/register_controls', $class, 'registerControl');
         $this->loader->add_action('elementor/editor/after_save', $class, 'elementorSave');
 

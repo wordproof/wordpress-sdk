@@ -1,18 +1,26 @@
-import WordProofModal from "./Modal";
+import WordProofModal from './Modal';
 
-const {__} = wp.i18n;
-const {compose} = wp.compose;
+const { __ } = wp.i18n;
 import PropTypes from 'prop-types';
 
-const WebhookFailedModal = () => {
-    return (
-            <WordProofModal
-                    title={__('WordProof Authentication', 'wordproof_timestamp')}>
-                <p>Webhook Failed!</p>
-            </WordProofModal>
-    );
-}
+const WebhookFailedModal = ( props ) => {
+	const { close } = props;
 
-WebhookFailedModal.proptypes = {}
+	return (
+		<WordProofModal
+			close={ close }
+			title={ __( 'Webhook failed', 'wordproof' ) }
+		>
+			<p>
+				The timestamp send by WordProof was not received on your
+				website. Please contact support to help solve this problem.
+			</p>
+		</WordProofModal>
+	);
+};
 
-export default compose([])(WebhookFailedModal);
+WebhookFailedModal.proptypes = {
+	close: PropTypes.func.isRequired,
+};
+
+export default WebhookFailedModal;

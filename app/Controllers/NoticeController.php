@@ -2,7 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\NoticeHelper;
+use WordProof\SDK\Helpers\ClassicNoticeHelper;
 use WordProof\SDK\Helpers\TransientHelper;
 use WordProof\SDK\Translations\TranslationsInterface;
 
@@ -18,7 +18,7 @@ class NoticeController
      */
     private $translations;
 
-    public function __construct( TranslationsInterface $translations )
+    public function __construct(TranslationsInterface $translations)
     {
         $this->translations = $translations;
     }
@@ -35,7 +35,7 @@ class NoticeController
             return;
         }
 
-        $notice = TransientHelper::getOnce(NoticeHelper::$transientKey);
+        $notice = TransientHelper::getOnce(ClassicNoticeHelper::$transientKey);
 
         if (!isset($notice) || !$notice) {
             return;
@@ -44,15 +44,15 @@ class NoticeController
         switch ($notice) {
             case 'no_balance':
                 $type = 'error';
-                $description = $this->translations->get_no_balance_notice();
+                $description = $this->translations->getNoBalanceNotice();
                 break;
             case 'timestamp_success':
                 $type = 'success';
-                $description = $this->translations->get_timestamp_success_notice();
+                $description = $this->translations->getTimestampSuccessNotice();
                 break;
             case 'timestamp_failed':
                 $type = 'error';
-                $description = $this->translations->get_timestamp_failed_notice();
+                $description = $this->translations->getTimestampFailedNotice();
                 break;
             default:
                 break;

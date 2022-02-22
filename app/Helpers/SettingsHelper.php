@@ -7,7 +7,7 @@ use WordProof\SDK\Config\OptionsConfig;
 class SettingsHelper
 {
     private static $key = 'settings';
-    
+
     /**
      * Retrieving settings from the option.
      *
@@ -19,16 +19,15 @@ class SettingsHelper
         $settings = OptionsHelper::get(self::$key);
 
         if ($setting) {
-            
             $option = OptionsConfig::get('settings.options.' . $setting);
-            
+
             if (isset($settings->$setting) && $option) {
                 return $settings->$setting;
             }
-    
+
             return $option['default'];
         }
-        
+
         return (object)$settings;
     }
 

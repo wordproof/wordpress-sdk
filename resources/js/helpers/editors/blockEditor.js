@@ -1,41 +1,29 @@
-import {handleTimestampRequest} from "./editor";
+const { subscribe, select } = wp.data;
 
-const {useEffect, useCallback} = wp.element;
-const {useSelect, useDispatch} = wp.data;
-import PropTypes from 'prop-types';
+/**
+ * Executes callback on post editor save.
+ *
+ * @param {Function} callback The callback.
+ *
+ * @return {void}
+ */
+export function callbackOnSave( callback ) {
+	let firstTime = true;
 
-export const getNoticeActions = () => {
+	subscribe( () => {
+		const isSavingPost = select( 'core/editor' ).isSavingPost();
+		const isAutosavingPost = select( 'core/editor' ).isAutosavingPost();
+		const didPostSaveRequestSucceed = select(
+			'core/editor'
+		).didPostSaveRequestSucceed();
 
-    const blockEditorNoticeActions = useDispatch("core/notices");
+		if ( isSavingPost && didPostSaveRequestSucceed && ! isAutosavingPost ) {
+			if ( firstTime ) {
+				firstTime = false;
+				return;
+			}
 
-    const {
-        createSuccessNotice,
-        createErrorNotice
-    } = blockEditorNoticeActions;
-
-    const createSuccessNoticeCallback = useCallback((props) => {
-        createSuccessNotice(props)
-    }, []);
-
-    const createErrorNoticeCallback = useCallback((props) => {
-        createErrorNotice(props)
-    }, []);
-
-    return {createSuccessNoticeCallback, createErrorNoticeCallback}
+			callback();
+		}
+	} );
 }
-
-const onSave = (props) => {
-    const isBlockEditorSavePost = useSelect((select) => select("core/editor").isSavingPost(), []);
-    const isBlockEditorAutoSavePost = useSelect((select) => select("core/editor").isAutosavingPost(), []);
-    const didBlockEditorPostSaveRequestSucceed = useSelect((select) => select("core/editor").didPostSaveRequestSucceed(), []);
-
-    useEffect(() => {
-        if (isBlockEditorSavePost && didBlockEditorPostSaveRequestSucceed && !isBlockEditorAutoSavePost) {
-            handleTimestampRequest(props)
-        }
-    }, [isBlockEditorSavePost, isBlockEditorAutoSavePost, didBlockEditorPostSaveRequestSucceed]);
-}
-onSave.proptypes = {
-    setTimestampResponse: PropTypes.func.isRequired
-}
-export {onSave};

@@ -8,11 +8,23 @@ class EnvironmentHelper
 {
     public static function url()
     {
+        $appConfig = AppConfigHelper::getAppConfig();
+
+        if ($appConfig->getWordProofUrl()) {
+            return $appConfig->getWordProofUrl();
+        }
+
         return self::get('url');
     }
 
     public static function client()
     {
+        $appConfig = AppConfigHelper::getAppConfig();
+
+        if ($appConfig->getOauthClient()) {
+            return $appConfig->getOauthClient();
+        }
+
         return self::get('client');
     }
 
@@ -23,17 +35,23 @@ class EnvironmentHelper
 
     public static function development()
     {
-        return SdkHelper::getEnvironment() === 'development';
+        return AppConfigHelper::getEnvironment() === 'development';
     }
 
     public static function get($key)
     {
-        return self::values()[$key];
+        $envConfig = self::environmentConfig();
+
+        if ($envConfig && isset($envConfig[$key])) {
+            return $envConfig[$key];
+        }
+
+        return null;
     }
 
-    private static function values()
+    private static function environmentConfig()
     {
-        $env = SdkHelper::getEnvironment();
+        $env = AppConfigHelper::getEnvironment();
         return EnvironmentConfig::get($env);
     }
 }

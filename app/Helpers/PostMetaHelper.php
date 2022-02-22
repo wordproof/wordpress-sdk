@@ -14,7 +14,7 @@ class PostMetaHelper
     {
         return add_post_meta($postId, $key, $value, $single);
     }
-    
+
     /**
      * @param integer $postId The post id for which the meta should be set.
      * @param string $key The key for the post meta.
@@ -25,7 +25,7 @@ class PostMetaHelper
     {
         return update_post_meta($postId, $key, $value);
     }
-    
+
     /**
      * @param integer $postId The post id for which the meta should be set.
      * @param string $key The key for the post meta.
@@ -36,7 +36,7 @@ class PostMetaHelper
     {
         return get_post_meta($postId, $key, $single);
     }
-    
+
     /**
      * @param integer $postId The post id for which the meta should be set.
      * @param string $key The key for the post meta.

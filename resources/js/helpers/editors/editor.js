@@ -1,65 +1,68 @@
-import {noBalanceNotice, timestampErrorNotice, timestampSuccessNotice} from "../../notices/notices";
-import {getData} from "../data";
-import {requestTimestamp} from "../api";
-
-const {useEffect, useCallback} = wp.element;
+import {
+	noBalanceNotice,
+	timestampErrorNotice,
+	timestampSuccessNotice,
+} from '../../notices/notices';
+import { getData } from '../data';
 import PropTypes from 'prop-types';
-
-const {debounce} = lodash;
+import { getLatestTimestampTransactionRequest } from '../endpoints';
+import { dispatch } from '../event';
 
 export const isElementorEditor = () => {
-    return getData('post_editor') === 'elementor';
-}
+	return getData( 'post_editor' ) === 'elementor';
+};
 
 export const isBlockEditor = () => {
-    return getData('post_editor') === 'block';
-}
+	return getData( 'post_editor' ) === 'block';
+};
 
 export const isClassicEditor = () => {
-    return getData('post_editor') === 'classic';
-}
+	return getData( 'post_editor' ) === 'classic';
+};
 
-const handleNoticesAfterTimestamp = (props) => {
+const handleNoticesAfterTimestamp = ( props ) => {
+	const { response, createSuccessNotice, createErrorNotice, postId } = props;
 
-    const {timestampResponse, createSuccessNoticeCallback, createErrorNoticeCallback} = props;
+	if ( response === null || response.status === 200 ) {
+		return;
+	}
 
-    useEffect(() => {
-        console.log('timestampResponse');
-        console.log(timestampResponse);
-        if (timestampResponse === null) {
-            return;
-        }
+	const successNoticeOptions = {
+		type: 'snackbar',
+		id: 'wordproof-timestamp-notice',
+	};
 
-        const successNoticeOptions = {type: 'snackbar', id: 'wordproof-timestamp-notice'};
-        const errorNoticeOptions = {id: 'wordproof-timestamp-notice'};
+	const errorNoticeOptions = { id: 'wordproof-timestamp-notice' };
 
-        if (timestampResponse) {
-            if (timestampResponse.balance === 0) {
-                createErrorNoticeCallback(noBalanceNotice, errorNoticeOptions);
-                //TODO check for webhook in 10 seconds.
-                //GET posts/id/timestamp/hash
-            } else {
-                createSuccessNoticeCallback(timestampSuccessNotice, successNoticeOptions);
-            }
-        } else {
-            createErrorNoticeCallback(timestampErrorNotice, errorNoticeOptions);
-        }
+	if ( response && response.status === 201 ) {
+		if ( response.balance === 0 ) {
+			createErrorNotice( noBalanceNotice, errorNoticeOptions );
+		} else {
+			createSuccessNotice( timestampSuccessNotice, successNoticeOptions );
+			checkForWebhook( postId, response.hash );
+		}
+	} else {
+		createErrorNotice( timestampErrorNotice, errorNoticeOptions );
+	}
+};
 
-    }, [timestampResponse]);
-}
+const checkForWebhook = async ( postId, hash ) => {
+	setTimeout( async () => {
+		const transaction = await getLatestTimestampTransactionRequest(
+			postId
+		);
+
+		if ( transaction.hash !== hash ) {
+			dispatch( 'wordproof:webhook:failed' );
+		}
+	}, 10000 );
+};
+
 handleNoticesAfterTimestamp.proptypes = {
-    timestampResponse: PropTypes.any.isRequired,
-    createSuccessNoticeCallback: PropTypes.func.isRequired,
-    createErrorNoticeCallback: PropTypes.func.isRequired
-}
-export {handleNoticesAfterTimestamp};
+	timestampResponse: PropTypes.any.isRequired,
+	createSuccessNotice: PropTypes.func.isRequired,
+	createErrorNotice: PropTypes.func.isRequired,
+	postId: PropTypes.number.isRequired,
+};
 
-const handleTimestampRequest = async (props) => {
-    const {setTimestampResponse} = props;
-    const success = await requestTimestamp();
-    setTimestampResponse(success);
-}
-handleTimestampRequest.proptypes = {
-    setTimestampResponse: PropTypes.func.isRequired,
-}
-export {handleTimestampRequest};
+export { handleNoticesAfterTimestamp };

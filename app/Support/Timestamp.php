@@ -10,6 +10,8 @@ class Timestamp
 {
     /**
      * @param array $data
+     *
+     * @return mixed
      */
     public static function sendPostRequest($data)
     {
@@ -18,7 +20,8 @@ class Timestamp
         $response = Api::post($endpoint, $data);
 
         if (!$response || !isset($response->hash)) {
-            return AuthenticationHelper::logout();
+//            AuthenticationHelper::logout(); // TODO Only if response is unauthenticated
+            return false;
         }
 
         $key = '_wordproof_hash_input_' . $response->hash;
