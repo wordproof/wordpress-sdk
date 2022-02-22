@@ -80,8 +80,8 @@ class WordPressSDK
         $this->appConfig = $appConfig ?: new DefaultAppConfig();
         $this->translations = $translations ?: new DefaultTranslations();
         
-        $this->partner = $this->appConfig->get_partner();
-        $this->environment = $this->appConfig->get_environment();
+        $this->partner = $this->appConfig->getPartner();
+        $this->environment = $this->appConfig->getEnvironment();
 
         $this->authentication();
         $this->api();
