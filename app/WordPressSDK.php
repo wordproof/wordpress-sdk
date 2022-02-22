@@ -26,18 +26,6 @@ class WordPressSDK
     public $version = '1.0.23';
 
     /**
-     * The partner used for displaying custom auth pages
-     * @var mixed|null
-     */
-    public $partner = null;
-
-    /**
-     * The environment being used. development|staging|production
-     * @var mixed|string
-     */
-    public $environment = 'production';
-
-    /**
      * @var null|WordPressSDK
      */
     private static $instance = null;
@@ -52,7 +40,7 @@ class WordPressSDK
      * Appconfig object
      * @var AppConfigInterface
      */
-    private $appConfig;
+    public $appConfig;
 
     /**
      * Translations object
@@ -79,9 +67,6 @@ class WordPressSDK
         $this->loader = new Loader();
         $this->appConfig = $appConfig ?: new DefaultAppConfig();
         $this->translations = $translations ?: new DefaultTranslations();
-        
-        $this->partner = $this->appConfig->getPartner();
-        $this->environment = $this->appConfig->getEnvironment();
 
         $this->authentication();
         $this->api();
@@ -104,8 +89,8 @@ class WordPressSDK
     /**
      * Singleton implementation of WordPress SDK.
      *
-     * @param null|string $partner The partner used for in the WordProof My.
-     * @param null|string $environment The environment used by the SDK to determine which server to use.
+     * @param AppConfigInterface|null $appConfig
+     * @param TranslationsInterface|null $translations
      * @return WordPressSDK|null Returns the WordPress SDK instance.
      * @throws \Exception
      */

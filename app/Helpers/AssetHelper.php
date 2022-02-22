@@ -58,7 +58,7 @@ class AssetHelper
     /**
      * Returns the prefixed script handle.
      *
-     * @param $name The name of the script.
+     * @param string $name The name of the script.
      * @return string Handle of the script.
      */
     private static function getHandle($name)
@@ -74,12 +74,10 @@ class AssetHelper
      */
     private static function getPathUrl($name, $extension)
     {
-        if (EnvironmentHelper::development()) {
-            $config = EnvironmentConfig::get(SdkHelper::getEnvironment());
+        $appConfig = AppConfigHelper::getAppConfig();
 
-            if (isset($config['file_overwrite'])) {
-                $url = $config['file_overwrite'];
-            }
+        if ($appConfig->getScriptsFileOverwrite()) {
+            $url = $appConfig->getScriptsFileOverwrite();
         } else {
             $url = plugin_dir_url(WORDPROOF_TIMESTAMP_SDK_FILE);
         }

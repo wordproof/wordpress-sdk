@@ -8,7 +8,7 @@ use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\PostTypeHelper;
 use WordProof\SDK\Helpers\TransientHelper;
-use WordProof\SDK\Helpers\SdkHelper;
+use WordProof\SDK\Helpers\AppConfigHelper;
 
 class Authentication
 {
@@ -35,7 +35,7 @@ class Authentication
             'state'                 => $state,
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
-            'partner'               => SdkHelper::getPartner(),
+            'partner'               => AppConfigHelper::getPartner(),
         ];
 
         self::redirect('/wordpress-sdk/authorize', $data);
@@ -90,7 +90,7 @@ class Authentication
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => get_site_url(),
             'available_post_types' => PostTypeHelper::getPublicPostTypes(),
-            'partner'              => SdkHelper::getPartner()
+            'partner'              => AppConfigHelper::getPartner()
         ];
 
         $response = Api::post('/api/wordpress-sdk/source', $data);
