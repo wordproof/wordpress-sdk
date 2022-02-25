@@ -8,25 +8,25 @@ use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\PostTypeHelper;
 use WordProof\SDK\Helpers\TransientHelper;
-use WordProof\SDK\Helpers\SdkHelper;
+use WordProof\SDK\Helpers\AppConfigHelper;
 
 class Authentication
 {
     private static $callbackEndpoint = 'wordproof/v1/oauth/callback';
-    
+
     public static function authorize($redirectUrl = null)
     {
         $state = wp_generate_password(40, false);
         $codeVerifier = wp_generate_password(128, false);
         $originalUrl = AdminHelper::currentUrl();
-        
+
         TransientHelper::set('wordproof_authorize_state', $state, 1200);
         TransientHelper::set('wordproof_authorize_code_verifier', $codeVerifier, 1200);
         TransientHelper::set('wordproof_authorize_current_url', $redirectUrl ?: $originalUrl);
-        
+
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
-        
+
         $data = [
             'client_id'             => EnvironmentHelper::client(),
             'redirect_uri'          => self::getCallbackUrl(),
@@ -35,12 +35,12 @@ class Authentication
             'state'                 => $state,
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
-            'partner'               => SdkHelper::getPartner(),
+            'partner'               => AppConfigHelper::getPartner(),
         ];
-        
+
         self::redirect('/wordpress-sdk/authorize', $data);
     }
-    
+
     /**
      * Retrieve the access token with the state and code.
      *
@@ -53,11 +53,11 @@ class Authentication
     {
         $localState = TransientHelper::getOnce('wordproof_authorize_state');
         $codeVerifier = TransientHelper::getOnce('wordproof_authorize_code_verifier');
-        
+
         if (strlen($localState) <= 0 || $localState !== $state) {
             throw new \Exception('WordProof: No state found.');
         }
-        
+
         $data = [
             'grant_type'    => 'authorization_code',
             'client_id'     => EnvironmentHelper::client(),
@@ -65,9 +65,9 @@ class Authentication
             'code_verifier' => $codeVerifier,
             'code'          => $code,
         ];
-        
+
         $response = Api::post('/api/wordpress-sdk/token', $data);
-        
+
         if (isset($response->error) && $response->error === 'invalid_grant') {
             $data = (object)[
                 'status'  => 401,
@@ -75,7 +75,7 @@ class Authentication
             ];
             return new \WP_REST_Response($data, $data->status);
         }
-        
+
         if (!isset($response->access_token)) {
             $data = (object)[
                 'status'  => 401,
@@ -83,20 +83,20 @@ class Authentication
             ];
             return new \WP_REST_Response($data, $data->status);
         }
-        
+
         OptionsHelper::setAccessToken($response->access_token);
-        
+
         $data = [
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => get_site_url(),
             'available_post_types' => PostTypeHelper::getPublicPostTypes(),
-            'partner'              => SdkHelper::getPartner()
+            'partner'              => AppConfigHelper::getPartner()
         ];
-        
+
         $response = Api::post('/api/wordpress-sdk/source', $data);
-        
+
         OptionsHelper::setSourceId($response->source_id);
-        
+
         $data = (object)[
             'status'           => 200,
             'message'          => 'authentication_success',
@@ -105,12 +105,12 @@ class Authentication
         ];
         return new \WP_REST_Response($data, $data->status);
     }
-    
+
     private static function getCallbackUrl()
     {
         return get_rest_url(null, self::$callbackEndpoint);
     }
-    
+
     public static function redirect($endpoint, $parameters)
     {
         $location = EnvironmentHelper::url() . $endpoint . '?' . http_build_query($parameters);

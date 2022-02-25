@@ -16,7 +16,7 @@ class SettingsController
     {
         return Settings::redirect($redirectUrl);
     }
-    
+
     /**
      * Adds admin page that will redirect the user to a predefined url.
      *
@@ -50,7 +50,7 @@ class SettingsController
     public function redirectOnLoad()
     {
         $closeWindowUrl = admin_url('admin.php?page=wordproof-close-after-redirect');
-        
+
         if ($this->redirect($closeWindowUrl) === false) {
             do_action('wordproof_authenticate', $closeWindowUrl);
         }

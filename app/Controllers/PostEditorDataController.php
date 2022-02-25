@@ -7,7 +7,6 @@ use WordProof\SDK\Helpers\PostEditorHelper;
 
 class PostEditorDataController
 {
-    
     /**
      * Localizes the post edit scripts.
      *
@@ -18,10 +17,10 @@ class PostEditorDataController
         if (! PostEditorHelper::isPostEdit($hook)) {
             return;
         }
-    
+
         $this->enqueueAndLocalizeScript();
     }
-    
+
     /**
      * Localizes the elementor script.
      */
@@ -29,13 +28,14 @@ class PostEditorDataController
     {
         $this->enqueueAndLocalizeScript();
     }
-    
+
     /**
      * Enqueues and localizes data script.
      */
-    private function enqueueAndLocalizeScript() {
+    private function enqueueAndLocalizeScript()
+    {
         $data = PostEditorHelper::getPostEditorData();
-        
+
         AssetHelper::enqueue('data');
         AssetHelper::localize('data', 'wordproofSdk', $data);
     }

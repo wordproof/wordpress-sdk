@@ -9,7 +9,7 @@ const WebhookFailedModal = ( props ) => {
 	return (
 		<WordProofModal
 			close={ close }
-			title={ __( 'Webhook failed', 'wordproof_timestamp' ) }
+			title={ __( 'Webhook failed', 'wordproof' ) }
 		>
 			<p>
 				The timestamp send by WordProof was not received on your

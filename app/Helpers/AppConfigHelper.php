@@ -4,7 +4,7 @@ namespace WordProof\SDK\Helpers;
 
 use WordProof\SDK\WordPressSDK;
 
-class SdkHelper
+class AppConfigHelper
 {
     /**
      * Returns the partner set during initialization.
@@ -13,15 +13,15 @@ class SdkHelper
      */
     public static function getPartner()
     {
-        $sdk = WordPressSDK::getInstance();
+        $appConfig = self::getAppConfig();
 
-        if ($sdk) {
-            return $sdk->partner;
+        if ($appConfig) {
+            return $appConfig->getPartner();
         }
 
         return null;
     }
-    
+
     /**
      * Returns the environment set during initialization.
 
@@ -29,10 +29,21 @@ class SdkHelper
      */
     public static function getEnvironment()
     {
+        $appConfig = self::getAppConfig();
+
+        if ($appConfig) {
+            return $appConfig->getEnvironment();
+        }
+
+        return null;
+    }
+
+    public static function getAppConfig()
+    {
         $sdk = WordPressSDK::getInstance();
 
         if ($sdk) {
-            return $sdk->environment;
+            return $sdk->appConfig;
         }
 
         return null;

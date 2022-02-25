@@ -31,7 +31,7 @@ class RoutesConfig extends Config
             'webhook'                => [
                 'endpoint' => '/webhook',
                 'method'   => 'get'
-        
+
             ],
             'settings'               => [
                 'endpoint' => '/settings',

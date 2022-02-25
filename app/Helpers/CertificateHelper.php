@@ -14,11 +14,15 @@ class CertificateHelper
         if (!is_singular()) {
             return false;
         }
-        
+
         if (!is_main_query()) {
             return false;
         }
-        
+    
+        if (post_password_required()) {
+            return false;
+        }
+
         global $post;
         return apply_filters(
             'wordproof_timestamp_show_certificate',

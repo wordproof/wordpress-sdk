@@ -17,14 +17,14 @@ class EscapeHelper
         if (is_array($value)) {
             return self::escapeArray($value, $escapeKey);
         }
-        
+
         if (is_object($value)) {
             return (object)self::escapeArray((array) $value, $escapeKey);
         }
-        
+
         return self::escapeSingleValue($value, $escapeKey);
     }
-    
+
     /**
      * Loops through the array to escape the values inside.
      *
@@ -35,14 +35,14 @@ class EscapeHelper
     private static function escapeArray($array, $escapeKey)
     {
         $values = [];
-        
+
         foreach ($array as $key => $value) {
             $values[$key] = self::escapeSingleValue($value, $escapeKey);
         }
-        
+
         return $values;
     }
-    
+
     /**
      * Escapes a single value using an escape function set in the class.
      *

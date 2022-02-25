@@ -8,7 +8,6 @@ use WordProof\SDK\Helpers\PostTypeHelper;
 
 class PostEditorTimestampController
 {
-    
     private $metaKey = '_wordproof_timestamp';
     private $classicEditorNonceKey = 'wordproof_timestamp_classic_nonce';
 
@@ -30,7 +29,7 @@ class PostEditorTimestampController
             ]);
         }
     }
-    
+
     /**
      * Returns if the current user can edit posts.
      *
@@ -40,7 +39,7 @@ class PostEditorTimestampController
     {
         return current_user_can('edit_posts');
     }
-    
+
     /**
      * Enqueues the wordproof-block-editor script.
      *
@@ -61,7 +60,7 @@ class PostEditorTimestampController
     {
         AssetHelper::enqueue('wordproof-elementor-editor');
     }
-    
+
     /**
      * Add Metabox to classic editor.
      *
@@ -83,7 +82,7 @@ class PostEditorTimestampController
             );
         }
     }
-    
+
     /**
      * Save the meta box meta value for the classic editor.
      *
@@ -102,7 +101,7 @@ class PostEditorTimestampController
             }
         }
     }
-    
+
     /**
      * Display the meta box HTML to Classic Editor users.
      *
@@ -111,15 +110,14 @@ class PostEditorTimestampController
     public function classicMetaboxHtml($post)
     {
         $value = PostMetaHelper::get($post->ID, $this->metaKey);
-        
-        wp_nonce_field('save_post', $this->classicEditorNonceKey);
-        ?>
+
+        wp_nonce_field('save_post', $this->classicEditorNonceKey); ?>
         <input type="checkbox" id="<?php echo $this->metaKey; ?>" name="<?php echo $this->metaKey; ?>"
                value="1" <?php echo boolval($value) ? 'checked' : ''; ?>>
         <label for="<?php echo $this->metaKey; ?>">Timestamp this post</label>
         <?php
     }
-    
+
     /**
      * Registers control for the Elementor editor.
      *
@@ -132,43 +130,43 @@ class PostEditorTimestampController
         if (!$document instanceof \Elementor\Core\DocumentTypes\PageBase || !$document::get_property('has_elements')) {
             return;
         }
-        
+
         // Add Metabox
         $document->start_controls_section(
             'wordproof_timestamp_section',
             [
-                'label' => esc_html__('WordProof Timestamp', 'wordproof_timestamp'),
+                'label' => esc_html__('WordProof Timestamp', 'wordproof'),
                 'tab'   => \Elementor\Controls_Manager::TAB_SETTINGS,
             ]
         );
-        
+
         // Get meta value
         $postId = $document->get_id();
         $metaValue = PostMetaHelper::get($postId, $this->metaKey, true);
-        
+
         // Override elementor value
         $pageSettingsManager = \Elementor\Core\Settings\Manager::get_settings_managers('page');
         $pageSettingsModel = $pageSettingsManager->get_model($postId);
         $pageSettingsModel->set_settings($this->metaKey, boolval($metaValue) ? 'yes' : '');
-        
+
         // Add Switcher
         $document->add_control(
             $this->metaKey,
             [
-                'label'   => esc_html__('Timestamp this post', 'wordproof_timestamp'),
+                'label'   => esc_html__('Timestamp this post', 'wordproof'),
                 'type'    => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'no',
             ]
         );
-        
+
         $document->end_controls_section();
     }
-    
-    public function beforeElementorSave() {
+
+    public function beforeElementorSave()
+    {
         ray('before save')->red();
-        
     }
-    
+
     /**
      * @param integer $postId
      * @action elementor/document/save/data
@@ -178,7 +176,7 @@ class PostEditorTimestampController
         if (get_post_type($postId) !== 'page') {
             return;
         }
-    
+
         $pageSettingsManager = \Elementor\Core\Settings\Manager::get_settings_managers('page');
         $pageSettingsModel = $pageSettingsManager->get_model($postId);
         $value = $pageSettingsModel->get_settings($this->metaKey);

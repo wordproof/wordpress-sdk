@@ -34,7 +34,7 @@ class CertificateController
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $schema;
     }
-    
+
     /**
      * Adds the certificate tag to the content before rendering it.
      *
@@ -51,7 +51,7 @@ class CertificateController
         if (SettingsHelper::hideCertificateLink()) {
             return $content;
         }
-        
+
         global $post;
         $identifier = $post->ID;
 
@@ -64,6 +64,4 @@ class CertificateController
 
         return $content;
     }
-    
-
 }
