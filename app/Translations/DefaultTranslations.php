@@ -21,4 +21,10 @@ class DefaultTranslations implements TranslationsInterface
         /* translators: %s expands to WordProof. */
         return sprintf(__('%1$s failed to timestamp this page. Please check if you\'re correctly authenticated with %1$s and try to save this page again.', 'wordproof'), 'WordProof');
     }
+
+    public function getWebhookFailedNotice()
+    {
+        /* translators: %s expands to WordProof. */
+        return sprintf(__('The timestamp is not retrieved by your site. Please try again or contact %1$s support.', 'wordproof'), 'WordProof');
+    }
 }

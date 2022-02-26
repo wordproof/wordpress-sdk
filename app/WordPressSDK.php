@@ -174,7 +174,7 @@ class WordPressSDK
      */
     private function postEditorData()
     {
-        $class = new PostEditorDataController();
+        $class = new PostEditorDataController($this->translations);
 
         $this->loader->add_action('admin_enqueue_scripts', $class, 'addScript');
         $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'addScriptForElementor');
