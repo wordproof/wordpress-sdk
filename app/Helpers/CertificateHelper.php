@@ -18,7 +18,7 @@ class CertificateHelper
         if (!is_main_query()) {
             return false;
         }
-    
+
         if (post_password_required()) {
             return false;
         }

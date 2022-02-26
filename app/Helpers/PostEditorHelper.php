@@ -2,6 +2,8 @@
 
 namespace WordProof\SDK\Helpers;
 
+use WordProof\SDK\Translations\TranslationsInterface;
+
 class PostEditorHelper
 {
     /**
@@ -57,13 +59,20 @@ class PostEditorHelper
     /**
      * Returns the data that should be added to the post editor.
      *
+     * @param TranslationsInterface $translations The implemented translations interface.
+     *
      * @return array[] The post editor data.
      */
-    public static function getPostEditorData()
+    public static function getPostEditorData(TranslationsInterface $translations)
     {
         global $post;
-
-        $currentPostType = self::getCurrentPostType();
+        
+        $translations = [
+            'no_balance'        => $translations->getNoBalanceNotice(),
+            'timestamp_success' => $translations->getTimestampSuccessNotice(),
+            'timestamp_failed'  => $translations->getTimestampFailedNotice(),
+            'webhook_failed'    => $translations->getWebhookFailedNotice(),
+        ];
 
         return [
             'data' => [
@@ -72,10 +81,10 @@ class PostEditorHelper
                 'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
                 'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
                 'settings'                          => SettingsHelper::get(),
-                'timestamp_url'                     => RestApiHelper::getRestRoute('timestamp', [$post->ID]),
                 'current_post_id'                   => $post->ID,
+                'current_post_type'                 => $post->post_type,
                 'post_editor'                       => self::getPostEditor(),
-
+                'translations'                      => $translations
             ],
         ];
     }

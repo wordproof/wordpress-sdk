@@ -9,4 +9,6 @@ interface TranslationsInterface
     public function getTimestampSuccessNotice();
 
     public function getTimestampFailedNotice();
+
+    public function getWebhookFailedNotice();
 }

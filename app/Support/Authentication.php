@@ -36,6 +36,7 @@ class Authentication
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
             'partner'               => AppConfigHelper::getPartner(),
+            'confirm_account'       => true
         ];
 
         self::redirect('/wordpress-sdk/authorize', $data);

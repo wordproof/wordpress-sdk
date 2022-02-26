@@ -1,8 +1,3 @@
-import {
-	noBalanceNotice,
-	timestampErrorNotice,
-	timestampSuccessNotice,
-} from '../../notices/notices';
 import { getData } from '../data';
 import PropTypes from 'prop-types';
 import { getLatestTimestampTransactionRequest } from '../endpoints';
@@ -36,24 +31,25 @@ const handleNoticesAfterTimestamp = ( props ) => {
 
 	if ( response && response.status === 201 ) {
 		if ( response.balance === 0 ) {
-			createErrorNotice( noBalanceNotice, errorNoticeOptions );
+			createErrorNotice( getData('translations.no_balance' ), errorNoticeOptions );
 		} else {
-			createSuccessNotice( timestampSuccessNotice, successNoticeOptions );
-			checkForWebhook( postId, response.hash );
+			createSuccessNotice( getData('translations.timestamp_success' ), successNoticeOptions );
+			checkForWebhook( postId, response.hash, createErrorNotice, errorNoticeOptions );
 		}
 	} else {
-		createErrorNotice( timestampErrorNotice, errorNoticeOptions );
+		createErrorNotice( getData('translations.timestamp_failed' ), errorNoticeOptions );
 	}
 };
 
-const checkForWebhook = async ( postId, hash ) => {
+const checkForWebhook = async ( postId, hash, createErrorNotice, errorNoticeOptions  ) => {
 	setTimeout( async () => {
 		const transaction = await getLatestTimestampTransactionRequest(
 			postId
 		);
 
 		if ( transaction.hash !== hash ) {
-			dispatch( 'wordproof:webhook:failed' );
+            errorNoticeOptions.type = 'snackbar';
+            createErrorNotice( getData('translations.webhook_failed' ), errorNoticeOptions );
 		}
 	}, 10000 );
 };
