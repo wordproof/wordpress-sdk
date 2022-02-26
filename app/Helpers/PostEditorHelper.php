@@ -82,6 +82,7 @@ class PostEditorHelper
                 'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
                 'settings'                          => SettingsHelper::get(),
                 'current_post_id'                   => $post->ID,
+                'current_post_type'                 => $post->post_type,
                 'post_editor'                       => self::getPostEditor(),
                 'translations'                      => $translations
             ],
