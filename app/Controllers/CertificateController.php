@@ -3,6 +3,7 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\CertificateHelper;
+use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
 use WordProof\SDK\Helpers\SettingsHelper;
 
@@ -57,8 +58,10 @@ class CertificateController
 
         $text = SettingsHelper::certificateLinkText();
         $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
+        $debug = EnvironmentHelper::development() ? 'true' : 'false';
+        $lastModified = get_the_modified_date('c', $post->ID);
 
-        $content.= "\n" . '<w-certificate shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '"></w-certificate>';
+        $content.= "\n" . '<w-certificate debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
         $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
         $content.= "\n";
 
