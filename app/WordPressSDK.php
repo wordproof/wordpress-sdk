@@ -221,6 +221,7 @@ class WordPressSDK
         // Classic editor
         $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
         $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
+        $this->loader->add_action('admin_enqueue_scripts', $class, 'enqueueClassicEditorScript');
 
         // Elementor
         $this->loader->add_action('elementor/editor/after_enqueue_scripts', $class, 'enqueueElementorEditorScript');
