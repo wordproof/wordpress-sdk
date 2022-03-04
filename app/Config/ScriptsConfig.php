@@ -23,6 +23,10 @@ class ScriptsConfig extends Config
             'wordproof-elementor-editor' => [
                 'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data', 'elementor-common'],
                 'type'         => 'js'
+            ],
+            'wordproof-classic-editor' => [
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
+                'type'         => 'js'
             ]
         ];
     }
