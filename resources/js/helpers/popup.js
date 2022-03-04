@@ -13,7 +13,7 @@ export default function popupWindow(
 	url,
 	windowName = '',
 	width = 800,
-	height = 600
+	height = 680
 ) {
 	const y = window.top.outerHeight / 2 + window.top.screenY - height / 2;
 	const x = window.top.outerWidth / 2 + window.top.screenX - width / 2;
