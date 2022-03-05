@@ -6,8 +6,8 @@ const WORDPROOF_REST_API_NAMESPACE = 'wordproof/v1';
  * Request Access token from WordProof
  *
  * @param  state.state
- * @param  state The state returned by WordProof
- * @param  code The code returned by WordProof
+ * @param  state       The state returned by WordProof
+ * @param  code        The code returned by WordProof
  * @param  state.code
  * @return {Promise<*>}
  */

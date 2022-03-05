@@ -1,3 +1,3 @@
-import initializeClassicEditor from "./initializers/classicEditor";
+import initializeClassicEditor from './initializers/classicEditor';
 
 initializeClassicEditor();
