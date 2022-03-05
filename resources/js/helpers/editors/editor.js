@@ -37,7 +37,17 @@ const handleNoticesAfterTimestamp = ( props ) => {
 			checkForWebhook( postId, response.hash, createErrorNotice, errorNoticeOptions );
 		}
 	} else {
-		createErrorNotice( getData('translations.timestamp_failed' ), errorNoticeOptions );
+	    if (response.error) {
+	        switch (response.error) {
+                case 'not_authenticated':
+                    errorNoticeOptions.type = 'snackbar';
+                    createErrorNotice(getData('translations.not_authenticated'), errorNoticeOptions);
+                    break;
+                case 'timestamp_failed':
+                default:
+                    createErrorNotice(getData('translations.timestamp_failed'), errorNoticeOptions);
+            }
+        }
 	}
 };
 

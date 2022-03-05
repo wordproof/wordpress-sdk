@@ -18,15 +18,21 @@ class TimestampHelper
             return $transient;
         }
 
-        if (!self::shouldBeTimestamped($post, $data)) {
+        $response = self::shouldBeTimestamped($post, $data);
+        if (is_bool($response) && $response === false) {
             $response = (object)['status' => 200, 'message' => 'Post should not be timestamped'];
+            return new \WP_REST_Response($response, $response->status);
+        }
+
+        if (is_array($response) && $response['timestamp'] === false) {
+            $response = (object)['status' => 400, 'message' => 'Post should not be timestamped', 'error' => 'not_authenticated'];
             return new \WP_REST_Response($response, $response->status);
         }
 
         $response = Timestamp::sendPostRequest($data);
 
         if ($response === false) {
-            $response = (object)['status' => 400, 'message' => 'Something went wrong.'];
+            $response = (object)['status' => 400, 'message' => 'Something went wrong.', 'error' => 'timestamp_failed'];
             return new \WP_REST_Response($response, $response->status);
         }
 
@@ -40,6 +46,10 @@ class TimestampHelper
     public static function shouldBeTimestamped(\WP_Post $post, $data)
     {
         if (!AuthenticationHelper::isAuthenticated()) {
+            if (self::hasPostMetaOverrideSetToTrue($post)) {
+                return ['timestamp' => false, 'notice' => 'not_authenticated'];
+            }
+
             return false;
         }
 
