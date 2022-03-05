@@ -11,4 +11,6 @@ interface TranslationsInterface
     public function getTimestampFailedNotice();
 
     public function getWebhookFailedNotice();
+
+    public function getNotAuthenticatedNotice();
 }

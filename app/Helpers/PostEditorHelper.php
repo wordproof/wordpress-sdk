@@ -66,12 +66,13 @@ class PostEditorHelper
     public static function getPostEditorData(TranslationsInterface $translations)
     {
         global $post;
-        
+
         $translations = [
             'no_balance'        => $translations->getNoBalanceNotice(),
             'timestamp_success' => $translations->getTimestampSuccessNotice(),
             'timestamp_failed'  => $translations->getTimestampFailedNotice(),
             'webhook_failed'    => $translations->getWebhookFailedNotice(),
+            'not_authenticated' => $translations->getNotAuthenticatedNotice(),
         ];
 
         return [
