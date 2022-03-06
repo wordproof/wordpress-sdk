@@ -13,4 +13,8 @@ interface TranslationsInterface
     public function getWebhookFailedNotice();
 
     public function getNotAuthenticatedNotice();
+
+    public function getOpenSettingsButtonText();
+
+    public function getOpenAuthenticationButtonText();
 }

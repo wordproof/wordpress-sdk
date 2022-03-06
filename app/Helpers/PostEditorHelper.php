@@ -73,6 +73,8 @@ class PostEditorHelper
             'timestamp_failed'  => $translations->getTimestampFailedNotice(),
             'webhook_failed'    => $translations->getWebhookFailedNotice(),
             'not_authenticated' => $translations->getNotAuthenticatedNotice(),
+            'open_authentication_button_text' => $translations->getOpenAuthenticationButtonText(),
+            'open_settings_button_text' => $translations->getOpenSettingsButtonText(),
         ];
 
         return [
