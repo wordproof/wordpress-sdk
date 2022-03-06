@@ -31,6 +31,16 @@ const handleNoticesAfterTimestamp = ( props ) => {
 
 	if ( response && response.status === 201 ) {
 		if ( response.balance === 0 ) {
+			errorNoticeOptions.actions = [
+				{
+					label: getData( 'translations.open_settings_button_text' ),
+					onClick: () => {
+						dispatch( 'wordproof:open_settings' );
+					},
+					variant: 'link',
+				},
+			];
+
 			createErrorNotice(
 				getData( 'translations.no_balance' ),
 				errorNoticeOptions
@@ -51,6 +61,19 @@ const handleNoticesAfterTimestamp = ( props ) => {
 		switch ( response.error ) {
 			case 'not_authenticated':
 				errorNoticeOptions.type = 'snackbar';
+
+				errorNoticeOptions.actions = [
+					{
+						label: getData(
+							'translations.open_authentication_button_text'
+						),
+						onClick: () => {
+							dispatch( 'wordproof:open_authentication' );
+						},
+						variant: 'link',
+					},
+				];
+
 				createErrorNotice(
 					getData( 'translations.not_authenticated' ),
 					errorNoticeOptions
