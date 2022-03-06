@@ -25,10 +25,10 @@ export function callbackOnSave( callback ) {
 		'document/save/save',
 		'wordproof/timestamper',
 		() => {
-            /**
-             * The post meta is not consistently saved on this hook.
-             * Wait 1 second to send the timestamp request.
-             */
+			/**
+			 * The post meta is not consistently saved on this hook.
+			 * Wait 1 second to send the timestamp request.
+			 */
 			window.setTimeout( callback, 1000 );
 		}
 	);

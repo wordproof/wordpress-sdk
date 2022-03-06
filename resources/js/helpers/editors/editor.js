@@ -31,25 +31,81 @@ const handleNoticesAfterTimestamp = ( props ) => {
 
 	if ( response && response.status === 201 ) {
 		if ( response.balance === 0 ) {
-			createErrorNotice( getData('translations.no_balance' ), errorNoticeOptions );
+			errorNoticeOptions.actions = [
+				{
+					label: getData( 'translations.open_settings_button_text' ),
+					onClick: () => {
+						dispatch( 'wordproof:open_settings' );
+					},
+					variant: 'link',
+				},
+			];
+
+			createErrorNotice(
+				getData( 'translations.no_balance' ),
+				errorNoticeOptions
+			);
 		} else {
-			createSuccessNotice( getData('translations.timestamp_success' ), successNoticeOptions );
-			checkForWebhook( postId, response.hash, createErrorNotice, errorNoticeOptions );
+			createSuccessNotice(
+				getData( 'translations.timestamp_success' ),
+				successNoticeOptions
+			);
+			checkForWebhook(
+				postId,
+				response.hash,
+				createErrorNotice,
+				errorNoticeOptions
+			);
 		}
-	} else {
-		createErrorNotice( getData('translations.timestamp_failed' ), errorNoticeOptions );
+	} else if ( response.error ) {
+		switch ( response.error ) {
+			case 'not_authenticated':
+				errorNoticeOptions.type = 'snackbar';
+
+				errorNoticeOptions.actions = [
+					{
+						label: getData(
+							'translations.open_authentication_button_text'
+						),
+						onClick: () => {
+							dispatch( 'wordproof:open_authentication' );
+						},
+						variant: 'link',
+					},
+				];
+
+				createErrorNotice(
+					getData( 'translations.not_authenticated' ),
+					errorNoticeOptions
+				);
+				break;
+			case 'timestamp_failed':
+			default:
+				createErrorNotice(
+					getData( 'translations.timestamp_failed' ),
+					errorNoticeOptions
+				);
+		}
 	}
 };
 
-const checkForWebhook = async ( postId, hash, createErrorNotice, errorNoticeOptions  ) => {
+const checkForWebhook = async (
+	postId,
+	hash,
+	createErrorNotice,
+	errorNoticeOptions
+) => {
 	setTimeout( async () => {
 		const transaction = await getLatestTimestampTransactionRequest(
 			postId
 		);
 
 		if ( transaction.hash !== hash ) {
-            errorNoticeOptions.type = 'snackbar';
-            createErrorNotice( getData('translations.webhook_failed' ), errorNoticeOptions );
+			errorNoticeOptions.type = 'snackbar';
+			createErrorNotice(
+				getData( 'translations.webhook_failed' ),
+				errorNoticeOptions
+			);
 		}
 	}, 10000 );
 };

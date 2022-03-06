@@ -27,4 +27,20 @@ class DefaultTranslations implements TranslationsInterface
         /* translators: %s expands to WordProof. */
         return sprintf(__('The timestamp is not retrieved by your site. Please try again or contact %1$s support.', 'wordproof'), 'WordProof');
     }
+
+    public function getNotAuthenticatedNotice()
+    {
+        /* translators: %s expands to WordProof. */
+        return sprintf(__('The timestamp is not created because you need to authenticate with %s first.', 'wordproof'), 'WordProof');
+    }
+
+    public function getOpenAuthenticationButtonText()
+    {
+        return __('Authenticate', 'wordproof');
+    }
+
+    public function getOpenSettingsButtonText()
+    {
+        return __('Open settings', 'wordproof');
+    }
 }
