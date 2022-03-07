@@ -24,17 +24,17 @@ class PostEditorDataController
     }
 
     /**
-     * Localizes the post edit scripts.
+     * Add script for post edit pages.
      *
      * @param string $hook The current page.
      */
     public function addScript($hook)
     {
-        if (! PostEditorHelper::isPostEdit($hook)) {
-            return;
-        }
+        $loadWordProofData = apply_filters('wordproof_load_data_on_pages', PostEditorHelper::getPostEditPages());
 
-        $this->enqueueAndLocalizeScript();
+        if (in_array($hook, $loadWordProofData, true)) {
+            $this->enqueueAndLocalizeScript();
+        }
     }
 
     /**
