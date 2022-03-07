@@ -68,8 +68,6 @@ export default function initializeAuthentication() {
 			return;
 		}
 
-		console.warn( 'Post message: ' + data.type );
-
 		switch ( data.type ) {
 			case 'wordproof:oauth:granted':
 				if (
