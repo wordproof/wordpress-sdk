@@ -37,6 +37,10 @@ class ClassicNoticeHelper
      */
     private static function getNoticeKeyForTimestampResponse($response)
     {
+        if (isset($response->error) && $response->error === 'not_authenticated') {
+            return 'not_authenticated';
+        }
+
         if (isset($response->balance) && $response->balance === 0) {
             return 'no_balance';
         }

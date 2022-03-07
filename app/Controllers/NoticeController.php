@@ -31,6 +31,7 @@ class NoticeController
     public function show()
     {
         $screen = get_current_screen();
+
         if (!in_array($screen->base, $this->screens, true)) {
             return;
         }
@@ -44,27 +45,45 @@ class NoticeController
         switch ($notice) {
             case 'no_balance':
                 $type = 'error';
-                $description = $this->translations->getNoBalanceNotice();
+                $message = $this->translations->getNoBalanceNotice();
+                $buttonText = $this->translations->getOpenSettingsButtonText();
+                $buttonEventName = 'wordproof:open_settings';
                 break;
             case 'timestamp_success':
                 $type = 'success';
-                $description = $this->translations->getTimestampSuccessNotice();
+                $message = $this->translations->getTimestampSuccessNotice();
                 break;
             case 'timestamp_failed':
                 $type = 'error';
-                $description = $this->translations->getTimestampFailedNotice();
+                $message = $this->translations->getTimestampFailedNotice();
+                break;
+            case 'not_authenticated':
+                $type = 'error';
+                $message = $this->translations->getNotAuthenticatedNotice();
+                $buttonText = $this->translations->getOpenAuthenticationButtonText();
+                $buttonEventName = 'wordproof:open_authentication';
                 break;
             default:
                 break;
         }
 
-        if (isset($description) && isset($type)) {
+        if (isset($message) && isset($type)) {
             $noticeClass = 'notice-' . $type;
             echo \sprintf(
-                '<div class="notice %1$s is-dismissible"><p>%2$s</p></div>',
+                '<div class="notice %1$s is-dismissible"><p>%2$s</p>',
                 esc_attr($noticeClass),
-                esc_html($description)
+                esc_html($message)
             );
+
+            if (isset($buttonText) && isset($buttonEventName)) {
+                echo \sprintf(
+                    '<button class="button button-primary" onclick="window.dispatchEvent( new window.CustomEvent( \'%2$s\' ) )">%1$s</button>',
+                    esc_html($buttonText),
+                    esc_attr($buttonEventName)
+                );
+            }
+
+            echo '</div>';
         }
     }
 }
