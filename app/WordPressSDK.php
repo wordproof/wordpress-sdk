@@ -12,7 +12,6 @@ use WordProof\SDK\Controllers\AuthenticationController;
 use WordProof\SDK\Controllers\CertificateController;
 use WordProof\SDK\Controllers\SettingsController;
 use WordProof\SDK\Controllers\TimestampController;
-use WordProof\SDK\Helpers\ReflectionHelper;
 use WordProof\SDK\Support\Loader;
 use WordProof\SDK\Translations\DefaultTranslations;
 use WordProof\SDK\Translations\TranslationsInterface;
@@ -51,14 +50,15 @@ class WordPressSDK
     /**
      * WordPressSDK constructor.
      *
+     * @return WordPressSDK|void
+     *
      * @throws \Exception
      */
     public function __construct(AppConfigInterface $appConfig = null, TranslationsInterface $translations = null)
     {
-        if (defined('WORDPROOF_TIMESTAMP_SDK')) {
+        if (defined('WORDPROOF_TIMESTAMP_SDK_VERSION')) {
             return;
         }
-        define('WORDPROOF_TIMESTAMP_SDK', ReflectionHelper::name($this));
 
         if (!headers_sent() && !session_id()) {
             session_start();
