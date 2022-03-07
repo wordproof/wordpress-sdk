@@ -36,7 +36,6 @@ class PostEditorHelper
         return 'classic';
     }
 
-
     /**
      * Returns if the page is a post edit page.
      *
@@ -45,15 +44,17 @@ class PostEditorHelper
      */
     public static function isPostEdit($page)
     {
-        switch ($page) {
-            case 'post.php':
-            case 'post':
-            case 'post-new.php':
-            case 'post-new':
-                return true;
-            default:
-                return false;
-        }
+        return in_array($page, self::getPostEditPages(), true);
+    }
+
+    /**
+     * Returns an array of edit page hooks.
+     *
+     * @return array Post edit page hooks.
+     */
+    public static function getPostEditPages()
+    {
+        return ['post.php', 'post', 'post-new.php', 'post-new'];
     }
 
     /**
@@ -67,14 +68,17 @@ class PostEditorHelper
     {
         global $post;
 
+        $postId = isset($post->ID) ? $post->ID : null;
+        $postType = isset($post->post_type) ? $post->post_type : null;
+
         $translations = [
-            'no_balance'        => $translations->getNoBalanceNotice(),
-            'timestamp_success' => $translations->getTimestampSuccessNotice(),
-            'timestamp_failed'  => $translations->getTimestampFailedNotice(),
-            'webhook_failed'    => $translations->getWebhookFailedNotice(),
-            'not_authenticated' => $translations->getNotAuthenticatedNotice(),
+            'no_balance'                      => $translations->getNoBalanceNotice(),
+            'timestamp_success'               => $translations->getTimestampSuccessNotice(),
+            'timestamp_failed'                => $translations->getTimestampFailedNotice(),
+            'webhook_failed'                  => $translations->getWebhookFailedNotice(),
+            'not_authenticated'               => $translations->getNotAuthenticatedNotice(),
             'open_authentication_button_text' => $translations->getOpenAuthenticationButtonText(),
-            'open_settings_button_text' => $translations->getOpenSettingsButtonText(),
+            'open_settings_button_text'       => $translations->getOpenSettingsButtonText(),
         ];
 
         return [
@@ -84,8 +88,8 @@ class PostEditorHelper
                 'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
                 'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
                 'settings'                          => SettingsHelper::get(),
-                'current_post_id'                   => $post->ID,
-                'current_post_type'                 => $post->post_type,
+                'current_post_id'                   => $postId,
+                'current_post_type'                 => $postType,
                 'post_editor'                       => self::getPostEditor(),
                 'translations'                      => $translations
             ],

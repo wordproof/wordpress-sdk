@@ -17,15 +17,15 @@ class ScriptsConfig extends Config
                 'type'         => 'js'
             ],
             'wordproof-block-editor' => [
-                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-Components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
                 'type'         => 'js'
             ],
             'wordproof-elementor-editor' => [
-                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data', 'elementor-common'],
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-Components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data', 'elementor-common'],
                 'type'         => 'js'
             ],
             'wordproof-classic-editor' => [
-                'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
+                'dependencies' => ['wp-i18n', 'wp-element', 'wp-Components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
                 'type'         => 'js'
             ]
         ];
