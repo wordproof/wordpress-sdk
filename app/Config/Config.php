@@ -35,5 +35,8 @@ abstract class Config
      *
      * @return array An array containing the config values.
      */
-    abstract protected static function values();
+    protected static function values()
+    {
+        return [];
+    }
 }
