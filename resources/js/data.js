@@ -1,4 +1,4 @@
-import apiFetch from "@wordpress/api-fetch";
+import apiFetch from '@wordpress/api-fetch';
 import { getData } from './helpers/data';
 
 const { createReduxStore, registerStore, register } = wp.data;
@@ -64,12 +64,12 @@ const storeConfig = {
 };
 
 if ( createReduxStore ) {
-	const store = createReduxStore( 'wordproof', storeConfig );
+	const store = createReduxStore( storeName, storeConfig );
 	register( store );
 } else {
 	/*
 	 * Compatibility fix for WP 5.6.
 	 * Remove this and the related import when WP 5.6 is no longer supported.
 	 */
-	registerStore( 'wordproof', storeConfig );
+	registerStore( storeName, storeConfig );
 }

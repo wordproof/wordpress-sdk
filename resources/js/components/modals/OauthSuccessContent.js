@@ -1,6 +1,6 @@
 import WordProofModal from './Modal';
 
-const { __ } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 const { compose } = wp.compose;
 const { withSelect } = wp.data;
 import PropTypes from 'prop-types';
@@ -14,8 +14,15 @@ const OauthSuccessContent = ( props ) => {
 			title={ __( 'Authenticated', 'wordproof' ) }
 		>
 			<p>
-				You have successfully connected your WordProof account with this
-				site.
+				{ sprintf(
+					/* translators: %1$s expands to WordProof. %2$s is the singular post type. */
+					__(
+						'You have successfully connected your %1$s account with this site. Your %2$s will now be timestamped everytime you update or publish.',
+						'wordproof'
+					),
+					'WordProof',
+					postType
+				) }
 			</p>
 		</WordProofModal>
 	);

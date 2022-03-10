@@ -1,4 +1,4 @@
-const { useState, useCallback } = wp.element;
+const { useState, useCallback, useEffect } = wp.element;
 
 import OauthDeniedContent from './modals/OauthDeniedContent';
 import OauthFailedContent from './modals/OauthFailedContent';

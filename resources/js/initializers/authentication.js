@@ -21,7 +21,7 @@ export default function initializeAuthentication() {
 	/**
 	 * Open the settings popup.
 	 *
-	 * @param  event
+	 * @param {Event} event
 	 */
 	const openSettings = ( event ) => {
 		event.preventDefault();
@@ -31,7 +31,7 @@ export default function initializeAuthentication() {
 	/**
 	 * Open the authentication popup.
 	 *
-	 * @param  event
+	 * @param {Event} event
 	 */
 	const openAuthentication = ( event ) => {
 		event.preventDefault();
@@ -41,8 +41,8 @@ export default function initializeAuthentication() {
 	/**
 	 * Opens popup and set in state.
 	 *
-	 * @param  link
-	 * @param  name
+	 * @param {string} link
+	 * @param {string} name
 	 */
 	const openPopup = ( link, name ) => {
 		popup = popupWindow( window, link, name );
@@ -139,7 +139,7 @@ export default function initializeAuthentication() {
 
 				return true;
 			},
-			async ( response ) => {
+			async () => {
 				return false;
 			}
 		);
