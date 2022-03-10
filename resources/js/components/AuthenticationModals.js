@@ -1,4 +1,4 @@
-const { useState } = wp.element;
+const { useState, useCallback } = wp.element;
 
 import OauthDeniedContent from './modals/OauthDeniedContent';
 import OauthFailedContent from './modals/OauthFailedContent';
@@ -8,70 +8,102 @@ import WebhookFailedContent from './modals/WebhookFailedContent';
 const AuthenticationModals = () => {
 	const [ modal, setModal ] = useState( null );
 
-    /**
-     * Show oauth failed content.
-     *
-     * @returns {void} Returns no value.
-     */
-    const setOauthFailed = useCallback( () => {
-        setModal( "oauth:failed" );
-    } );
+	/**
+	 * Show oauth failed content.
+	 *
+	 * @return {void} Returns no value.
+	 */
+	const setOauthFailed = useCallback( () => {
+		setModal( 'oauth:failed' );
+	} );
 
-    /**
-     * Show oauth denied content.
-     *
-     * @returns {void} Returns no value.
-     */
-    const setOauthDenied = useCallback( () => {
-        setModal( "oauth:denied" );
-    } );
+	/**
+	 * Show oauth denied content.
+	 *
+	 * @return {void} Returns no value.
+	 */
+	const setOauthDenied = useCallback( () => {
+		setModal( 'oauth:denied' );
+	} );
 
-    /**
-     * Show oauth webhook failed content.
-     *
-     * @returns {void} Returns no value.
-     */
-    const setWebhookFailed = useCallback( () => {
-        setModal( "webhook:failed" );
-    } );
+	/**
+	 * Show oauth webhook failed content.
+	 *
+	 * @return {void} Returns no value.
+	 */
+	const setWebhookFailed = useCallback( () => {
+		setModal( 'webhook:failed' );
+	} );
 
-    /**
-     * Show oauth success content.
-     *
-     * @returns {void} Returns no value.
-     */
-    const setOauthSuccess = useCallback( () => {
-        setModal( "oauth:success" );
-    } );
+	/**
+	 * Show oauth success content.
+	 *
+	 * @return {void} Returns no value.
+	 */
+	const setOauthSuccess = useCallback( () => {
+		setModal( 'oauth:success' );
+	} );
 
-    /**
-     * Stop displaying the current modal.
-     *
-     * @returns {void} Returns no value.
-     */
-    const closeModal = useCallback( () => {
-        setModal( null );
-    } );
+	/**
+	 * Stop displaying the current modal.
+	 *
+	 * @return {void} Returns no value.
+	 */
+	const closeModal = useCallback( () => {
+		setModal( null );
+	} );
 
-    useEffect( () => {
-        window.addEventListener( "wordproof:oauth:success", setOauthSuccess, false );
+	useEffect( () => {
+		window.addEventListener(
+			'wordproof:oauth:success',
+			setOauthSuccess,
+			false
+		);
 
-        window.addEventListener( "wordproof:oauth:failed", setOauthFailed, false );
+		window.addEventListener(
+			'wordproof:oauth:failed',
+			setOauthFailed,
+			false
+		);
 
-        window.addEventListener( "wordproof:oauth:denied", setOauthDenied, false );
+		window.addEventListener(
+			'wordproof:oauth:denied',
+			setOauthDenied,
+			false
+		);
 
-        window.addEventListener( "wordproof:webhook:failed", setWebhookFailed, false );
+		window.addEventListener(
+			'wordproof:webhook:failed',
+			setWebhookFailed,
+			false
+		);
 
-        return () => {
-            window.removeEventListener( "wordproof:oauth:success", setOauthSuccess, false );
+		return () => {
+			window.removeEventListener(
+				'wordproof:oauth:success',
+				setOauthSuccess,
+				false
+			);
 
-            window.removeEventListener( "wordproof:oauth:failed", setOauthFailed, false );
+			window.removeEventListener(
+				'wordproof:oauth:failed',
+				setOauthFailed,
+				false
+			);
 
-            window.removeEventListener( "wordproof:oauth:denied", setOauthDenied, false );
+			window.removeEventListener(
+				'wordproof:oauth:denied',
+				setOauthDenied,
+				false
+			);
 
-            window.removeEventListener( "wordproof:webhook:failed", setWebhookFailed, false );
-        };
-    }, [] );
+			window.removeEventListener(
+				'wordproof:webhook:failed',
+				setWebhookFailed,
+				false
+			);
+		};
+	}, [] );
 
 	return (
 		<>
