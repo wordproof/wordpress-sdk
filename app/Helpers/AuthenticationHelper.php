@@ -9,7 +9,7 @@ class AuthenticationHelper
      */
     public static function logout()
     {
-        OptionsHelper::reset();
+        OptionsHelper::resetAuthentication();
     }
 
     /**
