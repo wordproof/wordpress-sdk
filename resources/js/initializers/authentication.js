@@ -97,17 +97,19 @@ export default function initializeAuthentication() {
 				await postMessageResult( 'wordproof:oauth:destroy', false );
 				break;
 			case 'wordproof:oauth:retry':
-                await postMessageResult( 'wordproof:open_authentication', false );
-                break;
+				await postMessageResult(
+					'wordproof:open_authentication',
+					false
+				);
+				break;
 			case 'wordproof:oauth:close':
-                closeModal();
-                break;
+				closeModal();
+				break;
 		}
 	};
 
 	const postMessageResult = async ( event, isAuthenticated = null ) => {
-
-	    closeModal();
+		closeModal();
 		dispatchEvent( event );
 
 		if ( isAuthenticated === false ) {
