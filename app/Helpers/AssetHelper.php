@@ -45,14 +45,23 @@ class AssetHelper
         }
 
         $path = self::getPathUrl($name, $config['type']);
-
-        wp_enqueue_script(
-            self::getHandle($name),
-            $path,
-            $config['dependencies'],
-            self::getVersion(),
-            false
-        );
+    
+        if ( $config['type'] === 'css' ) {
+            wp_enqueue_style(
+                self::getHandle( $name ),
+                $path,
+                $config['dependencies'],
+                self::getVersion()
+            );
+        } else {
+            wp_enqueue_script(
+                self::getHandle( $name ),
+                $path,
+                $config['dependencies'],
+                self::getVersion(),
+                false
+            );
+        }
     }
 
     /**

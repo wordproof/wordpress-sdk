@@ -2,7 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('somedir')
-    ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
+    ->notPath('resources/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
 ;
 

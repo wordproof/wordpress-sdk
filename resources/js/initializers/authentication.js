@@ -96,12 +96,18 @@ export default function initializeAuthentication() {
 			case 'wordproof:oauth:destroy':
 				await postMessageResult( 'wordproof:oauth:destroy', false );
 				break;
+			case 'wordproof:oauth:retry':
+                await postMessageResult( 'wordproof:open_authentication', false );
+                break;
+			case 'wordproof:oauth:close':
+                closeModal();
+                break;
 		}
 	};
 
 	const postMessageResult = async ( event, isAuthenticated = null ) => {
-		window.removeEventListener( 'message', onPostMessage, false );
 
+	    closeModal();
 		dispatchEvent( event );
 
 		if ( isAuthenticated === false ) {
@@ -112,7 +118,10 @@ export default function initializeAuthentication() {
 		if ( isAuthenticated === true ) {
 			setIsAuthenticated( true );
 		}
+	};
 
+	const closeModal = () => {
+		window.removeEventListener( 'message', onPostMessage, false );
 		popup.close();
 	};
 
