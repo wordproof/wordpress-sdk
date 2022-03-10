@@ -5,7 +5,7 @@ const { compose } = wp.compose;
 const { withSelect } = wp.data;
 import PropTypes from 'prop-types';
 
-const OauthSuccessModal = ( props ) => {
+const OauthSuccessContent = (props ) => {
 	const { close, postType } = props;
 
 	return (
@@ -21,7 +21,7 @@ const OauthSuccessModal = ( props ) => {
 	);
 };
 
-OauthSuccessModal.proptypes = {
+OauthSuccessContent.proptypes = {
 	close: PropTypes.func.isRequired,
 };
 
@@ -31,4 +31,4 @@ export default compose( [
 			postType: select( 'core/editor' ).getCurrentPostType(),
 		};
 	} ),
-] )( OauthSuccessModal );
+] )( OauthSuccessContent );

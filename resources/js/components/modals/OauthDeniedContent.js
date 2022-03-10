@@ -6,7 +6,7 @@ const { Button } = wp.components;
 const { useCallback } = wp.element;
 const { __ } = wp.i18n;
 
-const OauthDeniedModal = () => {
+const OauthDeniedContent = () => {
 	const { close } = props;
 
 	const retry = useCallback( ( event ) => {
@@ -34,8 +34,8 @@ const OauthDeniedModal = () => {
 	);
 };
 
-OauthDeniedModal.proptypes = {
+OauthDeniedContent.proptypes = {
 	close: PropTypes.func.isRequired,
 };
 
-export default OauthDeniedModal;
+export default OauthDeniedContent;

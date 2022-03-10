@@ -1,9 +1,9 @@
 const { useState } = wp.element;
 
-import OauthDeniedModal from './modals/OauthDeniedModal';
-import OauthFailedModal from './modals/OauthFailedModal';
-import OauthSuccessModal from './modals/OauthSuccessModal';
-import WebhookFailedModal from './modals/WebhookFailedModal';
+import OauthDeniedContent from './modals/OauthDeniedContent';
+import OauthFailedContent from './modals/OauthFailedContent';
+import OauthSuccessContent from './modals/OauthSuccessContent';
+import WebhookFailedContent from './modals/WebhookFailedContent';
 
 const AuthenticationModals = () => {
 	const [ modal, setModal ] = useState( null );
@@ -47,19 +47,19 @@ const AuthenticationModals = () => {
 	return (
 		<>
 			{ modal === 'oauth:success' && (
-				<OauthSuccessModal close={ closeModal } />
+				<OauthSuccessContent close={ closeModal } />
 			) }
 
 			{ modal === 'oauth:denied' && (
-				<OauthDeniedModal close={ closeModal } />
+				<OauthDeniedContent close={ closeModal } />
 			) }
 
 			{ modal === 'oauth:failed' && (
-				<OauthFailedModal close={ closeModal } />
+				<OauthFailedContent close={ closeModal } />
 			) }
 
 			{ modal === 'webhook:failed' && (
-				<WebhookFailedModal close={ closeModal } />
+				<WebhookFailedContent close={ closeModal } />
 			) }
 		</>
 	);
