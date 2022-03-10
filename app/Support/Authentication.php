@@ -7,6 +7,7 @@ use WordProof\SDK\Helpers\AuthenticationHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\PostTypeHelper;
+use WordProof\SDK\Helpers\SettingsHelper;
 use WordProof\SDK\Helpers\TransientHelper;
 use WordProof\SDK\Helpers\AppConfigHelper;
 
@@ -91,9 +92,10 @@ class Authentication
             'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
             'url'                  => get_site_url(),
             'available_post_types' => PostTypeHelper::getPublicPostTypes(),
-            'partner'              => AppConfigHelper::getPartner()
+            'partner'              => AppConfigHelper::getPartner(),
+            'local_settings'       => (array) SettingsHelper::get()
         ];
-
+        
         $response = Api::post('/api/wordpress-sdk/source', $data);
 
         OptionsHelper::setSourceId($response->source_id);
