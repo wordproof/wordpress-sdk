@@ -8,41 +8,70 @@ import WebhookFailedContent from './modals/WebhookFailedContent';
 const AuthenticationModals = () => {
 	const [ modal, setModal ] = useState( null );
 
-	window.addEventListener(
-		'wordproof:oauth:success',
-		() => {
-			setModal( 'oauth:success' );
-		},
-		false
-	);
+    /**
+     * Show oauth failed content.
+     *
+     * @returns {void} Returns no value.
+     */
+    const setOauthFailed = useCallback( () => {
+        setModal( "oauth:failed" );
+    } );
 
-	window.addEventListener(
-		'wordproof:oauth:failed',
-		() => {
-			setModal( 'oauth:failed' );
-		},
-		false
-	);
+    /**
+     * Show oauth denied content.
+     *
+     * @returns {void} Returns no value.
+     */
+    const setOauthDenied = useCallback( () => {
+        setModal( "oauth:denied" );
+    } );
 
-	window.addEventListener(
-		'wordproof:oauth:denied',
-		() => {
-			setModal( 'oauth:denied' );
-		},
-		false
-	);
+    /**
+     * Show oauth webhook failed content.
+     *
+     * @returns {void} Returns no value.
+     */
+    const setWebhookFailed = useCallback( () => {
+        setModal( "webhook:failed" );
+    } );
 
-	window.addEventListener(
-		'wordproof:webhook:failed',
-		() => {
-			setModal( 'webhook:failed' );
-		},
-		false
-	);
+    /**
+     * Show oauth success content.
+     *
+     * @returns {void} Returns no value.
+     */
+    const setOauthSuccess = useCallback( () => {
+        setModal( "oauth:success" );
+    } );
 
-	const closeModal = () => {
-		setModal( null );
-	};
+    /**
+     * Stop displaying the current modal.
+     *
+     * @returns {void} Returns no value.
+     */
+    const closeModal = useCallback( () => {
+        setModal( null );
+    } );
+
+    useEffect( () => {
+        window.addEventListener( "wordproof:oauth:success", setOauthSuccess, false );
+
+        window.addEventListener( "wordproof:oauth:failed", setOauthFailed, false );
+
+        window.addEventListener( "wordproof:oauth:denied", setOauthDenied, false );
+
+        window.addEventListener( "wordproof:webhook:failed", setWebhookFailed, false );
+
+        return () => {
+            window.removeEventListener( "wordproof:oauth:success", setOauthSuccess, false );
+
+            window.removeEventListener( "wordproof:oauth:failed", setOauthFailed, false );
+
+            window.removeEventListener( "wordproof:oauth:denied", setOauthDenied, false );
+
+            window.removeEventListener( "wordproof:webhook:failed", setWebhookFailed, false );
+        };
+    }, [] );
 
 	return (
 		<>
