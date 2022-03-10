@@ -5,7 +5,7 @@ const { compose } = wp.compose;
 const { withSelect } = wp.data;
 import PropTypes from 'prop-types';
 
-const OauthSuccessContent = (props ) => {
+const OauthSuccessContent = ( props ) => {
 	const { close, postType } = props;
 
 	return (

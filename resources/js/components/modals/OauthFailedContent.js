@@ -6,7 +6,7 @@ const { Button } = wp.components;
 const { useCallback } = wp.element;
 const { __ } = wp.i18n;
 
-const OauthDeniedModal = () => {
+const OauthDeniedModal = ( props ) => {
 	const { close } = props;
 
 	const retry = useCallback( ( event ) => {
