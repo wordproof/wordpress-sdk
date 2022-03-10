@@ -5,13 +5,12 @@ const WORDPROOF_REST_API_NAMESPACE = 'wordproof/v1';
 /**
  * Request Access token from WordProof
  *
- * @param  state.state
- * @param  state       The state returned by WordProof
- * @param  code        The code returned by WordProof
- * @param  state.code
- * @return {Promise<*>}
+ * @param {Object} props
+ * @return {Promise<*>} The access token.
  */
-export const postAuthenticationRequest = async ( { state, code } ) => {
+export const postAuthenticationRequest = async ( props ) => {
+	const { state, code } = props;
+
 	return await callEndpoint( {
 		path: `${ WORDPROOF_REST_API_NAMESPACE }/oauth/authenticate`,
 		method: 'POST',
@@ -61,7 +60,7 @@ export const getIsAuthenticatedRequest = async () => {
 /**
  * The post timestamp request
  *
- * @param  postId The post id
+ * @param {number} postId The post id
  * @return {Promise<Object>} The promise wrapping the response object.
  */
 export const postTimestampRequest = async ( postId ) => {
@@ -74,7 +73,7 @@ export const postTimestampRequest = async ( postId ) => {
 /**
  * Retrieves the latest timestamp transaction for a post.
  *
- * @param  postId The post id
+ * @param {number} postId The post id
  * @return {Promise<Object>} The promise wrapping the response object.
  */
 export const getLatestTimestampTransactionRequest = async ( postId ) => {

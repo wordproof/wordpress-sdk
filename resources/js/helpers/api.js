@@ -34,9 +34,7 @@ export async function handleAPIResponse(
 		}
 
 		return false;
-	} catch ( e ) {
-		console.error( e.message );
-	}
+	} catch ( e ) {}
 }
 
 /**
@@ -56,7 +54,7 @@ export async function callEndpoint( endpoint ) {
 		}
 
 		// Sometimes we get a Response instance back instead of the data itself.
-		if ( e instanceof Response ) {
+		if ( e instanceof window.Response ) {
 			return await e.json();
 		}
 

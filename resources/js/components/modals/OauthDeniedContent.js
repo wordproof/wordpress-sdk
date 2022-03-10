@@ -6,7 +6,7 @@ const { Button } = wp.components;
 const { useCallback } = wp.element;
 const { __ } = wp.i18n;
 
-const OauthDeniedModal = () => {
+const OauthDeniedContent = ( props ) => {
 	const { close } = props;
 
 	const retry = useCallback( ( event ) => {
@@ -17,12 +17,12 @@ const OauthDeniedModal = () => {
 	return (
 		<WordProofModal
 			close={ close }
-			title={ __( 'Authentication failed', 'wordproof' ) }
+			title={ __( 'Authentication denied', 'wordproof' ) }
 		>
 			<>
 				<p>
 					{ __(
-						'Something failed during the authentication of your WordProof account. Please try again or contact the support team.',
+						'You need to allow WordProof to access your site to finish the WordProof installation.',
 						'wordproof'
 					) }
 				</p>
@@ -34,8 +34,8 @@ const OauthDeniedModal = () => {
 	);
 };
 
-OauthDeniedModal.proptypes = {
+OauthDeniedContent.proptypes = {
 	close: PropTypes.func.isRequired,
 };
 
-export default OauthDeniedModal;
+export default OauthDeniedContent;

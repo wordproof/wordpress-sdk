@@ -3,7 +3,7 @@ import WordProofModal from './Modal';
 const { __ } = wp.i18n;
 import PropTypes from 'prop-types';
 
-const WebhookFailedModal = ( props ) => {
+const WebhookFailedContent = ( props ) => {
 	const { close } = props;
 
 	return (
@@ -19,8 +19,8 @@ const WebhookFailedModal = ( props ) => {
 	);
 };
 
-WebhookFailedModal.proptypes = {
+WebhookFailedContent.proptypes = {
 	close: PropTypes.func.isRequired,
 };
 
-export default WebhookFailedModal;
+export default WebhookFailedContent;

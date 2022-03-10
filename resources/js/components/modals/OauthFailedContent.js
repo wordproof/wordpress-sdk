@@ -6,7 +6,7 @@ const { Button } = wp.components;
 const { useCallback } = wp.element;
 const { __ } = wp.i18n;
 
-const OauthDeniedModal = () => {
+const OauthDeniedModal = ( props ) => {
 	const { close } = props;
 
 	const retry = useCallback( ( event ) => {
@@ -17,12 +17,12 @@ const OauthDeniedModal = () => {
 	return (
 		<WordProofModal
 			close={ close }
-			title={ __( 'Authentication denied', 'wordproof' ) }
+			title={ __( 'Authentication failed', 'wordproof' ) }
 		>
 			<>
 				<p>
 					{ __(
-						'You need to allow WordProof to access your site to finish the WordProof installation.',
+						'Something failed during the authentication of your WordProof account. Please try again or contact the support team.',
 						'wordproof'
 					) }
 				</p>

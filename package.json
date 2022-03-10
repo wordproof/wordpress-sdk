@@ -5,7 +5,9 @@
     "repository": "https://github.com/wordproof/wordpress-sdk.git",
     "author": "Marijn Bent <marijn@marijnbent.nl>",
     "license": "MIT",
-    "dependencies": {},
+    "dependencies": {
+        "prop-types": "^15.8.1"
+    },
     "scripts": {
         "lint": "wp-scripts lint-js ./resources/js",
         "format": "wp-scripts format ./resources/js",
