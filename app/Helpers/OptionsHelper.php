@@ -87,6 +87,18 @@ class OptionsHelper
     }
 
     /**
+     * Deletes authentication options.
+     */
+    public static function resetAuthentication()
+    {
+        $optionKeys = ['access_token', 'source_id'];
+
+        foreach ($optionKeys as $key) {
+            self::delete($key);
+        }
+    }
+
+    /**
      * Retrieves the access token.
      *
      * @return string|null
