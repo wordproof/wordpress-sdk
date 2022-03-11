@@ -12,6 +12,10 @@ class ScriptsConfig extends Config
     protected static function values()
     {
         return [
+            'uikit'             => [
+                'dependencies' => [],
+                'type'         => 'js'
+            ],
             'data'             => [
                 'dependencies' => ['wp-data', 'lodash', 'wp-api-fetch'],
                 'type'         => 'js'
