@@ -95,7 +95,7 @@ class Authentication
             'partner'              => AppConfigHelper::getPartner(),
             'local_settings'       => (array) SettingsHelper::get()
         ];
-        
+
         $response = Api::post('/api/wordpress-sdk/source', $data);
 
         OptionsHelper::setSourceId($response->source_id);

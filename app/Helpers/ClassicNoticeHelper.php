@@ -26,7 +26,11 @@ class ClassicNoticeHelper
      */
     public static function addTimestampNotice($response)
     {
-        self::add(self::getNoticeKeyForTimestampResponse($response));
+        $notice = self::getNoticeKeyForTimestampResponse($response);
+
+        if ($notice) {
+            self::add($notice);
+        }
     }
 
     /**
@@ -49,6 +53,10 @@ class ClassicNoticeHelper
             return 'timestamp_success';
         }
 
-        return 'timestamp_failed';
+        if (isset($response->error) && $response->error === 'timestamp_failed') {
+            return 'timestamp_failed';
+        }
+
+        return null;
     }
 }
