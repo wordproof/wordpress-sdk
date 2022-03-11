@@ -198,7 +198,8 @@ class WordPressSDK
     public function certificate()
     {
         $class = new CertificateController();
-
+    
+        $this->loader->add_action('wp_enqueue_scripts', $class, 'enqueue');
         $this->loader->add_action('wp_head', $class, 'head');
         $this->loader->add_filter('the_content', $class, 'certificateTag');
 
