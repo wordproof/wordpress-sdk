@@ -4,8 +4,8 @@ const { get } = lodash;
 /**
  * Helper to get data from added JavaScript window variable.
  *
- * @param prop
- * @returns {*}
+ * @param {string} prop
+ * @return {*} The variable.
  */
 export const getData = ( prop ) =>
 	get( window, `wordproofSdk.data${ prop ? `.${ prop }` : '' }`, {} );
