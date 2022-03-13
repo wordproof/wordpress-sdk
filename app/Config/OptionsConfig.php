@@ -20,6 +20,10 @@ class OptionsConfig extends Config
                 'escape'  => 'text_field',
                 'default' => null,
             ],
+            'balance' => [
+                'escape'  => 'integer',
+                'default' => null,
+            ],
             'settings'     => [
                 'cast' => 'object',
                 'options' => [
