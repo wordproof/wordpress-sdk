@@ -42,7 +42,7 @@ class Authentication
         /**
          * Login with user if v2 plugin data exist.
          */
-        $accessToken = TransientHelper::getOnce('wordproof_v2_authenticate_with_token');
+        $accessToken = TransientHelper::get('wordproof_v2_authenticate_with_token');
         if ($accessToken) {
             $data = array_merge($data, ['access_token_login' => $accessToken]);
         } else {
