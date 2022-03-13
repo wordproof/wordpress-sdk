@@ -51,7 +51,8 @@ class PostEditorDataController
     private function enqueueAndLocalizeScript()
     {
         $data = PostEditorHelper::getPostEditorData($this->translations);
-
+        $data = apply_filters('wordproof_data', $data);
+    
         AssetHelper::enqueue('data');
         AssetHelper::localize('data', 'wordproofSdk', $data);
     }
