@@ -193,18 +193,18 @@ class RestApiController
                     AuthenticationHelper::logout();
                     break;
                 case 'dump_item':
-                    
+
                     $key = '_wordproof_hash_input_' . $response->data->hash;
                     PostMetaHelper::update($response->data->uid, $key, json_decode($response->data->hash_input));
-    
+
                     $this->setBlockchainTransaction($response->data);
-                    
+
                     break;
                 default:
                     break;
             }
         }
-    
+
         /**
          * Handle timestamping webhooks without type
          */
@@ -212,18 +212,19 @@ class RestApiController
             $this->setBlockchainTransaction($response);
         }
     }
-    
+
     /**
      * @param $response
      *
      * TODO: Improve
      */
-    private function setBlockchainTransaction($response) {
+    private function setBlockchainTransaction($response)
+    {
         $postId = intval($response->uid);
-    
+
         $blockchainTransaction = SchemaHelper::getBlockchainTransaction($response);
         PostMetaHelper::add($postId, '_wordproof_blockchain_transaction', $blockchainTransaction);
-    
+
         $schema = SchemaHelper::getSchema($postId);
         PostMetaHelper::update($postId, '_wordproof_schema', $schema);
     }

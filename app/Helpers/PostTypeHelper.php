@@ -13,8 +13,9 @@ class PostTypeHelper
     {
         return array_values(get_post_types(['public' => true]));
     }
-    
-    public static function getUnprotectedPosts( $postType ) {
+
+    public static function getUnprotectedPosts($postType)
+    {
         $query = [
             'post_type'      => [ $postType ],
             'fields'         => 'ids',
@@ -27,10 +28,9 @@ class PostTypeHelper
                 ]
             ],
         ];
-        
-        $query = new \WP_Query( $query );
-        
+
+        $query = new \WP_Query($query);
+
         return ['count' => $query->found_posts, 'postIds' => $query->posts];
-        
     }
 }

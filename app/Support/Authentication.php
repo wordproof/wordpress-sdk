@@ -27,7 +27,7 @@ class Authentication
 
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
         $codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');
-    
+
         $data = [
             'client_id'             => EnvironmentHelper::client(),
             'redirect_uri'          => self::getCallbackUrl(),
@@ -38,7 +38,7 @@ class Authentication
             'code_challenge_method' => 'S256',
             'partner'               => AppConfigHelper::getPartner(),
         ];
-        
+
         /**
          * Login with user if v2 plugin data exist.
          */
@@ -48,7 +48,7 @@ class Authentication
         } else {
             $data = array_merge($data, ['confirm_account' => true]);
         }
-        
+
         self::redirect('/wordpress-sdk/authorize', $data);
     }
 
@@ -104,7 +104,7 @@ class Authentication
             'partner'              => AppConfigHelper::getPartner(),
             'local_settings'       => (array) SettingsHelper::get(),
         ];
-    
+
         /**
          * Use existing source if user was authenticated in v2 of the plugin.
          */
@@ -112,7 +112,7 @@ class Authentication
         if ($sourceId) {
             $data = array_merge($data, ['source_id' => intval($sourceId)]);
         }
-    
+
         $response = Api::post('/api/wordpress-sdk/source', $data);
 
         OptionsHelper::setSourceId($response->source_id);
