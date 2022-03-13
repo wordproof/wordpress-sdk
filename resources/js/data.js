@@ -5,8 +5,8 @@ const { createReduxStore, registerStore, register } = wp.data;
 
 const storeName = 'wordproof';
 const initialState = {
-    isAuthenticated: getData( 'is_authenticated' ),
-    balance: getData( 'balance' ),
+	isAuthenticated: getData( 'is_authenticated' ),
+	balance: getData( 'balance' ),
 };
 
 const actions = {
@@ -21,12 +21,12 @@ const actions = {
 			type: 'GET_IS_AUTHENTICATED',
 		};
 	},
-    setBalance( balance ) {
-        return {
-            type: 'SET_BALANCE',
-            balance,
-        };
-    },
+	setBalance( balance ) {
+		return {
+			type: 'SET_BALANCE',
+			balance,
+		};
+	},
 	getBalance() {
 		return {
 			type: 'GET_BALANCE',
