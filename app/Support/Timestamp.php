@@ -24,6 +24,10 @@ class Timestamp
             return false;
         }
 
+        if (isset($response->balance)) {
+            OptionsHelper::set('balance', $response->balance);
+        }
+
         $key = '_wordproof_hash_input_' . $response->hash;
         PostMetaHelper::update($data['uid'], $key, json_decode($response->hash_input));
 

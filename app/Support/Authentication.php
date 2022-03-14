@@ -37,8 +37,17 @@ class Authentication
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
             'partner'               => AppConfigHelper::getPartner(),
-            'confirm_account'       => true
         ];
+
+        /**
+         * Login with user if v2 plugin data exist.
+         */
+        $accessToken = TransientHelper::get('wordproof_v2_authenticate_with_token');
+        if ($accessToken) {
+            $data = array_merge($data, ['access_token_login' => $accessToken]);
+        } else {
+            $data = array_merge($data, ['confirm_account' => true]);
+        }
 
         self::redirect('/wordpress-sdk/authorize', $data);
     }
@@ -93,8 +102,16 @@ class Authentication
             'url'                  => get_site_url(),
             'available_post_types' => PostTypeHelper::getPublicPostTypes(),
             'partner'              => AppConfigHelper::getPartner(),
-            'local_settings'       => (array) SettingsHelper::get()
+            'local_settings'       => (array) SettingsHelper::get(),
         ];
+
+        /**
+         * Use existing source if user was authenticated in v2 of the plugin.
+         */
+        $sourceId = TransientHelper::getOnce('wordproof_v2_get_existing_source');
+        if ($sourceId) {
+            $data = array_merge($data, ['source_id' => intval($sourceId)]);
+        }
 
         $response = Api::post('/api/wordpress-sdk/source', $data);
 

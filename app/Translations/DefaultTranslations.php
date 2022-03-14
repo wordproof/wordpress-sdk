@@ -12,14 +12,20 @@ class DefaultTranslations implements TranslationsInterface
 
     public function getTimestampFailedNotice()
     {
+        return sprintf(
         /* translators: %s expands to WordProof. */
-        return sprintf(__('%s has successfully timestamped this page.', 'wordproof'), 'WordProof');
+            __('%1$s failed to timestamp this page. Please check if you\'re correctly authenticated with %1$s and try to save this page again.', 'wordproof'),
+            'WordProof'
+        );
     }
 
     public function getTimestampSuccessNotice()
     {
+        return sprintf(
         /* translators: %s expands to WordProof. */
-        return sprintf(__('%1$s failed to timestamp this page. Please check if you\'re correctly authenticated with %1$s and try to save this page again.', 'wordproof'), 'WordProof');
+            __('%s has successfully timestamped this page.', 'wordproof'),
+            'WordProof'
+        );
     }
 
     public function getWebhookFailedNotice()

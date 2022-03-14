@@ -91,7 +91,8 @@ class PostEditorHelper
                 'current_post_id'                   => $postId,
                 'current_post_type'                 => $postType,
                 'post_editor'                       => self::getPostEditor(),
-                'translations'                      => $translations
+                'translations'                      => $translations,
+                'balance'                           => OptionsHelper::get('balance'),
             ],
         ];
     }
