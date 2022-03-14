@@ -10,13 +10,13 @@ use WordProof\SDK\Helpers\SettingsHelper;
 
 class CertificateController
 {
-    
     /**
      * Enqueue the uikit script.
      *
      * @action wp_head
      */
-    public function enqueue() {
+    public function enqueue()
+    {
         if (CertificateHelper::show()) {
             AssetHelper::enqueue('uikit');
         }
