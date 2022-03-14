@@ -12,11 +12,15 @@ class ScriptsConfig extends Config
     protected static function values()
     {
         return [
-            'data'             => [
+            'uikit'                => [
+                'dependencies' => [],
+                'type'         => 'js'
+            ],
+            'data'                       => [
                 'dependencies' => ['wp-data', 'lodash', 'wp-api-fetch'],
                 'type'         => 'js'
             ],
-            'wordproof-block-editor' => [
+            'wordproof-block-editor'     => [
                 'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
                 'type'         => 'js'
             ],
@@ -24,7 +28,7 @@ class ScriptsConfig extends Config
                 'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data', 'elementor-common'],
                 'type'         => 'js'
             ],
-            'wordproof-classic-editor' => [
+            'wordproof-classic-editor'   => [
                 'dependencies' => ['wp-i18n', 'wp-element', 'wp-components', 'wp-editor', 'wp-edit-post', 'wp-data', 'lodash', 'wordproof-data'],
                 'type'         => 'js'
             ]
