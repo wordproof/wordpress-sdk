@@ -171,7 +171,9 @@ class RestApiController
      * Handles webhooks sent by WordProof.
      *
      * @param \WP_REST_Request $request The Rest Request.
-     * @return bool|null The value returned by the action undertaken.
+     * @return bool|null|\WP_REST_Response|void The value returned by the action undertaken.
+     *
+     * TODO: Improve
      */
     public function webhook(\WP_REST_Request $request)
     {
@@ -188,7 +190,16 @@ class RestApiController
                     $data = (object)['status' => 200, 'source_id' => OptionsHelper::sourceId()];
                     return new \WP_REST_Response($data, $data->status);
                 case 'logout':
-                    return AuthenticationHelper::logout();
+                    AuthenticationHelper::logout();
+                    break;
+                case 'dump_item':
+
+                    $key = '_wordproof_hash_input_' . $response->data->hash;
+                    PostMetaHelper::update($response->data->uid, $key, json_decode($response->data->hash_input));
+
+                    $this->setBlockchainTransaction($response->data);
+
+                    break;
                 default:
                     break;
             }
@@ -198,14 +209,24 @@ class RestApiController
          * Handle timestamping webhooks without type
          */
         if (isset($response->uid) && isset($response->schema)) {
-            $postId = intval($response->uid);
-
-            $blockchainTransaction = SchemaHelper::getBlockchainTransaction($response);
-            PostMetaHelper::add($postId, '_wordproof_blockchain_transaction', $blockchainTransaction);
-
-            $schema = SchemaHelper::getSchema($postId);
-            PostMetaHelper::update($postId, '_wordproof_schema', $schema);
+            $this->setBlockchainTransaction($response);
         }
+    }
+
+    /**
+     * @param $response
+     *
+     * TODO: Improve
+     */
+    private function setBlockchainTransaction($response)
+    {
+        $postId = intval($response->uid);
+
+        $blockchainTransaction = SchemaHelper::getBlockchainTransaction($response);
+        PostMetaHelper::add($postId, '_wordproof_blockchain_transaction', $blockchainTransaction);
+
+        $schema = SchemaHelper::getSchema($postId);
+        PostMetaHelper::update($postId, '_wordproof_schema', $schema);
     }
 
     /**

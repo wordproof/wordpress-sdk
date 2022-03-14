@@ -6,6 +6,8 @@ class AuthenticationHelper
 {
     /**
      * Removes all the options set by WordProof.
+     *
+     * @return void
      */
     public static function logout()
     {
