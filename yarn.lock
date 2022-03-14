@@ -2240,10 +2240,10 @@
   resolved "https://registry.yarnpkg.com/@wordpress/warning/-/warning-2.3.0.tgz#deb1f7739c58290d744183516e21f3fafb678a8d"
   integrity sha512-Is6uEp2wvUPTK1+RtQQdzTdb93BDMAJEYE5UCHvoSFCWpxvEhBP6SY+Nzv/MkFKHZwY66QxEAduThxfINma87Q==
 
-"@wordproof/uikit@^1.0.33":
-  version "1.0.33"
-  resolved "https://registry.yarnpkg.com/@wordproof/uikit/-/uikit-1.0.33.tgz#fe94b8fdef63b0585b00a3c08e00a99f7297d0fa"
-  integrity sha512-+QZA53Ne9oFEorTCX7VsHKdcYoTktvi55qCWn0sqPZmJpmdXbsb2RbMgaq/t0Ai0B9aNtrsznwp79zPi+nbwGQ==
+"@wordproof/uikit@^1.0.36":
+  version "1.0.36"
+  resolved "https://registry.yarnpkg.com/@wordproof/uikit/-/uikit-1.0.36.tgz#4cc6dbf2ed3e308a5efcf03189cf6645ab166c65"
+  integrity sha512-TPSnxXfaM4aOd+MYxJme8SwHjZlRRnNf169IVXx12qHOTLWctvIPzYgqrcUY58mQ2OklVh6n77sOVJMdMB8lQw==
   dependencies:
     "@stencil/core" "2.9.0"
     autoprefixer "^10.2.3"
