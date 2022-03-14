@@ -37,7 +37,7 @@ class TimestampController
 
         $response = TimestampHelper::debounce($post);
 
-        ClassicNoticeHelper::addTimestampNotice($response->get_data());
+        ClassicNoticeHelper::addTimestampNotice($response);
 
         return $response;
     }

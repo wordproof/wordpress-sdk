@@ -15,7 +15,7 @@ class TimestampHelper
         $transient = TransientHelper::get($key);
 
         if ($transient) {
-            return $transient;
+            return new \WP_REST_Response($transient, $transient->status);
         }
 
         $response = self::shouldBeTimestamped($post, $data);
