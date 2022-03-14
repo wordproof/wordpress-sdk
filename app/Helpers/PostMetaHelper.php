@@ -30,7 +30,7 @@ class PostMetaHelper
      * @param integer $postId The post id for which the meta should be set.
      * @param string $key The key for the post meta.
      * @param bool $single If a single result should be returned.
-     * @return integer|boolean Returns the post meta data or false on failure.
+     * @return mixed Returns the post meta data or false on failure.
      */
     public static function get($postId, $key, $single = true)
     {
