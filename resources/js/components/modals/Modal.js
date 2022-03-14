@@ -7,7 +7,7 @@ const WordProofModal = ( props ) => {
 
 	return (
 		<>
-			<Modal title={ title } onRequestClose={ close }>
+            <Modal style={{maxWidth: '440px'}} title={ title } onRequestClose={ close }>
 				{ children }
 			</Modal>
 		</>
