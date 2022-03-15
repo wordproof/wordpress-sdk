@@ -24,8 +24,6 @@ const EditorPanel = ( {
 	}, [ isAuthenticated, selectedPostTypes ] );
 
 	const timestampedAutomatically = useCallback( () => {
-        console.log(selectedPostTypes);
-        console.log(postType);
 		return selectedPostTypes.includes( postType );
 	}, [ selectedPostTypes, postType ] );
 

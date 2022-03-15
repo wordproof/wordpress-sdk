@@ -5,9 +5,9 @@ const { createReduxStore, registerStore, register } = wp.data;
 
 const storeName = 'wordproof';
 const initialState = {
-	isAuthenticated: getData( 'is_authenticated' ),
-    balance: getData( 'balance' ),
-    selectedPostTypes: getData( 'settings.selected_post_types' ),
+	isAuthenticated: getData( 'is_authenticated', false ),
+    balance: getData( 'balance', 0 ),
+    selectedPostTypes: getData( 'settings.selected_post_types', [] ),
 };
 
 const actions = {
