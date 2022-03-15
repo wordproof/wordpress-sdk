@@ -27,13 +27,13 @@ const ActionLink = ( props ) => {
 		<>
 			{ isAuthenticated && (
 				<a href={ settingsLink } onClick={ openSettings }>
-					{ __( 'Open Settings', 'wordproof' ) }
+					{ __( 'Open settings', 'wordproof' ) }
 				</a>
 			) }
 
 			{ ! isAuthenticated && (
 				<a href={ authenticationLink } onClick={ openAuthentication }>
-					{ __( 'Open Authentication', 'wordproof' ) }
+					{ __( 'Open authentication', 'wordproof' ) }
 				</a>
 			) }
 		</>
