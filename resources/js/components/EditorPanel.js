@@ -9,6 +9,7 @@ const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
 const { useState, useCallback, useEffect } = wp.element;
 import PropTypes from 'prop-types';
+import {dispatch} from "../helpers/event";
 
 const EditorPanel = ( {
 	postType,
@@ -18,14 +19,13 @@ const EditorPanel = ( {
 	setPostMeta,
 } ) => {
 
-	useEffect( () => {
-		// TODO on update selected post types
-		// TODO on update isAuthenticated
-	}, [ isAuthenticated, selectedPostTypes ] );
-
 	const timestampedAutomatically = useCallback( () => {
 		return selectedPostTypes.includes( postType );
 	}, [ selectedPostTypes, postType ] );
+
+    const openAuthentication = useCallback( () => {
+        dispatch( 'wordproof:open_authentication' );
+    } );
 
 	return (
 		<PluginDocumentSettingPanel
@@ -39,8 +39,13 @@ const EditorPanel = ( {
 						__( 'Timestamp this %s', 'wordproof' ),
 						postType
 					) }
-					onChange={ ( value ) =>
-						setPostMeta( { _wordproof_timestamp: value } )
+					onChange={ ( value ) => {
+                        setPostMeta({_wordproof_timestamp: value})
+
+                        if (!isAuthenticated && value === true) {
+                            openAuthentication();
+                        }
+                        }
 					}
 					checked={
 						postMeta._wordproof_timestamp ||
