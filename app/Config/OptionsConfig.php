@@ -22,7 +22,7 @@ class OptionsConfig extends Config
             ],
             'balance' => [
                 'escape'  => 'integer',
-                'default' => null,
+                'default' => 0,
             ],
             'settings'     => [
                 'cast' => 'object',
