@@ -1,6 +1,5 @@
 import {
 	destroyAuthentication,
-	fetchSettings,
 	handleAPIResponse,
 } from '../helpers/api';
 
