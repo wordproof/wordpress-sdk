@@ -1,4 +1,3 @@
-import { getData } from '../helpers/data';
 import ActionLink from './ActionLink';
 import AuthenticationModals from './AuthenticationModals';
 
@@ -7,9 +6,9 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, PanelRow } = wp.components;
 const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
-const { useState, useCallback, useEffect } = wp.element;
+const { useCallback } = wp.element;
 import PropTypes from 'prop-types';
-import { dispatch } from '../helpers/event';
+import { dispatch as dispatchEvent } from '../helpers/event';
 
 const EditorPanel = ( {
 	postType,
@@ -23,7 +22,7 @@ const EditorPanel = ( {
 	}, [ selectedPostTypes, postType ] );
 
 	const openAuthentication = useCallback( () => {
-		dispatch( 'wordproof:open_authentication' );
+        dispatchEvent( 'wordproof:open_authentication' );
 	} );
 
 	return (
