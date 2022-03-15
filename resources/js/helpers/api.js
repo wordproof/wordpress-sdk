@@ -78,6 +78,19 @@ export const destroyAuthentication = async () => {
 };
 
 /**
+ * Retrieves WordProof settings.
+ *
+ * @return {Promise<Object|boolean>} The response object or false if request fails.
+ */
+export const fetchSettings = async () => {
+	return await handleAPIResponse(
+		async () => await getSettingsRequest(),
+		( settings ) => settings,
+		() => false
+	);
+};
+
+/**
  * Retrieves WordProof authentication status.
  *
  * @return {Promise<boolean>} The authentication status.
