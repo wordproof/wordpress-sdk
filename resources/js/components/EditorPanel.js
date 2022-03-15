@@ -7,28 +7,26 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, PanelRow } = wp.components;
 const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
-const { useState, useMemo, useEffect } = wp.element;
+const { useState, useCallback, useEffect } = wp.element;
 import PropTypes from 'prop-types';
 
 const EditorPanel = ( {
 	postType,
 	postMeta,
 	isAuthenticated,
+    selectedPostTypes,
 	setPostMeta,
 } ) => {
-	const initialData = getData();
-
-	const [ selectedPostTypes ] = useState(
-		initialData?.settings?.selected_post_types ?? []
-	);
 
 	useEffect( () => {
 		// TODO on update selected post types
 		// TODO on update isAuthenticated
 	}, [ isAuthenticated, selectedPostTypes ] );
 
-	const timestampedAutomatically = useMemo( () => {
-		selectedPostTypes.includes( postType );
+	const timestampedAutomatically = useCallback( () => {
+        console.log(selectedPostTypes);
+        console.log(postType);
+		return selectedPostTypes.includes( postType );
 	}, [ selectedPostTypes, postType ] );
 
 	return (
@@ -48,15 +46,17 @@ const EditorPanel = ( {
 					}
 					checked={
 						postMeta._wordproof_timestamp ||
-						timestampedAutomatically
+						timestampedAutomatically()
 					}
-					disabled={ timestampedAutomatically }
+					disabled={ timestampedAutomatically() }
 				/>
-				<ActionLink />
 
-				<AuthenticationModals />
 			</PanelRow>
-		</PluginDocumentSettingPanel>
+            <PanelRow>
+                <ActionLink />
+            </PanelRow>
+            <AuthenticationModals />
+        </PluginDocumentSettingPanel>
 	);
 };
 
@@ -72,7 +72,8 @@ export default compose( [
 		return {
 			postMeta: select( 'core/editor' ).getEditedPostAttribute( 'meta' ),
 			postType: select( 'core/editor' ).getCurrentPostType(),
-			isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
+            isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
+            selectedPostTypes: select( 'wordproof' ).getSelectedPostTypes(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => {
