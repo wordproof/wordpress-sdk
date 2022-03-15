@@ -12,36 +12,40 @@ class RoutesConfig extends Config
     protected static function values()
     {
         return [
-            'hashInput'              => [
+            'hashInput'                    => [
                 'endpoint' => '/posts/(?P<id>\d+)/hashinput/(?P<hash>[a-fA-F0-9]{64})',
                 'method'   => 'get'
             ],
-            'authenticate'           => [
+            'authenticate'                 => [
                 'endpoint' => '/oauth/authenticate',
                 'method'   => 'post'
             ],
-            'timestamp'              => [
+            'timestamp'                    => [
                 'endpoint' => '/posts/(?P<id>\d+)/timestamp',
                 'method'   => 'post'
             ],
-            'timestamp.transaction.latest'              => [
+            'timestamp.transaction.latest' => [
                 'endpoint' => '/posts/(?P<id>\d+)/timestamp/transaction/latest',
                 'method'   => 'get'
             ],
-            'webhook'                => [
+            'webhook'                      => [
                 'endpoint' => '/webhook',
                 'method'   => 'get'
-
+            
             ],
-            'settings'               => [
+            'settings'                     => [
                 'endpoint' => '/settings',
                 'method'   => 'get'
             ],
-            'authentication'         => [
+            'saveSettings'                 => [
+                'endpoint' => '/settings',
+                'method'   => 'POST'
+            ],
+            'authentication'               => [
                 'endpoint' => '/authentication',
                 'method'   => 'post'
             ],
-            'authentication.destroy' => [
+            'authentication.destroy'       => [
                 'endpoint' => '/oauth/destroy',
                 'method'   => 'post'
             ],

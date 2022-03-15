@@ -8,6 +8,7 @@ use WordProof\SDK\Helpers\PostMetaHelper;
 use WordProof\SDK\Helpers\SchemaHelper;
 use WordProof\SDK\Helpers\SettingsHelper;
 use WordProof\SDK\Helpers\AuthenticationHelper;
+use WordProof\SDK\Helpers\StringHelper;
 use WordProof\SDK\Support\Authentication;
 
 class RestApiController
@@ -58,6 +59,12 @@ class RestApiController
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
 
+        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('saveSettings'), [
+            'methods'             => 'POST',
+            'callback'            => [$this, 'saveSettings'],
+            'permission_callback' => [$this, 'canPublishPermission'],
+        ]);
+
         register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'authentication'],
@@ -79,6 +86,30 @@ class RestApiController
     public function settings()
     {
         $data = SettingsHelper::get();
+        $data->status = 200;
+
+        return new \WP_REST_Response($data, $data->status);
+    }
+
+    /**
+     * Save the settings.
+     *
+     * @return \WP_REST_Response Returns the settings.
+     */
+    public function saveSettings(\WP_REST_Request $request)
+    {
+        $data = $request->get_params();
+        
+        $settings = $data['settings'];
+        $snakeCaseSettings = [];
+        foreach ($settings as $key=> $value) {
+            $key = StringHelper::toUnderscore($key);
+            $snakeCaseSettings[$key] = $value;
+        }
+        
+        OptionsHelper::set('settings', $snakeCaseSettings);
+        
+        $data = (object)[];
         $data->status = 200;
 
         return new \WP_REST_Response($data, $data->status);
@@ -185,6 +216,7 @@ class RestApiController
         if (isset($response->type) && isset($response->data)) {
             switch ($response->type) {
                 case 'source_settings':
+                    ray($response->data);
                     return OptionsHelper::set('settings', $response->data);
                 case 'ping':
                     $data = (object)['status' => 200, 'source_id' => OptionsHelper::sourceId()];

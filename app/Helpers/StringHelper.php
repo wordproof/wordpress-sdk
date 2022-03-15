@@ -22,4 +22,14 @@ class StringHelper
 
         return $subject;
     }
+    
+    /**
+     * PascalCase to snake_case
+     *
+     * @param $string
+     * @return string
+     */
+    public static function toUnderscore($string) {
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $string));
+    }
 }
