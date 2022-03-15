@@ -22,6 +22,24 @@ export const postAuthenticationRequest = async ( props ) => {
 };
 
 /**
+ * Set settings received from WordProof
+ *
+ * @param {Object} props
+ * @return {Promise<*>} .
+ */
+export const postSettingsRequest = async ( props ) => {
+	const { settings } = props;
+
+	return await callEndpoint( {
+		path: `${ WORDPROOF_REST_API_NAMESPACE }/settings`,
+		method: 'POST',
+		data: {
+			settings
+		},
+	} );
+};
+
+/**
  * Destroy oauth token
  *
  * @return {Promise<Object|boolean>} The response object or false if request fails.

@@ -33,10 +33,10 @@ const actions = {
 			type: 'GET_BALANCE',
 		};
 	},
-	setSelectedPostTypes( settings ) {
+	setSelectedPostTypes( selectedPostTypes ) {
 		return {
 			type: 'SET_SELECTED_POST_TYPES',
-			selectedPostTypes: settings.selectedPostTypes,
+			selectedPostTypes,
 		};
 	},
     getSelectedPostTypes() {
