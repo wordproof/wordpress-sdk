@@ -9,23 +9,22 @@ const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
 const { useState, useCallback, useEffect } = wp.element;
 import PropTypes from 'prop-types';
-import {dispatch} from "../helpers/event";
+import { dispatch } from '../helpers/event';
 
 const EditorPanel = ( {
 	postType,
 	postMeta,
 	isAuthenticated,
-    selectedPostTypes,
+	selectedPostTypes,
 	setPostMeta,
 } ) => {
-
 	const timestampedAutomatically = useCallback( () => {
 		return selectedPostTypes.includes( postType );
 	}, [ selectedPostTypes, postType ] );
 
-    const openAuthentication = useCallback( () => {
-        dispatch( 'wordproof:open_authentication' );
-    } );
+	const openAuthentication = useCallback( () => {
+		dispatch( 'wordproof:open_authentication' );
+	} );
 
 	return (
 		<PluginDocumentSettingPanel
@@ -40,26 +39,24 @@ const EditorPanel = ( {
 						postType
 					) }
 					onChange={ ( value ) => {
-                        setPostMeta({_wordproof_timestamp: value})
+						setPostMeta( { _wordproof_timestamp: value } );
 
-                        if (!isAuthenticated && value === true) {
-                            openAuthentication();
-                        }
-                        }
-					}
+						if ( ! isAuthenticated && value === true ) {
+							openAuthentication();
+						}
+					} }
 					checked={
 						postMeta._wordproof_timestamp ||
 						timestampedAutomatically()
 					}
 					disabled={ timestampedAutomatically() }
 				/>
-
 			</PanelRow>
-            <PanelRow>
-                <ActionLink />
-            </PanelRow>
-            <AuthenticationModals />
-        </PluginDocumentSettingPanel>
+			<PanelRow>
+				<ActionLink />
+			</PanelRow>
+			<AuthenticationModals />
+		</PluginDocumentSettingPanel>
 	);
 };
 
@@ -75,8 +72,8 @@ export default compose( [
 		return {
 			postMeta: select( 'core/editor' ).getEditedPostAttribute( 'meta' ),
 			postType: select( 'core/editor' ).getCurrentPostType(),
-            isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
-            selectedPostTypes: select( 'wordproof' ).getSelectedPostTypes(),
+			isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
+			selectedPostTypes: select( 'wordproof' ).getSelectedPostTypes(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => {

@@ -34,7 +34,7 @@ export const postSettingsRequest = async ( props ) => {
 		path: `${ WORDPROOF_REST_API_NAMESPACE }/settings`,
 		method: 'POST',
 		data: {
-			settings
+			settings,
 		},
 	} );
 };

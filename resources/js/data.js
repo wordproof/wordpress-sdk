@@ -6,8 +6,8 @@ const { createReduxStore, registerStore, register } = wp.data;
 const storeName = 'wordproof';
 const initialState = {
 	isAuthenticated: getData( 'is_authenticated', false ),
-    balance: getData( 'balance', 0 ),
-    selectedPostTypes: getData( 'settings.selected_post_types', [] ),
+	balance: getData( 'balance', 0 ),
+	selectedPostTypes: getData( 'settings.selected_post_types', [] ),
 };
 
 const actions = {
@@ -39,7 +39,7 @@ const actions = {
 			selectedPostTypes,
 		};
 	},
-    getSelectedPostTypes() {
+	getSelectedPostTypes() {
 		return {
 			type: 'GET_SELECTED_POST_TYPES',
 		};
@@ -63,7 +63,7 @@ const reducer = ( state = initialState, action ) => {
 		case 'SET_SELECTED_POST_TYPES': {
 			return {
 				...state,
-                selectedPostTypes: action.selectedPostTypes,
+				selectedPostTypes: action.selectedPostTypes,
 			};
 		}
 		default: {

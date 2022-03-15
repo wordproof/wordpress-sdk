@@ -99,16 +99,16 @@ class RestApiController
     public function saveSettings(\WP_REST_Request $request)
     {
         $data = $request->get_params();
-        
+
         $settings = $data['settings'];
         $snakeCaseSettings = [];
         foreach ($settings as $key=> $value) {
             $key = StringHelper::toUnderscore($key);
             $snakeCaseSettings[$key] = $value;
         }
-        
+
         OptionsHelper::set('settings', $snakeCaseSettings);
-        
+
         $data = (object)[];
         $data->status = 200;
 

@@ -1,17 +1,19 @@
-import {
-	destroyAuthentication,
-	handleAPIResponse,
-} from '../helpers/api';
+import { destroyAuthentication, handleAPIResponse } from '../helpers/api';
 
 const { dispatch } = wp.data;
 
 import { getData } from '../helpers/data';
 import popupWindow from '../helpers/popup';
 import { dispatch as dispatchEvent } from '../helpers/event';
-import {postAuthenticationRequest, postSettingsRequest} from '../helpers/endpoints';
+import {
+	postAuthenticationRequest,
+	postSettingsRequest,
+} from '../helpers/endpoints';
 
 export default function initializeAuthentication() {
-	const { setIsAuthenticated, setSelectedPostTypes } = dispatch( 'wordproof' );
+	const { setIsAuthenticated, setSelectedPostTypes } = dispatch(
+		'wordproof'
+	);
 	const authenticationLink = getData( 'popup_redirect_authentication_url' );
 	const settingsLink = getData( 'popup_redirect_settings_url' );
 
@@ -89,7 +91,7 @@ export default function initializeAuthentication() {
 				break;
 			case 'wordproof:settings:updated':
 				await postMessageResult( 'wordproof:settings:updated' );
-                await performSettingsRequest( data );
+				await performSettingsRequest( data );
 				break;
 			case 'wordproof:oauth:destroy':
 				await postMessageResult( 'wordproof:oauth:destroy', false );
@@ -144,16 +146,14 @@ export default function initializeAuthentication() {
 	};
 
 	const performSettingsRequest = async ( data ) => {
-
 		await handleAPIResponse(
 			() => postSettingsRequest( data ),
 			async () => {
+				const settings = data.settings;
 
-			    const settings = data.settings;
-
-			    if (settings.selectedPostTypes) {
-                    setSelectedPostTypes(settings.selectedPostTypes);
-                }
+				if ( settings.selectedPostTypes ) {
+					setSelectedPostTypes( settings.selectedPostTypes );
+				}
 
 				return true;
 			},

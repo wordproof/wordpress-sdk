@@ -5,8 +5,12 @@ const { get } = lodash;
  * Helper to get data from added JavaScript window variable.
  *
  * @param {string} prop
- * @param {any} defaultValue
+ * @param {any}    defaultValue
  * @return {*} The variable.
  */
 export const getData = ( prop, defaultValue = {} ) =>
-	get( window, `wordproofSdk.data${ prop ? `.${ prop }` : '' }`, defaultValue );
+	get(
+		window,
+		`wordproofSdk.data${ prop ? `.${ prop }` : '' }`,
+		defaultValue
+	);
