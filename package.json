@@ -6,7 +6,7 @@
     "author": "Marijn Bent <marijn@marijnbent.nl>",
     "license": "MIT",
     "dependencies": {
-        "@wordproof/uikit": "^1.0.37",
+        "@wordproof/uikit": "^1.0.38",
         "prop-types": "^15.8.1"
     },
     "scripts": {
