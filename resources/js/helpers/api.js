@@ -85,7 +85,7 @@ export const destroyAuthentication = async () => {
 export const fetchSettings = async () => {
 	return await handleAPIResponse(
 		async () => await getSettingsRequest(),
-		( response ) => response,
+		( settings ) => settings,
 		() => false
 	);
 };

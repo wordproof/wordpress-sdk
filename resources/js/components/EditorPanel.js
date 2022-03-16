@@ -1,4 +1,3 @@
-import { getData } from '../helpers/data';
 import ActionLink from './ActionLink';
 import AuthenticationModals from './AuthenticationModals';
 
@@ -7,29 +6,24 @@ const { PluginDocumentSettingPanel } = wp.editPost;
 const { ToggleControl, PanelRow } = wp.components;
 const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
-const { useState, useMemo, useEffect } = wp.element;
+const { useCallback } = wp.element;
 import PropTypes from 'prop-types';
+import { dispatch as dispatchEvent } from '../helpers/event';
 
 const EditorPanel = ( {
 	postType,
 	postMeta,
 	isAuthenticated,
+	selectedPostTypes,
 	setPostMeta,
 } ) => {
-	const initialData = getData();
-
-	const [ selectedPostTypes ] = useState(
-		initialData?.settings?.selected_post_types ?? []
-	);
-
-	useEffect( () => {
-		// TODO on update selected post types
-		// TODO on update isAuthenticated
-	}, [ isAuthenticated, selectedPostTypes ] );
-
-	const timestampedAutomatically = useMemo( () => {
-		selectedPostTypes.includes( postType );
+	const timestampedAutomatically = useCallback( () => {
+		return selectedPostTypes.includes( postType );
 	}, [ selectedPostTypes, postType ] );
+
+	const openAuthentication = useCallback( () => {
+        dispatchEvent( 'wordproof:open_authentication' );
+	} );
 
 	return (
 		<PluginDocumentSettingPanel
@@ -43,19 +37,24 @@ const EditorPanel = ( {
 						__( 'Timestamp this %s', 'wordproof' ),
 						postType
 					) }
-					onChange={ ( value ) =>
-						setPostMeta( { _wordproof_timestamp: value } )
-					}
+					onChange={ ( value ) => {
+						setPostMeta( { _wordproof_timestamp: value } );
+
+						if ( ! isAuthenticated && value === true ) {
+							openAuthentication();
+						}
+					} }
 					checked={
 						postMeta._wordproof_timestamp ||
-						timestampedAutomatically
+						timestampedAutomatically()
 					}
-					disabled={ timestampedAutomatically }
+					disabled={ timestampedAutomatically() }
 				/>
-				<ActionLink />
-
-				<AuthenticationModals />
 			</PanelRow>
+			<PanelRow>
+				<ActionLink />
+			</PanelRow>
+			<AuthenticationModals />
 		</PluginDocumentSettingPanel>
 	);
 };
@@ -73,6 +72,7 @@ export default compose( [
 			postMeta: select( 'core/editor' ).getEditedPostAttribute( 'meta' ),
 			postType: select( 'core/editor' ).getCurrentPostType(),
 			isAuthenticated: select( 'wordproof' ).getIsAuthenticated(),
+			selectedPostTypes: select( 'wordproof' ).getSelectedPostTypes(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => {
