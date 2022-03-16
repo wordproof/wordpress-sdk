@@ -28,7 +28,7 @@ class SettingsController
             null,
             'WordProof Settings',
             'WordProof Settings',
-            'manage_options',
+            'publish_pages',
             'wordproof-redirect-settings',
             [$this, 'redirectPageContent']
         );

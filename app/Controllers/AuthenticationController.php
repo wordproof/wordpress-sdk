@@ -25,7 +25,7 @@ class AuthenticationController
             null,
             'WordProof Authenticate',
             'WordProof Authenticate',
-            'manage_options',
+            'publish_pages',
             'wordproof-redirect-authenticate',
             [$this, 'redirectPageContent']
         );
@@ -55,7 +55,7 @@ class AuthenticationController
             null,
             'WordProof After Authenticate',
             'WordProof After Authenticate',
-            'manage_options',
+            'publish_pages',
             'wordproof-close-after-redirect',
             [$this, 'closeOnLoadContent']
         );
