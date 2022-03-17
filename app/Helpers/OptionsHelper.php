@@ -19,7 +19,7 @@ class OptionsHelper
     {
         if (self::optionContainsOptions($key)) {
             $sanitizedValue = self::secureOptionWithOptions($key, $value, 'sanitize');
-            
+
             return update_option(self::$prefix . $key, (object) $sanitizedValue);
         } else {
             $option = self::getOptionFromConfig($key);
