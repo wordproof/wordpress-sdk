@@ -216,7 +216,6 @@ class RestApiController
         if (isset($response->type) && isset($response->data)) {
             switch ($response->type) {
                 case 'source_settings':
-                    ray($response->data);
                     return OptionsHelper::set('settings', $response->data);
                 case 'ping':
                     $data = (object)['status' => 200, 'source_id' => OptionsHelper::sourceId()];
