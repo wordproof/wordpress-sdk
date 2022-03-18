@@ -181,11 +181,6 @@ class PostEditorTimestampController
         $document->end_controls_section();
     }
 
-    public function beforeElementorSave()
-    {
-        ray('before save')->red();
-    }
-
     /**
      * @param integer $postId
      * @action elementor/document/save/data
