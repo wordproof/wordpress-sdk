@@ -22,11 +22,11 @@ class ClassicNoticeHelper
     /**
      * Add new notice depending on the timestamp response.
      *
-     * @param object $response The timestamp response.
+     * @param \WP_REST_Response $response The timestamp response.
      */
     public static function addTimestampNotice($response)
     {
-        $notice = self::getNoticeKeyForTimestampResponse($response);
+        $notice = self::getNoticeKeyForTimestampResponse($response->get_data());
 
         if ($notice) {
             self::add($notice);
@@ -34,26 +34,26 @@ class ClassicNoticeHelper
     }
 
     /**
-     * Retrieve notice key for the timestamp response.
+     * Retrieve notice key for the timestamp response data.
      *
-     * @param object $response The timestamp response.
-     * @return string The notice key for this response.
+     * @param object $data The timestamp response data.
+     * @return string The notice key for this response data.
      */
-    private static function getNoticeKeyForTimestampResponse($response)
+    private static function getNoticeKeyForTimestampResponse($data)
     {
-        if (isset($response->error) && $response->error === 'not_authenticated') {
+        if (isset($data->error) && $data->error === 'not_authenticated') {
             return 'not_authenticated';
         }
 
-        if (isset($response->balance) && $response->balance === 0) {
+        if (isset($data->balance) && $data->balance === 0) {
             return 'no_balance';
         }
 
-        if (isset($response->hash)) {
+        if (isset($data->hash)) {
             return 'timestamp_success';
         }
 
-        if (isset($response->error) && $response->error === 'timestamp_failed') {
+        if (isset($data->error) && $data->error === 'timestamp_failed') {
             return 'timestamp_failed';
         }
 
