@@ -53,7 +53,7 @@ class TimestampHelper
             return false;
         }
 
-        if ($post->post_content === '') {
+        if ($post->post_type !== 'attachment' && $post->post_content === '') {
             return false;
         }
 
