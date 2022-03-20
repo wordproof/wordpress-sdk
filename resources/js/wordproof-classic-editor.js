@@ -1,7 +1,7 @@
 import initializeClassicEditor from './initializers/classicEditor';
 import ActionLink from "./components/ActionLink";
 import {getData} from "./helpers/data";
-import {openAuthentication} from "./helpers/event";
+import {dispatchOpenAuthenticationEvent} from "./helpers/event";
 
 const {render} = wp.element;
 const {select, subscribe} = wp.data;
@@ -40,7 +40,7 @@ function init() {
     //Set event listener to toggle to open authentication on click.
     toggle.addEventListener('change', (event) => {
         if (!isAuthenticated() && toggle.checked) {
-            openAuthentication();
+            dispatchOpenAuthenticationEvent();
         }
     })
 }
