@@ -15,11 +15,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 const currentPostType = getData('current_post_type');
 
 let toggle = null;
+let initialToggleChecked = null;
 let actionLink = null;
 
 function init() {
 
     toggle = document.querySelector('#_wordproof_timestamp');
+    initialToggleChecked = toggle.checked;
     if (!toggle) {
         return;
     }
@@ -48,8 +50,13 @@ function init() {
 function setToggle(selectedPostTypes) {
     const disabled = selectedPostTypes.includes(currentPostType);
 
-    toggle.disabled = disabled;
-    toggle.checked = disabled;
+    if (disabled) {
+        toggle.disabled = true;
+        toggle.checked = true;
+    } else {
+        toggle.disabled = false;
+        toggle.checked = initialToggleChecked;
+    }
 }
 
 function getSelectedPostTypes() {
