@@ -131,9 +131,13 @@ class PostEditorTimestampController
         $value = PostMetaHelper::get($post->ID, $this->metaKey);
 
         wp_nonce_field('save_post', $this->classicEditorNonceKey); ?>
-        <input type="checkbox" id="<?php echo $this->metaKey; ?>" name="<?php echo $this->metaKey; ?>"
-               value="1" <?php echo boolval($value) ? 'checked' : ''; ?>>
-        <label for="<?php echo $this->metaKey; ?>">Timestamp this post</label>
+    
+        <div id="wordproof-toggle">
+            <input type="checkbox" id="<?php echo $this->metaKey; ?>" name="<?php echo $this->metaKey; ?>"
+                   value="1" <?php echo boolval($value) ? 'checked' : ''; ?>>
+            <label for="<?php echo $this->metaKey; ?>">Timestamp this post</label>
+            <div id="wordproof-action-link"></div>
+        </div>
         <?php
     }
 
