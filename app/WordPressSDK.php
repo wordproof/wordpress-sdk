@@ -60,10 +60,6 @@ class WordPressSDK
             return;
         }
 
-        if (!headers_sent() && !session_id()) {
-            session_start();
-        }
-
         $this->loader = new Loader();
         $this->appConfig = $appConfig ?: new DefaultAppConfig();
         $this->translations = $translations ?: new DefaultTranslations();
