@@ -22,7 +22,7 @@ class WordPressSDK
      * The version of this SDK
      * @var string
      */
-    public $version = '1.0.23';
+    public $version = '1.2.17';
 
     /**
      * @var null|WordPressSDK
@@ -58,10 +58,6 @@ class WordPressSDK
     {
         if (defined('WORDPROOF_TIMESTAMP_SDK_VERSION')) {
             return;
-        }
-
-        if (!headers_sent() && !session_id()) {
-            session_start();
         }
 
         $this->loader = new Loader();
