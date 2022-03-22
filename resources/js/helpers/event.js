@@ -12,12 +12,12 @@ export function dispatch( name ) {
  * Helper to open the WordProof authentication.
  */
 export function dispatchOpenAuthenticationEvent() {
-    dispatch('wordproof:open_authentication')
+	dispatch( 'wordproof:open_authentication' );
 }
 
 /**
  * Helper to open the WordProof settings.
  */
 export function dispatchOpenSettingsEvent() {
-    dispatch('wordproof:open_settings')
+	dispatch( 'wordproof:open_settings' );
 }

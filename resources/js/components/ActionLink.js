@@ -1,5 +1,8 @@
 import { getData } from '../helpers/data';
-import {dispatchOpenAuthenticationEvent, dispatchOpenSettingsEvent,} from '../helpers/event';
+import {
+	dispatchOpenAuthenticationEvent,
+	dispatchOpenSettingsEvent,
+} from '../helpers/event';
 
 const { __ } = wp.i18n;
 const { useCallback } = wp.element;
@@ -14,13 +17,13 @@ const ActionLink = ( props ) => {
 	const settingsLink = getData( 'popup_redirect_settings_url' );
 
 	const openSettings = useCallback( ( event ) => {
-        event.preventDefault();
-        dispatchOpenSettingsEvent()
+		event.preventDefault();
+		dispatchOpenSettingsEvent();
 	} );
 
 	const openAuthentication = useCallback( ( event ) => {
-        event.preventDefault();
-        dispatchOpenAuthenticationEvent();
+		event.preventDefault();
+		dispatchOpenAuthenticationEvent();
 	} );
 
 	return (
