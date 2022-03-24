@@ -111,7 +111,7 @@ class PostEditorTimestampController
     public function saveClassicMetaboxPostMeta($postId)
     {
         if (array_key_exists($this->classicEditorNonceKey, $_POST)) {
-            if (wp_verify_nonce($_POST[$this->classicEditorNonceKey], 'save_post')) {
+            if (wp_verify_nonce(sanitize_key($_POST[$this->classicEditorNonceKey]), 'save_post')) {
                 update_post_meta(
                     $postId,
                     $this->metaKey,
@@ -131,9 +131,9 @@ class PostEditorTimestampController
         $value = PostMetaHelper::get($post->ID, $this->metaKey);
 
         wp_nonce_field('save_post', $this->classicEditorNonceKey); ?>
-        <input type="checkbox" id="<?php echo $this->metaKey; ?>" name="<?php echo $this->metaKey; ?>"
+        <input type="checkbox" id="<?php echo esc_attr($this->metaKey); ?>" name="<?php echo esc_attr($this->metaKey); ?>"
                value="1" <?php echo boolval($value) ? 'checked' : ''; ?>>
-        <label for="<?php echo $this->metaKey; ?>">Timestamp this post</label>
+        <label for="<?php echo esc_attr($this->metaKey); ?>">Timestamp this post</label>
         <?php
     }
 
