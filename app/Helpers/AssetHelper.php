@@ -2,7 +2,6 @@
 
 namespace WordProof\SDK\Helpers;
 
-use WordProof\SDK\Config\EnvironmentConfig;
 use WordProof\SDK\Config\ScriptsConfig;
 
 class AssetHelper

@@ -41,7 +41,10 @@
         }
     },
     "config": {
-        "platform-check": false
+        "platform-check": false,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
