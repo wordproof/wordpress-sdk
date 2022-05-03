@@ -23,7 +23,7 @@ class TimestampController
     }
 
     /**
-     * Timestamp new posts except those inserted by the API..
+     * Timestamp new posts except those inserted by the API.
      *
      * @param integer $postId The post id to be timestamped.
      * @param \WP_Post $post The post to be timestamped.
@@ -40,6 +40,20 @@ class TimestampController
         ClassicNoticeHelper::addTimestampNotice($response);
 
         return $response;
+    }
+
+    /**
+     * Timestamp new attachments.
+     *
+     * @param integer $postId The post id to be timestamped.
+     *
+     * @action add_attachment|edit_attachment
+     */
+    public function timestampAfterAttachmentRequest($postId)
+    {
+        $post = get_post($postId);
+
+        $this->timestampAfterPostRequest($postId, $post);
     }
 
     /**

@@ -22,7 +22,7 @@ const EditorPanel = ( {
 	}, [ selectedPostTypes, postType ] );
 
 	const openAuthentication = useCallback( () => {
-        dispatchEvent( 'wordproof:open_authentication' );
+		dispatchEvent( 'wordproof:open_authentication' );
 	} );
 
 	return (

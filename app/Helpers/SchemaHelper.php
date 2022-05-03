@@ -14,10 +14,25 @@ class SchemaHelper
     {
         $postId = $response->uid;
         $hashLink = RestApiHelper::getRestRoute('hashInput', [$postId, $response->hash]);
+        
+        $identifier = null;
+        
+        if (isset($response->transaction)) {
+            
+            $transaction = $response->transaction;
+            
+            if (isset($transaction->transactionId)) {
+                $identifier = $transaction->transactionId;
+            }
+    
+            if (isset($transaction->tx)) {
+                $identifier = $transaction->tx;
+            }
+        }
 
         return [
             '@type' => 'BlockchainTransaction',
-            'identifier' => $response->transaction->transactionId,
+            'identifier' => $identifier,
             'hash' => $response->hash,
             'hashLink' => $hashLink,
             'recordedIn' => [

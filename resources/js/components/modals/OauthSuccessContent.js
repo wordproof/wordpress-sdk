@@ -15,14 +15,22 @@ const OauthSuccessContent = ( props ) => {
 		>
 			<p>
 				{ sprintf(
-					/* translators: %1$s expands to WordProof. %2$s is the singular post type. */
+					/* translators: %s expands to WordProof. */
 					__(
-						'You have successfully connected your %1$s account with this site. Your %2$s will now be timestamped everytime you update or publish.',
+						'You have successfully connected your %s account with this site.',
 						'wordproof'
 					),
-					'WordProof',
-					postType
+					'WordProof'
 				) }
+
+                { postType && sprintf(
+                        /* translators: %s is the singular post type. */
+                        __(
+                                'Your %s will now be timestamped everytime you update or publish.',
+                                'wordproof'
+                        ),
+                        postType
+                ) }
 			</p>
 		</WordProofModal>
 	);
