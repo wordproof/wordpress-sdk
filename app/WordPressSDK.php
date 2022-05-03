@@ -147,6 +147,9 @@ class WordPressSDK
         $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
         $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
 
+        $this->loader->add_action('edit_attachment', $class, 'timestampAfterAttachmentRequest', \PHP_INT_MAX);
+        $this->loader->add_action('add_attachment', $class, 'timestampAfterAttachmentRequest', \PHP_INT_MAX);
+
         $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
 
         $this->loader->add_action('elementor/document/before_save', $class, 'beforeElementorSave');
@@ -218,6 +221,7 @@ class WordPressSDK
         // Classic editor
         $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
         $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
+        $this->loader->add_action('edit_attachment', $class, 'saveClassicMetaboxPostMeta');
         $this->loader->add_action('admin_enqueue_scripts', $class, 'enqueueClassicEditorScript');
 
         // Elementor

@@ -1,5 +1,8 @@
 import { getData } from '../helpers/data';
-import { dispatch } from '../helpers/event';
+import {
+	dispatchOpenAuthenticationEvent,
+	dispatchOpenSettingsEvent,
+} from '../helpers/event';
 
 const { __ } = wp.i18n;
 const { useCallback } = wp.element;
@@ -15,12 +18,12 @@ const ActionLink = ( props ) => {
 
 	const openSettings = useCallback( ( event ) => {
 		event.preventDefault();
-		dispatch( 'wordproof:open_settings' );
+		dispatchOpenSettingsEvent();
 	} );
 
 	const openAuthentication = useCallback( ( event ) => {
 		event.preventDefault();
-		dispatch( 'wordproof:open_authentication' );
+		dispatchOpenAuthenticationEvent();
 	} );
 
 	return (
