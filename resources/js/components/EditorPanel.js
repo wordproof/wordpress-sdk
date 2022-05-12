@@ -25,6 +25,10 @@ const EditorPanel = ( {
 		dispatchEvent( 'wordproof:open_authentication' );
 	} );
 
+    if (postMeta === undefined) {
+        return (<></>);
+    }
+
 	return (
 		<PluginDocumentSettingPanel
 			title={ __( 'WordProof Timestamp', 'wordproof' ) }
