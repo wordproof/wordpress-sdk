@@ -146,7 +146,7 @@ class RestApiController
      * Send a post request to WordProof to timestamp a post.
      *
      * @param \WP_REST_Request $request The Rest Request.
-     * @return bool|void Returns if the request was successful.
+     * @return \WP_REST_Response
      */
     public function timestamp(\WP_REST_Request $request)
     {
@@ -155,7 +155,13 @@ class RestApiController
 
         return TimestampController::timestamp($postId);
     }
-
+    
+    /**
+     * The latest timestamp transaction is returned.
+     *
+     * @param \WP_REST_Request $request
+     * @return \WP_REST_Response
+     */
     public function showLatestTimestampTransaction(\WP_REST_Request $request)
     {
         $data = $request->get_params();
@@ -163,8 +169,11 @@ class RestApiController
 
         $transactions = PostMetaHelper::get($postId, '_wordproof_blockchain_transaction', false);
         $transaction = array_pop($transactions);
-
-        return new \WP_REST_Response((object)$transaction);
+    
+        $response = new \WP_REST_Response((object)$transaction);
+        $response->header('X-Robots-Tag', 'noindex');
+    
+        return $response;
     }
 
     /**
@@ -182,7 +191,10 @@ class RestApiController
 
         $hashInput = PostMetaHelper::get($postId, '_wordproof_hash_input_' . $hash);
 
-        return new \WP_REST_Response((object)$hashInput);
+        $response = new \WP_REST_Response((object)$hashInput);
+        $response->header('X-Robots-Tag', 'noindex');
+        
+        return $response;
     }
 
     /**
