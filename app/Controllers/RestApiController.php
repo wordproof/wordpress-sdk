@@ -21,57 +21,57 @@ class RestApiController
      */
     public function init()
     {
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authenticate'), [
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authenticate'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'authenticate'],
             'permission_callback' => [$this, 'canPublishPermission']
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('webhook'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('webhook'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'webhook'],
             'permission_callback' => [$this, 'isValidWebhookRequest']
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('hashInput'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('hashInput'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'hashInput'],
             'permission_callback' => function () {
                 return true;
             },
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'timestamp'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp.transaction.latest'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp.transaction.latest'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'showLatestTimestampTransaction'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('settings'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('saveSettings'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('saveSettings'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'saveSettings'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'authentication'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-
-        register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication.destroy'), [
+    
+        \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication.destroy'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'destroyAuthentication'],
             'permission_callback' => [$this, 'canPublishPermission'],
@@ -187,7 +187,7 @@ class RestApiController
         $data = $request->get_params();
 
         $postId = intval($data['id']);
-        $hash = sanitize_text_field($data['hash']);
+        $hash = \sanitize_text_field($data['hash']);
 
         $hashInput = PostMetaHelper::get($postId, '_wordproof_hash_input_' . $hash);
 
@@ -204,8 +204,8 @@ class RestApiController
      */
     public function authenticate(\WP_REST_Request $request)
     {
-        $state = sanitize_text_field($request->get_param('state'));
-        $code = sanitize_text_field($request->get_param('code'));
+        $state = \sanitize_text_field($request->get_param('state'));
+        $code = \sanitize_text_field($request->get_param('code'));
 
         return Authentication::token($state, $code);
     }
@@ -279,7 +279,7 @@ class RestApiController
      */
     public function canPublishPermission()
     {
-        return current_user_can('publish_posts') && current_user_can('publish_pages');
+        return \current_user_can('publish_posts') && \current_user_can('publish_pages');
     }
 
     /**

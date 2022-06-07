@@ -12,8 +12,8 @@ class AdminHelper
     public static function currentUrl()
     {
         if (isset($_SERVER['REQUEST_URI'])) {
-            $requestUri = esc_url_raw(wp_unslash($_SERVER['REQUEST_URI']));
-            return admin_url(sprintf(basename($requestUri)));
+            $requestUri = \esc_url_raw(\wp_unslash($_SERVER['REQUEST_URI']));
+            return \admin_url(\sprintf(basename($requestUri)));
         }
 
         return null;

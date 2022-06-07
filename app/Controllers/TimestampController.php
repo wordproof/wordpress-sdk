@@ -17,7 +17,7 @@ class TimestampController
      */
     public static function timestamp($postId)
     {
-        $post = get_post(intval($postId));
+        $post = \get_post(intval($postId));
 
         return TimestampHelper::debounce($post);
     }
@@ -51,7 +51,7 @@ class TimestampController
      */
     public function timestampAfterAttachmentRequest($postId)
     {
-        $post = get_post($postId);
+        $post = \get_post($postId);
 
         $this->timestampAfterPostRequest($postId, $post);
     }
@@ -72,8 +72,8 @@ class TimestampController
      */
     public function beforeElementorSave()
     {
-        remove_action('rest_after_insert_post', [$this, 'timestampAfterRestApiRequest']);
-        remove_action('wp_insert_post', [$this, 'timestampAfterPostRequest'], \PHP_INT_MAX);
+        \remove_action('rest_after_insert_post', [$this, 'timestampAfterRestApiRequest']);
+        \remove_action('wp_insert_post', [$this, 'timestampAfterPostRequest'], \PHP_INT_MAX);
     }
 
     /**
@@ -86,7 +86,7 @@ class TimestampController
      */
     public function syncPostMetaTimestampOverrides($metaId, $postId, $metaKey, $metaValue)
     {
-        $timestampablePostMetaKeys = apply_filters('wordproof_timestamp_post_meta_key_overrides', ['_wordproof_timestamp']);
+        $timestampablePostMetaKeys = \apply_filters('wordproof_timestamp_post_meta_key_overrides', ['_wordproof_timestamp']);
 
         if (in_array($metaKey, $timestampablePostMetaKeys, true) && count($timestampablePostMetaKeys) > 1) {
             $arrayKey = array_search($metaKey, $timestampablePostMetaKeys, true);

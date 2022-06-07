@@ -26,7 +26,7 @@ class AssetHelper
             return;
         }
 
-        return wp_localize_script(self::getHandle($name), $objectName, $data);
+        return \wp_localize_script(self::getHandle($name), $objectName, $data);
     }
 
     /**
@@ -46,14 +46,14 @@ class AssetHelper
         $path = self::getPathUrl($name, $config['type']);
 
         if ($config['type'] === 'css') {
-            wp_enqueue_style(
+            \wp_enqueue_style(
                 self::getHandle($name),
                 $path,
                 $config['dependencies'],
                 self::getVersion()
             );
         } else {
-            wp_enqueue_script(
+            \wp_enqueue_script(
                 self::getHandle($name),
                 $path,
                 $config['dependencies'],
@@ -87,7 +87,7 @@ class AssetHelper
         if ($appConfig->getScriptsFileOverwrite()) {
             $url = $appConfig->getScriptsFileOverwrite();
         } else {
-            $url = plugin_dir_url(WORDPROOF_TIMESTAMP_SDK_FILE);
+            $url = \plugin_dir_url(WORDPROOF_TIMESTAMP_SDK_FILE);
         }
 
         $base = StringHelper::lastReplace(self::$filePath, self::$buildPath, $url);

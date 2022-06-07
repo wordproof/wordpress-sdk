@@ -6,7 +6,7 @@ class DefaultTranslations implements TranslationsInterface
 {
     public function getNoBalanceNotice()
     {
-        return sprintf(
+        return \sprintf(
         /* translators: %s expands to WordProof. */
             __('You are out of timestamps. Please upgrade your account by opening the %s settings.', 'wordproof'),
             'WordProof'
@@ -15,7 +15,7 @@ class DefaultTranslations implements TranslationsInterface
     
     public function getTimestampFailedNotice()
     {
-        return sprintf(
+        return \sprintf(
         /* translators: %s expands to WordProof. */
             __('%1$s failed to timestamp this page. Please check if you\'re correctly authenticated with %1$s and try to save this page again.', 'wordproof'),
             'WordProof'
@@ -24,7 +24,7 @@ class DefaultTranslations implements TranslationsInterface
     
     public function getTimestampSuccessNotice()
     {
-        return sprintf(
+        return \sprintf(
         /* translators: %s expands to WordProof. */
             __('%s has successfully timestamped this page.', 'wordproof'),
             'WordProof'
@@ -34,13 +34,13 @@ class DefaultTranslations implements TranslationsInterface
     public function getWebhookFailedNotice()
     {
         /* translators: %s expands to WordProof. */
-        return sprintf(__('The timestamp is not retrieved by your site. Please try again or contact %1$s support.', 'wordproof'), 'WordProof');
+        return \sprintf(__('The timestamp is not retrieved by your site. Please try again or contact %1$s support.', 'wordproof'), 'WordProof');
     }
     
     public function getNotAuthenticatedNotice()
     {
         /* translators: %s expands to WordProof. */
-        return sprintf(__('The timestamp is not created because you need to authenticate with %s first.', 'wordproof'), 'WordProof');
+        return \sprintf(__('The timestamp is not created because you need to authenticate with %s first.', 'wordproof'), 'WordProof');
     }
     
     public function getOpenAuthenticationButtonText()
@@ -55,7 +55,7 @@ class DefaultTranslations implements TranslationsInterface
     
     public function getContactWordProofSupportButtonText()
     {
-        return sprintf(
+        return \sprintf(
         /* translators: %s expands to WordProof. */
             __('Contact %s support.', 'wordproof'),
             'WordProof'

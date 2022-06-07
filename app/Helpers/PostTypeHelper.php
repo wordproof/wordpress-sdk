@@ -11,7 +11,7 @@ class PostTypeHelper
      */
     public static function getPublicPostTypes()
     {
-        return array_values(get_post_types(['public' => true]));
+        return array_values(\get_post_types(['public' => true]));
     }
 
     public static function getUnprotectedPosts($postType)

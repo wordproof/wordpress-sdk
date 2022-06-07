@@ -20,12 +20,12 @@ class OptionsHelper
         if (self::optionContainsOptions($key)) {
             $sanitizedValue = self::secureOptionWithOptions($key, $value, 'sanitize');
 
-            return update_option(self::$prefix . $key, (object) $sanitizedValue);
+            return \update_option(self::$prefix . $key, (object) $sanitizedValue);
         } else {
             $option = self::getOptionFromConfig($key);
             $sanitizedValue = SanitizeHelper::sanitize($value, $option['escape']);
 
-            return update_option(self::$prefix . $key, $sanitizedValue);
+            return \update_option(self::$prefix . $key, $sanitizedValue);
         }
     }
 
@@ -37,7 +37,7 @@ class OptionsHelper
      */
     public static function delete($key)
     {
-        return delete_option(self::$prefix . $key);
+        return \delete_option(self::$prefix . $key);
     }
 
     /**
@@ -49,7 +49,7 @@ class OptionsHelper
     public static function get($key)
     {
         $option = self::getOptionFromConfig($key);
-        $value = get_option(self::$prefix . $key);
+        $value = \get_option(self::$prefix . $key);
 
         if (self::optionContainsOptions($key)) {
             return self::secureOptionWithOptions($key, $value, 'escape');

@@ -36,7 +36,7 @@ class CertificateController
         global $post;
 
         $schema = "\n";
-        $schema .= '<script type="application/ld+json" class="' . esc_attr('wordproof-schema-graph') . '">';
+        $schema .= '<script type="application/ld+json" class="' . \esc_attr('wordproof-schema-graph') . '">';
         $schema .= json_encode(PostMetaHelper::get($post->ID, '_wordproof_schema'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $schema .= "</script>";
         $schema .= "\n";
@@ -68,7 +68,7 @@ class CertificateController
         $text = SettingsHelper::certificateLinkText();
         $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
         $debug = EnvironmentHelper::development() ? 'true' : 'false';
-        $lastModified = get_the_modified_date('c', $post->ID);
+        $lastModified = \get_the_modified_date('c', $post->ID);
 
         $content.= "\n" . '<w-certificate debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
         $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';

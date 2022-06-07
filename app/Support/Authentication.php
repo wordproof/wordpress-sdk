@@ -17,8 +17,8 @@ class Authentication
 
     public static function authorize($redirectUrl = null)
     {
-        $state = wp_generate_password(40, false);
-        $codeVerifier = wp_generate_password(128, false);
+        $state = \wp_generate_password(40, false);
+        $codeVerifier = \wp_generate_password(128, false);
         $originalUrl = AdminHelper::currentUrl();
 
         TransientHelper::set('wordproof_authorize_state', $state, 1200);
@@ -98,8 +98,8 @@ class Authentication
         OptionsHelper::setAccessToken($response->access_token);
 
         $data = [
-            'webhook_url'          => get_rest_url(null, 'wordproof/v1/webhook'),
-            'url'                  => get_site_url(),
+            'webhook_url'          => \get_rest_url(null, 'wordproof/v1/webhook'),
+            'url'                  => \get_site_url(),
             'available_post_types' => PostTypeHelper::getPublicPostTypes(),
             'partner'              => AppConfigHelper::getPartner(),
             'local_settings'       => (array) SettingsHelper::get(),
@@ -128,7 +128,7 @@ class Authentication
 
     private static function getCallbackUrl()
     {
-        return get_rest_url(null, self::$callbackEndpoint);
+        return \get_rest_url(null, self::$callbackEndpoint);
     }
 
     public static function redirect($endpoint, $parameters)

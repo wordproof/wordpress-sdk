@@ -30,7 +30,7 @@ class NoticeController
      */
     public function show()
     {
-        $screen = get_current_screen();
+        $screen = \get_current_screen();
 
         if (!in_array($screen->base, $this->screens, true)) {
             return;
@@ -71,15 +71,15 @@ class NoticeController
             $noticeClass = 'notice-' . $type;
             echo \sprintf(
                 '<div class="notice %1$s is-dismissible"><p>%2$s</p>',
-                esc_attr($noticeClass),
-                esc_html($message)
+                \esc_attr($noticeClass),
+                \esc_html($message)
             );
 
             if (isset($buttonText) && isset($buttonEventName)) {
                 echo \sprintf(
                     '<button class="button button-primary" onclick="window.dispatchEvent( new window.CustomEvent( \'%2$s\' ) )">%1$s</button>',
-                    esc_html($buttonText),
-                    esc_attr($buttonEventName)
+                    \esc_html($buttonText),
+                    \esc_attr($buttonEventName)
                 );
             }
 

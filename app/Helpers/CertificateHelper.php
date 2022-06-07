@@ -11,20 +11,20 @@ class CertificateHelper
      */
     public static function show()
     {
-        if (!is_singular()) {
+        if (!\is_singular()) {
             return false;
         }
 
-        if (!is_main_query()) {
+        if (!\is_main_query()) {
             return false;
         }
 
-        if (post_password_required()) {
+        if (\post_password_required()) {
             return false;
         }
 
         global $post;
-        return apply_filters(
+        return \apply_filters(
             'wordproof_timestamp_show_certificate',
             PostMetaHelper::has($post->ID, '_wordproof_schema'),
             $post
