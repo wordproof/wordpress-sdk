@@ -117,11 +117,11 @@ class WordPressSDK
     {
         $class = new AuthenticationController();
 
-        $this->loader->add_action('wordproof_authenticate', $class, 'authenticate');
+        $this->loader->addAction('wordproof_authenticate', $class, 'authenticate');
 
-        $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
-        $this->loader->add_action('admin_menu', $class, 'addSelfDestructPage');
-        $this->loader->add_action('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
+        $this->loader->addAction('admin_menu', $class, 'addRedirectPage');
+        $this->loader->addAction('admin_menu', $class, 'addSelfDestructPage');
+        $this->loader->addAction('load-admin_page_wordproof-redirect-authenticate', $class, 'redirectOnLoad');
     }
 
     /**
@@ -131,7 +131,7 @@ class WordPressSDK
     {
         $class = new RestApiController();
 
-        $this->loader->add_action('rest_api_init', $class, 'init');
+        $this->loader->addAction('rest_api_init', $class, 'init');
     }
 
     /**
@@ -141,18 +141,18 @@ class WordPressSDK
     {
         $class = new TimestampController();
 
-        $this->loader->add_action('added_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
-        $this->loader->add_action('updated_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        $this->loader->addAction('added_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
+        $this->loader->addAction('updated_post_meta', $class, 'syncPostMetaTimestampOverrides', \PHP_INT_MAX, 4);
 
-        $this->loader->add_action('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
-        $this->loader->add_action('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
+        $this->loader->addAction('rest_after_insert_post', $class, 'timestampAfterRestApiRequest');
+        $this->loader->addAction('wp_insert_post', $class, 'timestampAfterPostRequest', \PHP_INT_MAX, 2);
 
-        $this->loader->add_action('edit_attachment', $class, 'timestampAfterAttachmentRequest', \PHP_INT_MAX);
-        $this->loader->add_action('add_attachment', $class, 'timestampAfterAttachmentRequest', \PHP_INT_MAX);
+        $this->loader->addAction('edit_attachment', $class, 'timestampAfterAttachmentRequest', \PHP_INT_MAX);
+        $this->loader->addAction('add_attachment', $class, 'timestampAfterAttachmentRequest', \PHP_INT_MAX);
 
-        $this->loader->add_action('wordproof_timestamp', $class, 'timestamp');
+        $this->loader->addAction('wordproof_timestamp', $class, 'timestamp');
 
-        $this->loader->add_action('elementor/document/before_save', $class, 'beforeElementorSave');
+        $this->loader->addAction('elementor/document/before_save', $class, 'beforeElementorSave');
     }
 
     /**
@@ -162,10 +162,10 @@ class WordPressSDK
     {
         $class = new SettingsController();
 
-        $this->loader->add_action('wordproof_settings', $class, 'redirect');
+        $this->loader->addAction('wordproof_settings', $class, 'redirect');
 
-        $this->loader->add_action('admin_menu', $class, 'addRedirectPage');
-        $this->loader->add_action('load-admin_page_wordproof-redirect-settings', $class, 'redirectOnLoad');
+        $this->loader->addAction('admin_menu', $class, 'addRedirectPage');
+        $this->loader->addAction('load-admin_page_wordproof-redirect-settings', $class, 'redirectOnLoad');
     }
 
     /**
@@ -175,8 +175,8 @@ class WordPressSDK
     {
         $class = new PostEditorDataController($this->translations);
 
-        $this->loader->add_action('admin_enqueue_scripts', $class, 'addScript');
-        $this->loader->add_action('elementor/editor/before_enqueue_scripts', $class, 'addScriptForElementor');
+        $this->loader->addAction('admin_enqueue_scripts', $class, 'addScript');
+        $this->loader->addAction('elementor/editor/before_enqueue_scripts', $class, 'addScriptForElementor');
     }
 
     /**
@@ -186,7 +186,7 @@ class WordPressSDK
     {
         $class = new NoticeController($this->translations);
 
-        $this->loader->add_action('admin_notices', $class, 'show');
+        $this->loader->addAction('admin_notices', $class, 'show');
     }
 
     /**
@@ -198,9 +198,9 @@ class WordPressSDK
     {
         $class = new CertificateController();
 
-        $this->loader->add_action('wp_enqueue_scripts', $class, 'enqueue');
-        $this->loader->add_action('wp_head', $class, 'head');
-        $this->loader->add_filter('the_content', $class, 'certificateTag');
+        $this->loader->addAction('wp_enqueue_scripts', $class, 'enqueue');
+        $this->loader->addAction('wp_head', $class, 'head');
+        $this->loader->addFilter('the_content', $class, 'certificateTag');
 
         return $this;
     }
@@ -215,19 +215,19 @@ class WordPressSDK
         $class = new PostEditorTimestampController();
 
         // Gutenberg
-        $this->loader->add_action('init', $class, 'registerPostMeta', \PHP_INT_MAX);
-        $this->loader->add_action('enqueue_block_editor_assets', $class, 'enqueueBlockEditorScript');
+        $this->loader->addAction('init', $class, 'registerPostMeta', \PHP_INT_MAX);
+        $this->loader->addAction('enqueue_block_editor_assets', $class, 'enqueueBlockEditorScript');
 
         // Classic editor
-        $this->loader->add_action('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
-        $this->loader->add_action('save_post', $class, 'saveClassicMetaboxPostMeta');
-        $this->loader->add_action('edit_attachment', $class, 'saveClassicMetaboxPostMeta');
-        $this->loader->add_action('admin_enqueue_scripts', $class, 'enqueueClassicEditorScript');
+        $this->loader->addAction('add_meta_boxes', $class, 'addMetaboxToClassicEditor');
+        $this->loader->addAction('save_post', $class, 'saveClassicMetaboxPostMeta');
+        $this->loader->addAction('edit_attachment', $class, 'saveClassicMetaboxPostMeta');
+        $this->loader->addAction('admin_enqueue_scripts', $class, 'enqueueClassicEditorScript');
 
         // Elementor
-        $this->loader->add_action('elementor/editor/after_enqueue_scripts', $class, 'enqueueElementorEditorScript');
-        $this->loader->add_action('elementor/documents/register_controls', $class, 'registerControl');
-        $this->loader->add_action('elementor/editor/after_save', $class, 'elementorSave');
+        $this->loader->addAction('elementor/editor/after_enqueue_scripts', $class, 'enqueueElementorEditorScript');
+        $this->loader->addAction('elementor/documents/register_controls', $class, 'registerControl');
+        $this->loader->addAction('elementor/editor/after_save', $class, 'elementorSave');
 
         return $this;
     }
