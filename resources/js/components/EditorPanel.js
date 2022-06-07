@@ -25,9 +25,9 @@ const EditorPanel = ( {
 		dispatchEvent( 'wordproof:open_authentication' );
 	} );
 
-    if (postMeta === undefined) {
-        return (<></>);
-    }
+	if ( postMeta === undefined ) {
+		return <></>;
+	}
 
 	return (
 		<PluginDocumentSettingPanel
