@@ -1,6 +1,7 @@
 import WordProofModal from './Modal';
+import { addLinkToString } from '../../helpers/string';
 
-const { __ } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 import PropTypes from 'prop-types';
 
 const WebhookFailedContent = ( props ) => {
@@ -12,8 +13,28 @@ const WebhookFailedContent = ( props ) => {
 			title={ __( 'Webhook failed', 'wordproof' ) }
 		>
 			<p>
-				The timestamp send by WordProof was not received on your
-				website. Please contact support to help solve this problem.
+				{ sprintf(
+					/* Translators: %s expands to WordProof */
+					__(
+						'The timestamp sent by %s was not received on your website.',
+						'WordProof'
+					),
+					'WordProof'
+				) }
+
+				{ addLinkToString(
+					sprintf(
+						/* Translators: %1s and %2s are html tags. %3s expands to WordProof */
+						__(
+							'Please contact the %1$s%3$s support team%2$s to help solve this problem.',
+							'wordpress-seo'
+						),
+						'<a>',
+						'</a>',
+						'WordProof'
+					),
+					'https://help.wordproof.com/'
+				) }
 			</p>
 		</WordProofModal>
 	);

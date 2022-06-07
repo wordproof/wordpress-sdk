@@ -1,10 +1,12 @@
 import WordProofModal from './Modal';
 import { dispatch } from '../../helpers/event';
+import { addLinkToString } from '../../helpers/string';
 
 import PropTypes from 'prop-types';
+
 const { Button } = wp.components;
 const { useCallback } = wp.element;
-const { __ } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 
 const OauthDeniedModal = ( props ) => {
 	const { close } = props;
@@ -21,9 +23,27 @@ const OauthDeniedModal = ( props ) => {
 		>
 			<>
 				<p>
-					{ __(
-						'Something failed during the authentication of your WordProof account. Please try again or contact the support team.',
-						'wordproof'
+					{ sprintf(
+						/* Translators: %s expands to WordProof */
+						__(
+							'Something failed during the authentication of your %s account.',
+							'wordproof'
+						),
+						'WordProof'
+					) }
+
+					{ addLinkToString(
+						sprintf(
+							/* Translators: %1s and %2s are html tags. %3s expands to WordProof */
+							__(
+								'Please try again or contact the %1$s%3$s support team%2$s.',
+								'wordpress-seo'
+							),
+							'<a>',
+							'</a>',
+							'WordProof'
+						),
+						'https://help.wordproof.com/'
 					) }
 				</p>
 				<Button variant={ 'primary' } onClick={ retry }>

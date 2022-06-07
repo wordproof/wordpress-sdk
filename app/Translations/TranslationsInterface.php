@@ -17,4 +17,6 @@ interface TranslationsInterface
     public function getOpenSettingsButtonText();
 
     public function getOpenAuthenticationButtonText();
+
+    public function getContactWordProofSupportButtonText();
 }

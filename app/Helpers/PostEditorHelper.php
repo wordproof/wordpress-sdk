@@ -79,6 +79,7 @@ class PostEditorHelper
             'not_authenticated'               => $translations->getNotAuthenticatedNotice(),
             'open_authentication_button_text' => $translations->getOpenAuthenticationButtonText(),
             'open_settings_button_text'       => $translations->getOpenSettingsButtonText(),
+            'contact_wordproof_support_button_text'       => $translations->getContactWordProofSupportButtonText(),
         ];
 
         return [
