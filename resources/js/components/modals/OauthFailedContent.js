@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const { Button } = wp.components;
 const { useCallback } = wp.element;
-const { __ } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 
 const OauthDeniedModal = ( props ) => {
 	const { close } = props;
@@ -34,8 +34,8 @@ const OauthDeniedModal = ( props ) => {
 
 					{ addLinkToString(
 						sprintf(
-                                /* Translators: %1s and %2s are html tags. %3s expands to WordProof */
-                                __(
+							/* Translators: %1s and %2s are html tags. %3s expands to WordProof */
+							__(
 								'Please try again or contact the %1$s%3$s support team%2$s.',
 								'wordpress-seo'
 							),
