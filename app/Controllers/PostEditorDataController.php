@@ -30,7 +30,7 @@ class PostEditorDataController
      */
     public function addScript($hook)
     {
-        $loadWordProofData = apply_filters('wordproof_load_data_on_pages', PostEditorHelper::getPostEditPages());
+        $loadWordProofData = \apply_filters('wordproof_load_data_on_pages', PostEditorHelper::getPostEditPages());
 
         if (in_array($hook, $loadWordProofData, true)) {
             $this->enqueueAndLocalizeScript();
@@ -51,7 +51,7 @@ class PostEditorDataController
     private function enqueueAndLocalizeScript()
     {
         $data = PostEditorHelper::getPostEditorData($this->translations);
-        $data = apply_filters('wordproof_data', $data);
+        $data = \apply_filters('wordproof_data', $data);
 
         AssetHelper::enqueue('data');
         AssetHelper::localize('data', 'wordproofSdk', $data);

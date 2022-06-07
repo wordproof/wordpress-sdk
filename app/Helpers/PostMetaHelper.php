@@ -12,7 +12,7 @@ class PostMetaHelper
      */
     public static function add($postId, $key, $value, $single = false)
     {
-        return add_post_meta($postId, $key, $value, $single);
+        return \add_post_meta($postId, $key, $value, $single);
     }
 
     /**
@@ -23,7 +23,7 @@ class PostMetaHelper
      */
     public static function update($postId, $key, $value)
     {
-        return update_post_meta($postId, $key, $value);
+        return \update_post_meta($postId, $key, $value);
     }
 
     /**
@@ -34,7 +34,7 @@ class PostMetaHelper
      */
     public static function get($postId, $key, $single = true)
     {
-        return get_post_meta($postId, $key, $single);
+        return \get_post_meta($postId, $key, $single);
     }
 
     /**

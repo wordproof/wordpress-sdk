@@ -38,7 +38,7 @@ class RestApiHelper
 
     public static function getRestRoute($slug, $params = [])
     {
-        $url = get_rest_url(null, self::buildPath(self::endpoint($slug)));
+        $url = \get_rest_url(null, self::buildPath(self::endpoint($slug)));
         preg_match_all("/\(.+?\)/", $url, $matches);
 
         if (!isset($matches) || !isset($matches[0])) {

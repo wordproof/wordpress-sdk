@@ -21,7 +21,7 @@ class AuthenticationController
      */
     public function addRedirectPage()
     {
-        add_submenu_page(
+        \add_submenu_page(
             null,
             'WordProof Authenticate',
             'WordProof Authenticate',
@@ -43,7 +43,7 @@ class AuthenticationController
      */
     public function redirectOnLoad()
     {
-        do_action('wordproof_authenticate', admin_url('admin.php?page=wordproof-close-after-redirect'));
+        \do_action('wordproof_authenticate', \admin_url('admin.php?page=wordproof-close-after-redirect'));
     }
 
     /**
@@ -51,7 +51,7 @@ class AuthenticationController
      */
     public function addSelfDestructPage()
     {
-        add_submenu_page(
+        \add_submenu_page(
             null,
             'WordProof After Authenticate',
             'WordProof After Authenticate',

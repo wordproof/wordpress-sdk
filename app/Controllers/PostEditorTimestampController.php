@@ -38,7 +38,7 @@ class PostEditorTimestampController
      */
     public function userCanEditPosts()
     {
-        return current_user_can('edit_posts');
+        return \current_user_can('edit_posts');
     }
 
     /**
@@ -88,7 +88,7 @@ class PostEditorTimestampController
     public function addMetaboxToClassicEditor()
     {
         foreach (PostTypeHelper::getPublicPostTypes() as $postType) {
-            add_meta_box(
+            \add_meta_box(
                 'wordproof_timestamp_metabox',
                 'WordProof Timestamp',
                 [$this, 'classicMetaboxHtml'],
@@ -111,8 +111,8 @@ class PostEditorTimestampController
     public function saveClassicMetaboxPostMeta($postId)
     {
         if (array_key_exists($this->classicEditorNonceKey, $_POST)) {
-            if (wp_verify_nonce(sanitize_key($_POST[$this->classicEditorNonceKey]), 'save_post')) {
-                update_post_meta(
+            if (\wp_verify_nonce(\sanitize_key($_POST[$this->classicEditorNonceKey]), 'save_post')) {
+                \update_post_meta(
                     $postId,
                     $this->metaKey,
                     array_key_exists($this->metaKey, $_POST)
@@ -130,12 +130,12 @@ class PostEditorTimestampController
     {
         $value = PostMetaHelper::get($post->ID, $this->metaKey);
 
-        wp_nonce_field('save_post', $this->classicEditorNonceKey); ?>
+        \wp_nonce_field('save_post', $this->classicEditorNonceKey); ?>
     
         <div id="wordproof-toggle">
-            <input type="checkbox" id="<?php echo esc_attr($this->metaKey); ?>" name="<?php echo esc_attr($this->metaKey); ?>"
+            <input type="checkbox" id="<?php echo \esc_attr($this->metaKey); ?>" name="<?php echo \esc_attr($this->metaKey); ?>"
                    value="1" <?php echo boolval($value) ? 'checked' : ''; ?>>
-            <label for="<?php echo esc_attr($this->metaKey); ?>">Timestamp this post</label>
+            <label for="<?php echo \esc_attr($this->metaKey); ?>">Timestamp this post</label>
             <div id="wordproof-action-link"></div>
         </div>
         <?php
@@ -158,7 +158,7 @@ class PostEditorTimestampController
         $document->start_controls_section(
             'wordproof_timestamp_section',
             [
-                'label' => esc_html__('WordProof Timestamp', 'wordproof'),
+                'label' => \esc_html__('WordProof Timestamp', 'wordproof'),
                 'tab'   => \Elementor\Controls_Manager::TAB_SETTINGS,
             ]
         );
@@ -176,7 +176,7 @@ class PostEditorTimestampController
         $document->add_control(
             $this->metaKey,
             [
-                'label'   => esc_html__('Timestamp this post', 'wordproof'),
+                'label'   => \esc_html__('Timestamp this post', 'wordproof'),
                 'type'    => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'no',
             ]
@@ -191,7 +191,7 @@ class PostEditorTimestampController
      */
     public function elementorSave($postId)
     {
-        if (get_post_type($postId) !== 'page') {
+        if (\get_post_type($postId) !== 'page') {
             return;
         }
 

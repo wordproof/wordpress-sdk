@@ -17,7 +17,7 @@ class PostEditorHelper
             return null;
         }
 
-        $screen = get_current_screen();
+        $screen = \get_current_screen();
 
         if (!self::isPostEdit($screen->base)) {
             return null;
@@ -86,8 +86,8 @@ class PostEditorHelper
             'data' => [
                 'origin'                            => EnvironmentHelper::url(),
                 'is_authenticated'                  => AuthenticationHelper::isAuthenticated(),
-                'popup_redirect_authentication_url' => admin_url('admin.php?page=wordproof-redirect-authenticate'),
-                'popup_redirect_settings_url'       => admin_url('admin.php?page=wordproof-redirect-settings'),
+                'popup_redirect_authentication_url' => \admin_url('admin.php?page=wordproof-redirect-authenticate'),
+                'popup_redirect_settings_url'       => \admin_url('admin.php?page=wordproof-redirect-settings'),
                 'settings'                          => SettingsHelper::get(),
                 'current_post_id'                   => $postId,
                 'current_post_type'                 => $postType,
@@ -121,7 +121,7 @@ class PostEditorHelper
 
         // phpcs:disable WordPress.Security.NonceVerification
         if (isset($_REQUEST['post_type'])) {
-            return sanitize_key($_REQUEST['post_type']);
+            return \sanitize_key($_REQUEST['post_type']);
         }
         // phpcs:enable WordPress.Security.NonceVerification
 

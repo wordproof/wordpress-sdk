@@ -24,7 +24,7 @@ class SettingsController
      */
     public function addRedirectPage()
     {
-        add_submenu_page(
+        \add_submenu_page(
             null,
             'WordProof Settings',
             'WordProof Settings',
@@ -49,10 +49,10 @@ class SettingsController
      */
     public function redirectOnLoad()
     {
-        $closeWindowUrl = admin_url('admin.php?page=wordproof-close-after-redirect');
+        $closeWindowUrl = \admin_url('admin.php?page=wordproof-close-after-redirect');
 
         if ($this->redirect($closeWindowUrl) === false) {
-            do_action('wordproof_authenticate', $closeWindowUrl);
+            \do_action('wordproof_authenticate', $closeWindowUrl);
         }
     }
 }

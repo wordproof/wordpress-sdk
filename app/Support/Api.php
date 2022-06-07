@@ -15,7 +15,7 @@ class Api
     public static function post($endpoint, $body = [])
     {
         $location = EnvironmentHelper::url() . $endpoint;
-        $body = wp_json_encode($body);
+        $body = \wp_json_encode($body);
 
         $accessToken = OptionsHelper::accessToken();
 
@@ -36,14 +36,14 @@ class Api
             'sslverify'   => EnvironmentHelper::sslVerify()
         ];
 
-        $request = wp_remote_post($location, $options);
+        $request = \wp_remote_post($location, $options);
 
-        $status = wp_remote_retrieve_response_code($request);
+        $status = \wp_remote_retrieve_response_code($request);
 
         if ($status < 200 || $status >= 300) {
             return false;
         }
 
-        return json_decode(wp_remote_retrieve_body($request));
+        return json_decode(\wp_remote_retrieve_body($request));
     }
 }
