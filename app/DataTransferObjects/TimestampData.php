@@ -13,7 +13,14 @@ class TimestampData
     public static function fromPost($post)
     {
         if ($post->post_type === 'attachment') {
-            $content = hash_file('sha256', \get_attached_file($post->ID));
+    
+            $file = \get_attached_file($post->ID);
+    
+            $content = '';
+            
+            if ($file) {
+                $content = hash_file('sha256', $file);
+            }
         } else {
             $content = $post->post_content;
         }

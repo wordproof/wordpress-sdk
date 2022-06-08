@@ -56,6 +56,10 @@ class TimestampHelper
         if ($post->post_type !== 'attachment' && $post->post_content === '') {
             return false;
         }
+        
+        if ($post->post_type === 'attachment' && \get_attached_file($post->ID) === false) {
+            return false;
+        }
 
         if (!in_array($post->post_status, ['publish', 'inherit'], true)) {
             return false;
