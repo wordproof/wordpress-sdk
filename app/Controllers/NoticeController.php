@@ -77,7 +77,7 @@ class NoticeController
 
             if (isset($buttonText) && isset($buttonEventName)) {
                 echo \sprintf(
-                    '<button class="button button-primary" onclick="window.dispatchEvent( new window.CustomEvent( \'%2$s\' ) )">%1$s</button>',
+                    '<p><button class="button button-primary" onclick="window.dispatchEvent( new window.CustomEvent( \'%2$s\' ) )">%1$s</button></p>',
                     \esc_html($buttonText),
                     \esc_attr($buttonEventName)
                 );
