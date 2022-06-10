@@ -38,6 +38,22 @@ class AppConfigHelper
         return null;
     }
 
+    /**
+     * Returns the environment set during initialization.
+
+     * @return boolean
+     */
+    public static function getLoadUikitFromCdn()
+    {
+        $appConfig = self::getAppConfig();
+
+        if ($appConfig) {
+            return $appConfig->getLoadUikitFromCdn();
+        }
+
+        return null;
+    }
+
     public static function getAppConfig()
     {
         $sdk = WordPressSDK::getInstance();
