@@ -19,6 +19,14 @@ interface AppConfigInterface
      * @return string
      */
     public function getEnvironment();
+    
+    /**
+     * The WordProof environment used. Either staging or production.
+     *
+     * @default true
+     * @return boolean
+     */
+    public function getLoadUikitFromCdn();
 
     /**
      * Only used for local development.

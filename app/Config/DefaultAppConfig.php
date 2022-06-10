@@ -21,6 +21,14 @@ class DefaultAppConfig implements AppConfigInterface
     }
 
     /**
+     * @return boolean
+     */
+    public function getLoadUikitFromCdn()
+    {
+        return true;
+    }
+
+    /**
      * @return null
      */
     public function getOauthClient()
