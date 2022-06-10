@@ -22,7 +22,7 @@ class WordPressSDK
      * The version of this SDK
      * @var string
      */
-    public $version = '1.2.21';
+    public $version = '1.3.0';
 
     /**
      * @var null|WordPressSDK
