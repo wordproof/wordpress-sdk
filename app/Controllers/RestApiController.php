@@ -2,6 +2,7 @@
 
 namespace WordProof\SDK\Controllers;
 
+use WordProof\SDK\Exceptions\ValidationException;
 use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\RestApiHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
@@ -26,13 +27,13 @@ class RestApiController
             'callback'            => [$this, 'authenticate'],
             'permission_callback' => [$this, 'canPublishPermission']
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('webhook'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'webhook'],
             'permission_callback' => [$this, 'isValidWebhookRequest']
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('hashInput'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'hashInput'],
@@ -40,37 +41,37 @@ class RestApiController
                 return true;
             },
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'timestamp'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('timestamp.transaction.latest'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'showLatestTimestampTransaction'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('settings'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'settings'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('saveSettings'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'saveSettings'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication'), [
             'methods'             => 'GET',
             'callback'            => [$this, 'authentication'],
             'permission_callback' => [$this, 'canPublishPermission'],
         ]);
-    
+
         \register_rest_route(RestApiHelper::getNamespace(), RestApiHelper::endpoint('authentication.destroy'), [
             'methods'             => 'POST',
             'callback'            => [$this, 'destroyAuthentication'],
@@ -155,7 +156,7 @@ class RestApiController
 
         return TimestampController::timestamp($postId);
     }
-    
+
     /**
      * The latest timestamp transaction is returned.
      *
@@ -169,10 +170,10 @@ class RestApiController
 
         $transactions = PostMetaHelper::get($postId, '_wordproof_blockchain_transaction', false);
         $transaction = array_pop($transactions);
-    
+
         $response = new \WP_REST_Response((object)$transaction);
         $response->header('X-Robots-Tag', 'noindex');
-    
+
         return $response;
     }
 
@@ -193,7 +194,7 @@ class RestApiController
 
         $response = new \WP_REST_Response((object)$hashInput);
         $response->header('X-Robots-Tag', 'noindex');
-        
+
         return $response;
     }
 
@@ -243,6 +244,13 @@ class RestApiController
                     $this->setBlockchainTransaction($response->data);
 
                     break;
+                case 'set_identity':
+                    try {
+                        (new IdentityController())->store((array) $response->data);
+                        return new \WP_REST_Response(null, 201);
+                    } catch (ValidationException $e) {
+                        return new \WP_REST_Response(['message' => $e->getMessage()], 400);
+                    }
                 default:
                     break;
             }
