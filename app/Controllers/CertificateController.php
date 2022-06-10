@@ -27,9 +27,9 @@ class CertificateController
         $schema = "\n";
         
         if (AppConfigHelper::getLoadUikitFromCdn() === true) {
-            $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit@1.3.*/dist/uikit/uikit.esm.js"></script>';
+            $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit@1.0.*/dist/uikit/uikit.esm.js"></script>';
             $schema .= "\n";
-            $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit@1.3.*/dist/uikit/uikit.js"></script>';
+            $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit@1.0.*/dist/uikit/uikit.js"></script>';
             $schema .= "\n";
         }
 
