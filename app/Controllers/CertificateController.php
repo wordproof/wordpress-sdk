@@ -2,7 +2,6 @@
 
 namespace WordProof\SDK\Controllers;
 
-use WordProof\SDK\Helpers\AssetHelper;
 use WordProof\SDK\Helpers\CertificateHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
@@ -10,17 +9,6 @@ use WordProof\SDK\Helpers\SettingsHelper;
 
 class CertificateController
 {
-    /**
-     * Enqueue the uikit script.
-     *
-     * @action wp_head
-     */
-    public function enqueue()
-    {
-        if (CertificateHelper::show()) {
-            AssetHelper::enqueue('uikit');
-        }
-    }
 
     /**
      * Add scripts and schema to the head of the current page.
@@ -36,6 +24,10 @@ class CertificateController
         global $post;
 
         $schema = "\n";
+        $schema .= '<script type="module" src="https://unpkg.com/@wordproof/uikit@1.3.*/dist/uikit/uikit.esm.js"></script>';
+        $schema .= "\n";
+        $schema .= '<script nomodule src="https://unpkg.com/@wordproof/uikit@1.3.*/dist/uikit/uikit.js"></script>';
+        $schema .= "\n";
         $schema .= '<script type="application/ld+json" class="' . \esc_attr('wordproof-schema-graph') . '">';
         $schema .= json_encode(PostMetaHelper::get($post->ID, '_wordproof_schema'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $schema .= "</script>";
