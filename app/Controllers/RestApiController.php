@@ -290,6 +290,10 @@ class RestApiController
      */
     public static function isValidWebhookRequest(\WP_REST_Request $request)
     {
+        if (!AuthenticationHelper::isAuthenticated()) {
+            return false;
+        }
+        
         $hashedToken = hash('sha256', OptionsHelper::accessToken());
         $hmac = hash_hmac('sha256', $request->get_body(), $hashedToken);
 
