@@ -236,6 +236,7 @@ class RestApiController
                     AuthenticationHelper::logout();
                     break;
                 case 'dump_item':
+
                     $key = '_wordproof_hash_input_' . $response->data->hash;
                     PostMetaHelper::update($response->data->uid, $key, json_decode($response->data->hash_input));
 
@@ -289,11 +290,6 @@ class RestApiController
      */
     public static function isValidWebhookRequest(\WP_REST_Request $request)
     {
-        $response = json_decode($request->get_body());
-        if (isset($response->type) && $response->type === 'ping') {
-            return true;
-        }
-    
         if (!AuthenticationHelper::isAuthenticated()) {
             return false;
         }
