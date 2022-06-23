@@ -83,6 +83,9 @@ export default function initializeAuthentication() {
 			case 'wordproof:oauth:denied':
 				await postMessageResult( 'wordproof:oauth:denied', false );
 				break;
+			case 'wordproof:oauth:invalid_token':
+				await postMessageResult( 'wordproof:oauth:invalid_token', false );
+				break;
 			case 'wordproof:webhook:success':
 				await postMessageResult( 'wordproof:oauth:success', true );
 				break;
