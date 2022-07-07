@@ -54,4 +54,13 @@ class IdentityController
     public function store($data) {
         return OptionsHelper::set('identity', $this->validate($data));
     }
+    
+    /**
+     * Delete the stored identity data
+     *
+     * @return mixed
+     */
+    public function delete() {
+        return OptionsHelper::delete('identity');
+    }
 }

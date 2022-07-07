@@ -251,6 +251,12 @@ class RestApiController
                     } catch (ValidationException $e) {
                         return new \WP_REST_Response(['message' => $e->getMessage()], 400);
                     }
+                    
+               case 'delete_identity':
+                   (new IdentityController())->delete();
+                   $data = (object)['status' => 200, 'message' => 'success'];
+                   return new \WP_REST_Response($data, $data->status);
+                   
                 default:
                     break;
             }
