@@ -38,13 +38,15 @@ class Authentication
             'code_challenge_method' => 'S256',
             'partner'               => AppConfigHelper::getPartner(),
         ];
-
+    
         /**
          * Login with user if v2 plugin data exist.
          */
         $accessToken = TransientHelper::get('wordproof_v2_authenticate_with_token');
-        if ($accessToken) {
-            $data = array_merge($data, ['access_token_login' => $accessToken]);
+        $sourceId = TransientHelper::get('wordproof_v2_get_existing_source');
+    
+        if ($accessToken && $sourceId) {
+            $data = array_merge($data, ['access_token_login' => $accessToken, 'source_id' => $sourceId]);
         } else {
             $data = array_merge($data, ['confirm_account' => true]);
         }
