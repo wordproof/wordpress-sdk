@@ -12,6 +12,9 @@ class AuthenticationHelper
     public static function logout()
     {
         OptionsHelper::resetAuthentication();
+        
+        TransientHelper::getOnce('wordproof_v2_authenticate_with_token');
+        TransientHelper::getOnce('wordproof_v2_get_existing_source');
     }
 
     /**
