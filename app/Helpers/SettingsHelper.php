@@ -40,6 +40,26 @@ class SettingsHelper
     {
         return self::get('certificate_link_text');
     }
+    
+    public static function certificateLinkColor()
+    {
+        return self::get('certificate_link_color');
+    }
+    
+    public static function certificateLinkIcon()
+    {
+        return self::get('certificate_link_icon');
+    }
+    
+    public static function certificateLinkShape()
+    {
+        return self::get('certificate_link_shape');
+    }
+    
+    public static function certificateLinkVariant()
+    {
+        return self::get('certificate_link_variant');
+    }
 
     public static function hideCertificateLink()
     {

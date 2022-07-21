@@ -20,30 +20,46 @@ class OptionsConfig extends Config
                 'escape'  => 'text_field',
                 'default' => null,
             ],
-            'balance' => [
+            'balance'      => [
                 'escape'  => 'integer',
                 'default' => 0,
             ],
             'settings'     => [
-                'cast' => 'object',
+                'cast'    => 'object',
                 'options' => [
-                    'certificate_link_text' => [
+                    'certificate_link_text'  => [
                         'escape'  => 'text_field',
                         'default' => __('View this content\'s Timestamp certificate', 'wordproof')
                     ],
-                    'hide_certificate_link' => [
+                    'certificate_link_color' => [
+                        'escape'  => 'text_field',
+                        'default' => '#000000'
+                    ],
+                    'certificate_link_icon'  => [
+                        'escape'  => 'text_field',
+                        'default' => 'none'
+                    ],
+                    'certificate_link_shape' => [
+                        'escape'  => 'text_field',
+                        'default' => 'text'
+                    ],
+                    'certificate_link_variant' => [
+                        'escape'  => 'text_field',
+                        'default' => ''
+                    ],
+                    'hide_certificate_link'  => [
                         'escape'  => 'boolean',
                         'default' => false,
                     ],
-                    'selected_post_types'   => [
+                    'selected_post_types'    => [
                         'escape'  => 'text_field',
                         'default' => [],
                     ],
-                    'show_revisions'        => [
+                    'show_revisions'         => [
                         'escape'  => 'boolean',
                         'default' => true,
                     ],
-
+                
                 ]
             ]
         ];

@@ -63,12 +63,17 @@ class CertificateController
         $identifier = $post->ID;
 
         $text = SettingsHelper::certificateLinkText();
+        $color = SettingsHelper::certificateLinkColor();
+        $icon = SettingsHelper::certificateLinkIcon();
+        $shape = SettingsHelper::certificateLinkShape();
+        $variant = SettingsHelper::certificateLinkVariant();
+        
         $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
         $debug = EnvironmentHelper::development() ? 'true' : 'false';
         $lastModified = \get_the_modified_date('c', $post->ID);
 
         $content.= "\n" . '<w-certificate debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
-        $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
+        $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="' . $icon . '" shape="' . $shape . '" text="' . $text . '" color="' . $color . '" variant="' . $variant . '"></w-certificate-button></p>';
         $content.= "\n";
 
         return $content;
