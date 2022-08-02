@@ -45,6 +45,27 @@ class OptionsConfig extends Config
                     ],
 
                 ]
+            ],
+            'identity'     => [
+                'cast' => 'object',
+                'options' => [
+                    'source' => [
+                        'escape'  => 'text_field',
+                        'default' => null,
+                    ],
+                    'first_name' => [
+                        'escape'  => 'text_field',
+                        'default' => null,
+                    ],
+                    'last_name' => [
+                        'escape'  => 'text_field',
+                        'default' => null,
+                    ],
+                    'profile_picture' => [
+                        'escape'  => 'url',
+                        'default' => null,
+                    ],
+                ]
             ]
         ];
     }

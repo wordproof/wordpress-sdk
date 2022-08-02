@@ -5,6 +5,7 @@ namespace WordProof\SDK\Controllers;
 use WordProof\SDK\Helpers\AppConfigHelper;
 use WordProof\SDK\Helpers\CertificateHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
+use WordProof\SDK\Helpers\OptionsHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
 use WordProof\SDK\Helpers\SettingsHelper;
 
@@ -66,8 +67,14 @@ class CertificateController
         $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
         $debug = EnvironmentHelper::development() ? 'true' : 'false';
         $lastModified = \get_the_modified_date('c', $post->ID);
+        
+        $identity = OptionsHelper::get('identity');
+        
+        $identityProvider = (isset($identity['source'])) ? $identity['source'] : '';
+        $identityName = ((isset($identity['first_name'])) ? $identity['first_name'] : '') . ' ' . ((isset($identity['last_name'])) ? $identity['last_name'] : '');
+        $identityPicture = (isset($identity['profile_picture'])) ? $identity['profile_picture'] : '';
 
-        $content.= "\n" . '<w-certificate debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
+        $content.= "\n" . '<w-certificate identity-provider="' . $identityProvider . '" identity-name="' . $identityName . '" identity-picture="' . $identityPicture . '" debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
         $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
         $content.= "\n";
 
