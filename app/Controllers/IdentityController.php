@@ -24,8 +24,8 @@ class IdentityController
             throw new ValidationException("Invalid field 'last_name'");
         }
 
-        if (!isset($data['source']) || !is_string($data['source'])) {
-            throw new ValidationException("Invalid field 'source'");
+        if (!isset($data['provider']) || !is_string($data['provider'])) {
+            throw new ValidationException("Invalid field 'provider'");
         }
 
         if (
@@ -38,7 +38,7 @@ class IdentityController
         return [
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
-            'source' => $data['source'],
+            'provider' => $data['provider'],
             'profile_picture' => $data['profile_picture'],
         ];
     }

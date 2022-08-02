@@ -70,7 +70,7 @@ class CertificateController
         
         $identity = OptionsHelper::get('identity');
         
-        $identityProvider = (isset($identity['source'])) ? $identity['source'] : '';
+        $identityProvider = (isset($identity['provider'])) ? $identity['provider'] : '';
         $identityName = ((isset($identity['first_name'])) ? $identity['first_name'] : '') . ' ' . ((isset($identity['last_name'])) ? $identity['last_name'] : '');
         $identityProfilePicture = (isset($identity['profile_picture'])) ? $identity['profile_picture'] : '';
 
