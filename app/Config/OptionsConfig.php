@@ -49,7 +49,7 @@ class OptionsConfig extends Config
             'identity'     => [
                 'cast' => 'object',
                 'options' => [
-                    'source' => [
+                    'provider' => [
                         'escape'  => 'text_field',
                         'default' => null,
                     ],
