@@ -72,9 +72,9 @@ class CertificateController
         
         $identityProvider = (isset($identity['source'])) ? $identity['source'] : '';
         $identityName = ((isset($identity['first_name'])) ? $identity['first_name'] : '') . ' ' . ((isset($identity['last_name'])) ? $identity['last_name'] : '');
-        $identityPicture = (isset($identity['profile_picture'])) ? $identity['profile_picture'] : '';
+        $identityProfilePicture = (isset($identity['profile_picture'])) ? $identity['profile_picture'] : '';
 
-        $content.= "\n" . '<w-certificate identity-provider="' . $identityProvider . '" identity-name="' . $identityName . '" identity-picture="' . $identityPicture . '" debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
+        $content.= "\n" . '<w-certificate identity-provider="' . $identityProvider . '" identity-name="' . $identityName . '" identity-profile-picture="' . $identityProfilePicture . '" debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
         $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
         $content.= "\n";
 
