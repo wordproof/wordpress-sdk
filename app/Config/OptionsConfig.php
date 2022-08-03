@@ -65,6 +65,10 @@ class OptionsConfig extends Config
                         'escape'  => 'url',
                         'default' => null,
                     ],
+                    'proof_url' => [
+                        'escape'  => 'url',
+                        'default' => null,
+                    ],
                 ]
             ]
         ];
