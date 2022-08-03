@@ -70,11 +70,12 @@ class CertificateController
         
         $identity = OptionsHelper::get('identity');
         
-        $identityProvider = (isset($identity['provider'])) ? $identity['provider'] : '';
-        $identityName = ((isset($identity['first_name'])) ? $identity['first_name'] : '') . ' ' . ((isset($identity['last_name'])) ? $identity['last_name'] : '');
-        $identityProfilePicture = (isset($identity['profile_picture'])) ? $identity['profile_picture'] : '';
+        $identityProvider = (isset($identity->provider)) ? $identity->provider : '';
+        $identityName = ((isset($identity->first_name)) ? $identity->first_name : '') . ' ' . ((isset($identity->last_name)) ? $identity->last_name : '');
+        $identityProfilePicture = (isset($identity->profile_picture)) ? $identity->profile_picture : '';
+        $identityProofUrl = (isset($identity->proof_url)) ? $identity->proof_url : '';
 
-        $content.= "\n" . '<w-certificate identity-provider="' . $identityProvider . '" identity-name="' . $identityName . '" identity-profile-picture="' . $identityProfilePicture . '" debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
+        $content.= "\n" . '<w-certificate identity-provider="' . $identityProvider . '" identity-name="' . $identityName . '" identity-profile-picture="' . $identityProfilePicture . '" identity-proof-url="' . $identityProofUrl . '" debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
         $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
         $content.= "\n";
 

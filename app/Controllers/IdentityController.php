@@ -3,6 +3,8 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Exceptions\ValidationException;
+use WordProof\SDK\Helpers\AppConfigHelper;
+use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\OptionsHelper;
 
 class IdentityController
@@ -40,6 +42,7 @@ class IdentityController
             'last_name' => $data['last_name'],
             'provider' => $data['provider'],
             'profile_picture' => $data['profile_picture'],
+            'proof_url' => EnvironmentHelper::url() . '/identity/' . OptionsHelper::sourceId() //This should be changed obviously.
         ];
     }
 
