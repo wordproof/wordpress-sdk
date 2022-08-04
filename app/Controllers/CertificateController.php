@@ -41,6 +41,31 @@ class CertificateController
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $schema;
     }
+    
+    /**
+     * @param bool $output
+     * @return string|void
+     */
+    public function certificateButton($output = false) {
+        global $post;
+        $identifier = $post->ID;
+    
+        $text = SettingsHelper::certificateLinkText();
+        $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
+        $debug = EnvironmentHelper::development() ? 'true' : 'false';
+        $lastModified = \get_the_modified_date('c', $post->ID);
+        
+        $content = "\n" . '<w-certificate debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
+        $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
+        $content.= "\n";
+    
+        if (!$output) {
+            return $content;
+        }
+        
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $content;
+    }
 
     /**
      * Adds the certificate tag to the content before rendering it.
@@ -59,18 +84,6 @@ class CertificateController
             return $content;
         }
 
-        global $post;
-        $identifier = $post->ID;
-
-        $text = SettingsHelper::certificateLinkText();
-        $showRevisions = SettingsHelper::showRevisions() ? 'true' : 'false';
-        $debug = EnvironmentHelper::development() ? 'true' : 'false';
-        $lastModified = \get_the_modified_date('c', $post->ID);
-
-        $content.= "\n" . '<w-certificate debug="' . $debug . '" shared-identifier="' . $identifier . '" render-without-button="true" show-revisions="' . $showRevisions . '" last-modified="' . $lastModified . '"></w-certificate>';
-        $content.= "\n" . '<p><w-certificate-button shared-identifier="' . $identifier . '" icon="shield" shape="text" text="' . $text . '"></w-certificate-button></p>';
-        $content.= "\n";
-
-        return $content;
+        return $content . $this->certificateButton();
     }
 }

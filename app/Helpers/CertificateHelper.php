@@ -22,8 +22,13 @@ class CertificateHelper
         if (\post_password_required()) {
             return false;
         }
-
+    
         global $post;
+        
+        if (BlocksHelper::getContainsBlock($post->ID)) {
+            return false;
+        }
+        
         return \apply_filters(
             'wordproof_timestamp_show_certificate',
             PostMetaHelper::has($post->ID, '_wordproof_schema'),

@@ -4,6 +4,7 @@ namespace WordProof\SDK;
 
 use WordProof\SDK\Config\DefaultAppConfig;
 use WordProof\SDK\Config\AppConfigInterface;
+use WordProof\SDK\Controllers\BlockController;
 use WordProof\SDK\Controllers\NoticeController;
 use WordProof\SDK\Controllers\PostEditorDataController;
 use WordProof\SDK\Controllers\PostEditorTimestampController;
@@ -188,6 +189,18 @@ class WordPressSDK
 
         $this->loader->addAction('admin_notices', $class, 'show');
     }
+    
+    /**
+     * Register all gutenberg blocks.
+     */
+    public function blocks() {
+        $class = new BlockController();
+
+        $class->registerBlocks();
+        $this->loader->addAction('save_post', $class, 'savePost', 10, 2);
+        
+        return $this;
+    }
 
     /**
      * Optional feature to include the schema and certificate to the page.
@@ -200,6 +213,7 @@ class WordPressSDK
 
         $this->loader->addAction('wp_head', $class, 'head');
         $this->loader->addFilter('the_content', $class, 'certificateTag');
+        $this->loader->addFilter('wordproof_certificate_button', $class, 'certificateButton');
 
         return $this;
     }
