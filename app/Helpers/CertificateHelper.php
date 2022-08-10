@@ -25,10 +25,6 @@ class CertificateHelper
     
         global $post;
         
-        if (BlocksHelper::getContainsBlock($post->ID)) {
-            return false;
-        }
-        
         return \apply_filters(
             'wordproof_timestamp_show_certificate',
             PostMetaHelper::has($post->ID, '_wordproof_schema'),

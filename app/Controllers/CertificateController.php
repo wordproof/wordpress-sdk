@@ -3,6 +3,7 @@
 namespace WordProof\SDK\Controllers;
 
 use WordProof\SDK\Helpers\AppConfigHelper;
+use WordProof\SDK\Helpers\BlocksHelper;
 use WordProof\SDK\Helpers\CertificateHelper;
 use WordProof\SDK\Helpers\EnvironmentHelper;
 use WordProof\SDK\Helpers\PostMetaHelper;
@@ -77,6 +78,10 @@ class CertificateController
     public function certificateTag($content)
     {
         if (!CertificateHelper::show()) {
+            return $content;
+        }
+    
+        if (BlocksHelper::getContainsBlock(get_the_ID())) {
             return $content;
         }
 

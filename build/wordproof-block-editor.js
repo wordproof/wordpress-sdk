@@ -1,6 +1,88 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./resources/js/blocks/certificateButton/edit.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/blocks/certificateButton/edit.js ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_ActionLink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/ActionLink */ "./resources/js/components/ActionLink.js");
+/* harmony import */ var _components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/icon/Wordproof */ "./resources/js/components/icon/Wordproof.js");
+
+
+
+
+const {
+  __
+} = wp.i18n;
+const {
+  InspectorControls
+} = wp.blockEditor;
+const {
+  PanelBody
+} = wp.components;
+const {
+  PanelRow
+} = wp.components;
+/* harmony default export */ __webpack_exports__["default"] = (() => {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "wp-block-wordproof-certificate-button "
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    className: "wp-block-wordproof-certificate-button--content"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_3__["default"], null), __('The certificate button will be placed here')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelBody, {
+    initialOpen: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelRow, null, __('Customize the look of your certificate button')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelRow, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ActionLink__WEBPACK_IMPORTED_MODULE_2__["default"], null)))));
+});
+
+/***/ }),
+
+/***/ "./resources/js/blocks/certificateButton/index.js":
+/*!********************************************************!*\
+  !*** ./resources/js/blocks/certificateButton/index.js ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./edit */ "./resources/js/blocks/certificateButton/edit.js");
+/* harmony import */ var _components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/icon/Wordproof */ "./resources/js/components/icon/Wordproof.js");
+
+
+
+const {
+  __
+} = wp.i18n;
+const {
+  registerBlockType
+} = wp.blocks;
+/* harmony default export */ __webpack_exports__["default"] = (() => {
+  registerBlockType('wordproof/certificate-button', {
+    title: __('Certificate Button'),
+    description: __('Add the certificate button to the content'),
+    category: 'embed',
+    keywords: [__('timestsamp'), __('wordproof'), __('certificate')],
+    icon: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_2__["default"], null),
+    example: {},
+    edit: _edit__WEBPACK_IMPORTED_MODULE_1__["default"]
+  });
+});
+
+/***/ }),
+
 /***/ "./resources/js/components/ActionLink.js":
 /*!***********************************************!*\
   !*** ./resources/js/components/ActionLink.js ***!
@@ -2649,32 +2731,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _initializers_blockEditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initializers/blockEditor */ "./resources/js/initializers/blockEditor.js");
 /* harmony import */ var _components_EditorPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/EditorPanel */ "./resources/js/components/EditorPanel.js");
-/* harmony import */ var _components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/icon/Wordproof */ "./resources/js/components/icon/Wordproof.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _components_ActionLink__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/ActionLink */ "./resources/js/components/ActionLink.js");
+/* harmony import */ var _blocks_certificateButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./blocks/certificateButton */ "./resources/js/blocks/certificateButton/index.js");
 
 
-const {
-  __
-} = wp.i18n;
 const {
   registerPlugin
 } = wp.plugins;
-const {
-  registerBlockType
-} = wp.blocks;
-const {
-  InspectorControls
-} = wp.blockEditor;
-const {
-  PanelBody
-} = wp.components;
-const {
-  PanelRow
-} = wp.components;
-
-
 
 
 registerPlugin('wordproof-timestamp-panel', {
@@ -2683,28 +2745,7 @@ registerPlugin('wordproof-timestamp-panel', {
   }
 
 });
-registerBlockType('wordproof/certificate-button', {
-  title: __('Certificate Button'),
-  description: __('Add the certificate button to the content'),
-  category: 'embed',
-  keywords: [__('timestsamp'), __('wordproof'), __('certificate')],
-  icon: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_3__["default"], null),
-  example: {},
-  edit: () => {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_4__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "wp-block-wordproof-certificate-button "
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      style: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-      },
-      className: "wp-block-wordproof-certificate-button--content"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_icon_Wordproof__WEBPACK_IMPORTED_MODULE_3__["default"], null), __('We will render your certificate button here')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelBody, {
-      initialOpen: true
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelRow, null, __('Customize the look of your certificate button')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelRow, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ActionLink__WEBPACK_IMPORTED_MODULE_5__["default"], null)))));
-  }
-});
+(0,_blocks_certificateButton__WEBPACK_IMPORTED_MODULE_3__["default"])();
 (0,_initializers_blockEditor__WEBPACK_IMPORTED_MODULE_1__["default"])();
 }();
 /******/ })()
