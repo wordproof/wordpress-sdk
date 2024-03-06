@@ -24,7 +24,7 @@ class PostEditorHelper
         }
 
         // Start with Elementor, otherwise the block editor will be returned.
-        $action = \filter_input(\INPUT_GET, 'action', \FILTER_SANITIZE_STRING);
+        $action = \filter_input(\INPUT_GET, 'action');
         if ($action === 'elementor') {
             return 'elementor';
         }
